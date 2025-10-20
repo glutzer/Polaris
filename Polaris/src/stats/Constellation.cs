@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Polaris;
 
@@ -16,11 +17,39 @@ public class Constellation
     public Vector2i StartBounds { get; private set; }
     public Vector2i EndBounds { get; private set; }
 
+    public float BaseExpCurve { get; private set; } = 1.5f;
+    public float BaseExpRequirement { get; private set; } = 100f;
+
     private int indexCounter;
 
     public Constellation(string name)
     {
         Name = name;
+    }
+
+    /// <summary>
+    /// How much exp to reach this level.
+    /// </summary>
+    public float GetExpToReachLevel(int level)
+    {
+        return BaseExpRequirement * MathF.Pow(level - 1, BaseExpCurve);
+    }
+
+    public float GetTotalExpGained(int level, float currentExp)
+    {
+        float totalExp = 0f;
+        for (int i = 1; i <= level; i++)
+        {
+            totalExp += GetExpToReachLevel(i);
+        }
+        return totalExp + currentExp;
+    }
+
+    public Constellation SetExpCurve(float power, float baseRequirement)
+    {
+        BaseExpCurve = power;
+        BaseExpRequirement = baseRequirement;
+        return this;
     }
 
     public PassiveNode? GetNodeById(int nodeId)
@@ -35,9 +64,10 @@ public class Constellation
         RecalculateBounds();
     }
 
-    public void SetColor(float r, float g, float b, float a)
+    public Constellation SetColor(float r, float g, float b, float a)
     {
         Color = new Vector4(r, g, b, a);
+        return this;
     }
 
     /// <summary>

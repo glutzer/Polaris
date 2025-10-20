@@ -20,6 +20,7 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
     private readonly Dictionary<string, PlayerPolarisData> playerDataByUid = [];
 
     public event Action<PlayerPolarisData>? OnClientDataUpdated;
+    public event Action<Constellation, float, int>? OnClientExperienceGain;
 
     private static SystemPolarisPassiveTree clientInst = null!;
     private static SystemPolarisPassiveTree serverInst = null!;
@@ -72,17 +73,16 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
 
     public override void Initialize()
     {
-        // Initialize base constellations.
-        Constellation survival = new("Survival");
-        survival.SetColor(1f, 0.7f, 0.7f, 1f);
+        // Survival.
+        Constellation survival = new Constellation("Survival").SetColor(1f, 0.7f, 0.7f, 1f);
         AddConstellation(survival);
 
         PassiveNode surv1 = new FreeNode("", new NodePosition()).AddTo(survival).MakeStartNode();
         PassiveNode surv2 = new AdditiveValueNode("movespeed", "walkspeed", 0.05f, surv1.GetOffsetPosition(50, 50)).AddTo(survival).AddParentConnection(surv1);
         new AdditiveValueNode("movespeed", "walkspeed", 0.1f, surv2.GetOffsetPosition(40, 60)).AddTo(survival).AddParentConnection(surv2);
 
-        Constellation combat = new("Combat");
-        combat.SetColor(1f, 0.3f, 0f, 1f);
+        // Combat.
+        Constellation combat = new Constellation("Combat").SetColor(1f, 0.3f, 0f, 1f);
         AddConstellation(combat);
 
         PassiveNode combat1 = new FreeNode("", new NodePosition()).AddTo(combat).MakeStartNode();
@@ -90,9 +90,10 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
         new AdditiveValueNode("meleedamage", "meleeWeaponsDamage", 0.1f, combat1.GetOffsetPosition(50, -50)).AddTo(combat).AddParentConnection(combat1);
         new AdditiveValueNode("meleedamage", "meleeWeaponsDamage", 0.1f, combat1.GetOffsetPosition(100, 50)).AddTo(combat).AddParentConnection(combat1);
 
-        Constellation time = new("Time");
-        time.SetColor(0.2f, 1f, 0.6f, 0.5f);
+        // Time.
+        Constellation time = new Constellation("Time").SetColor(0.2f, 1f, 0.6f, 0.5f);
         AddConstellation(time);
+
         PassiveNode time1 = new FreeNode("", new NodePosition()).AddTo(time).MakeStartNode();
         new AdditiveValueNode("miningspeed", "miningSpeedMul", 0.1f, time1.GetOffsetPosition(50, 50)).AddTo(time).AddParentConnection(time1);
         new AdditiveValueNode("miningspeed", "miningSpeedMul", 0.1f, time1.GetOffsetPosition(50, -50)).AddTo(time).AddParentConnection(time1);
@@ -103,7 +104,8 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
     {
         channel
             .RegisterMessageType<PlayerPolarisData>()
-            .RegisterMessageType<NodeAllocationRequest>();
+            .RegisterMessageType<NodeAllocationRequest>()
+            .RegisterMessageType<S2CExpPacket>();
     }
 
     protected override void RegisterClientMessages(IClientNetworkChannel channel)
@@ -129,6 +131,11 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
                 constData.AllocatedNodeIds.Remove(p.NodeId);
 
             OnClientDataUpdated?.Invoke(data);
+        });
+
+        channel.SetMessageHandler<S2CExpPacket>(p =>
+        {
+            AddExperience(p.Constellation, MainAPI.Capi.World.Player.PlayerUID, p.ExpGain);
         });
     }
 
@@ -163,17 +170,66 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
     }
 
     /// <summary>
+    /// Server-side static helper for experience.
+    /// </summary>
+    public static void AddExperience(string constellationName, IPlayer player, float amount)
+    {
+        Instance(MainAPI.Sapi).AddExperience(constellationName, player.PlayerUID, amount);
+    }
+
+    /// <summary>
     /// Adds experience to a constellation, triggers events.
+    /// Called on client and server.
     /// </summary>
     public void AddExperience(string constellationName, string uid, float amount)
     {
-        PlayerConstellationData data = GetConstellationData(constellationName, uid);
+        if (!constellationByName.TryGetValue(constellationName, out Constellation? constellation)) return; // Invalid.
+
+        PlayerPolarisData playerData = GetPlayerData(uid);
+        PlayerConstellationData data = playerData.GetConstellation(constellationName);
         data.Experience += amount;
 
-        while (data.Experience >= 100f * data.Level)
+        bool shouldServerRecalculate = false;
+
+        while (data.Experience >= constellation.GetExpToReachLevel(data.Level + 1) && data.Level < 100)
         {
-            data.Experience -= 100f * data.Level;
+            float expNeeded = constellation.GetExpToReachLevel(data.Level + 1);
+
+            data.Experience -= expNeeded;
+            playerData.Experience += expNeeded;
+
             data.Level++;
+            shouldServerRecalculate = true;
+        }
+
+        while (playerData.Experience >= PlayerPolarisData.GetExpToReachLevel(playerData.Level + 1))
+        {
+            playerData.Experience -= PlayerPolarisData.GetExpToReachLevel(playerData.Level + 1);
+            playerData.Level++;
+            shouldServerRecalculate = true;
+        }
+
+        if (api.Side.IsServer())
+        {
+            IPlayer? player = api.World.PlayerByUid(uid);
+            if (player == null) return;
+
+            S2CExpPacket packet = new()
+            {
+                Constellation = constellationName,
+                ExpGain = amount
+            };
+            SendPacket(packet, (IServerPlayer)player);
+
+            // Recalculate when leveling up.
+            if (shouldServerRecalculate)
+            {
+                MainAPI.GetServerSystem<SystemPolarisStats>().CalculatePlayerStats(player.Entity);
+            }
+        }
+        else
+        {
+            OnClientExperienceGain?.Invoke(constellation, amount, data.Level);
         }
     }
 
@@ -239,6 +295,57 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
         MainAPI.Sapi.WorldManager.SaveGame.StoreData("polarisplayerdata", dataToSave);
     }
 
+    /// <summary>
+    /// Fixes data when loading.
+    /// </summary>
+    private void VerifyPlayerData(PlayerPolarisData data)
+    {
+        int pointsSpent = 0;
+        float totalExpGained = 0f;
+
+        foreach (KeyValuePair<string, PlayerConstellationData> constData in data.ConstellationData)
+        {
+            // Remove invalid node ids.
+            if (!constellationByName.TryGetValue(constData.Key, out Constellation? constellation)) continue;
+
+            // Remove allocated nodes that don't exist, get allocation count.
+            HashSet<int> validNodeIds = [];
+            foreach (PassiveNode node in constellation.AllNodes)
+            {
+                validNodeIds.Add(node.Id);
+
+                if (constData.Value.AllocatedNodeIds.Contains(node.Id))
+                {
+                    pointsSpent += node.Cost;
+                }
+            }
+            constData.Value.AllocatedNodeIds.RemoveWhere(id => !validNodeIds.Contains(id));
+
+            // Calculate total exp gained.
+            totalExpGained += constellation.GetTotalExpGained(constData.Value.Level, constData.Value.Experience);
+        }
+
+        // Remove all non-existent constellations, from old versions.
+        List<string> toRemove = [];
+        foreach (string constName in data.ConstellationData.Keys)
+        {
+            if (!constellationByName.ContainsKey(constName))
+            {
+                toRemove.Add(constName);
+            }
+        }
+        foreach (string constName in toRemove)
+        {
+            data.ConstellationData.Remove(constName);
+        }
+
+        // Set new level from total experience gained.
+        data.SetLevelFromTotalExp(totalExpGained);
+
+        // At this point a player may have negative points, but they can simply not spend them until it's positive.
+        data.SetKnowledgePoints(data.Level - 1 - pointsSpent);
+    }
+
     public void LoadDataFromWorld()
     {
         if (api.Side != EnumAppSide.Server) throw new Exception("Loading on the client.");
@@ -253,10 +360,24 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
             PlayerPolarisData? data = SerializerUtil.Deserialize<PlayerPolarisData>(bytes);
             if (data != null)
             {
+                VerifyPlayerData(data);
                 playerDataByUid[uid] = data;
             }
         }
     }
+}
+
+/// <summary>
+/// Packet sent from the server to the client who gained experience.
+/// </summary>
+[ProtoContract]
+public class S2CExpPacket
+{
+    [ProtoMember(1)]
+    public string Constellation = "";
+
+    [ProtoMember(2)]
+    public float ExpGain;
 }
 
 [ProtoContract]
@@ -286,6 +407,30 @@ public class PlayerPolarisData
 
     [ProtoMember(3)]
     public float Experience;
+
+    // Knowledge points, loaded when verifying data.
+    public int KnowledgePoints { get; private set; }
+
+    public void SetKnowledgePoints(int amount)
+    {
+        KnowledgePoints = amount;
+    }
+
+    public void SetLevelFromTotalExp(float exp)
+    {
+        Level = 1;
+        Experience = exp;
+        while (Experience >= GetExpToReachLevel(Level + 1))
+        {
+            Experience -= GetExpToReachLevel(Level + 1);
+            Level++;
+        }
+    }
+
+    public static float GetExpToReachLevel(int level)
+    {
+        return 100f * MathF.Pow(level, 2f);
+    }
 
     public PlayerConstellationData GetConstellation(string name)
     {

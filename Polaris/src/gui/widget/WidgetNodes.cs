@@ -21,6 +21,13 @@ public class WidgetNodes : Widget
     private readonly NineSliceTexture expSides = PolarisGuiThemes.ExpSides;
     private readonly NineSliceTexture expInner = PolarisGuiThemes.ExpInner;
 
+    private readonly SystemPolarisStarScreen starScreen;
+
+    // Gathered when positioning constellations.
+    private int currentLevel = 1;
+    private int currentExp = 0;
+    private int nextLevelExp = 100;
+
     private readonly TextObject nodeText = new("none", PolarisGuiThemes.Font, 12, new Vector4(0.8f, 0.8f, 0.9f, 0.9f))
     {
         Shadow = true
@@ -39,6 +46,7 @@ public class WidgetNodes : Widget
     public WidgetNodes(Widget? parent, Gui gui, Offset offset) : base(parent, gui)
     {
         this.offset = offset;
+        starScreen = MainAPI.GetClientSystem<SystemPolarisStarScreen>();
         PositionConstellations();
         SystemPolarisPassiveTree.Instance(MainAPI.Capi).OnClientDataUpdated += OnClientDataUpdated;
 
@@ -83,9 +91,16 @@ public class WidgetNodes : Widget
             return false;
         }
 
+        PlayerPolarisData playerData = SystemPolarisPassiveTree.Instance(MainAPI.Capi).GetClientData();
+
+        currentExp = (int)playerData.Experience;
+        currentLevel = playerData.Level;
+        nextLevelExp = (int)PlayerPolarisData.GetExpToReachLevel(currentLevel + 1);
+
         foreach (Constellation constellation in SystemPolarisPassiveTree.Instance(MainAPI.Capi).AllConstellations)
         {
-            PositionedConstellation positionedConstellation = new(constellation);
+            PlayerConstellationData constData = playerData.GetConstellation(constellation.Name);
+            PositionedConstellation positionedConstellation = new(constellation, (int)constData.Experience, (int)constellation.GetExpToReachLevel(constData.Level + 1), constData.Level);
 
             // Check if it can be placed with no offset.
             if (!IntersectsAny(positionedConstellation))
@@ -128,6 +143,25 @@ public class WidgetNodes : Widget
             positionedConstellation.Center = ((constellation.StartBounds + constellation.EndBounds) / new Vector2i(2)) + positionedConstellation.Offset;
             positionedConstellation.LightRadius = (int)((constellation.EndBounds - constellation.StartBounds).EuclideanLength / 2f);
         }
+
+        List<StarLight> lights = [];
+        // Update light positions, without offset.
+        foreach (PositionedConstellation posConst in positionedConstellations)
+        {
+            foreach (PassiveNode node in posConst.Constellation.AllNodes)
+            {
+                float x = node.Position.X + posConst.Offset.X;
+                float y = node.Position.Y + posConst.Offset.Y;
+
+                lights.Add(new StarLight()
+                {
+                    PosRange = new Vector4(x, -y, 20f * node.NodeSize, 0f),
+                    Color = posConst.Constellation.Color
+                });
+            }
+        }
+
+        starScreen.UpdateUbo(lights);
     }
 
     public override void RegisterEvents(GuiEvents guiEvents)
@@ -329,36 +363,34 @@ public class WidgetNodes : Widget
             shader.Uniform("color", expColor);
             RenderTools.RenderNineSlice(expSides, shader, cx - 150f, cy, 300f, 40f);
 
-            float expPercent = 0.75f;
+            float expPercent = posConst.CurrentExp / (float)posConst.RequiredExp;
             RenderTools.PushScissor((int)cx - 150, (int)cy, (int)(300f * expPercent), 40);
             RenderTools.RenderNineSlice(expInner, shader, cx - 150f, cy, 300f, 40f);
             RenderTools.PopScissor();
 
             cy += 20f;
 
-            expText.Text = "75 / 100";
+            expText.Text = $"{posConst.CurrentExp} / {posConst.RequiredExp}";
             expText.RenderCenteredLine(cx, cy, shader, true);
 
-            expText.Text = "1";
+            expText.Text = $"{posConst.CurrentLevel}";
             expText.RenderLeftAlignedLine(cx - 160f, cy, shader, true);
         }
 
         // Render own level.
-        int level = ownData.Level;
-
         shader.Uniform("color", new Vector4(0.7f, 0.7f, 0.9f, 0.5f));
 
         RenderTools.RenderNineSlice(expSides, shader, 0, 0, 300f, 40f);
 
-        float percent = 0.75f;
+        float percent = currentExp / (float)nextLevelExp;
         RenderTools.PushScissor(0, 0, (int)(300f * percent), 40);
         RenderTools.RenderNineSlice(expInner, shader, 0, 0, 300f, 40f);
         RenderTools.PopScissor();
 
-        expText.Text = "75 / 100";
+        expText.Text = $"{currentExp} / {nextLevelExp}";
         expText.RenderCenteredLine(150f, 20f, shader, true);
 
-        expText.Text = $"Level {level}";
+        expText.Text = $"Level {currentLevel}";
         expText.RenderLine(310f, 20f, shader, 0f, true);
     }
 
@@ -380,9 +412,16 @@ public class WidgetNodes : Widget
         public Vector2i Center;
         public float LightRadius;
 
-        public PositionedConstellation(Constellation constellation)
+        public int CurrentExp;
+        public int RequiredExp;
+        public int CurrentLevel;
+
+        public PositionedConstellation(Constellation constellation, int currentExp, int requiredExp, int currentLevel)
         {
             Constellation = constellation;
+            CurrentExp = currentExp;
+            RequiredExp = requiredExp;
+            CurrentLevel = currentLevel;
         }
 
         public bool Intersects(PositionedConstellation otherConst)

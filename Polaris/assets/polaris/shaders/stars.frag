@@ -1,4 +1,6 @@
 #version 330 core
+#extension GL_ARB_explicit_attrib_location : enable
+#extension GL_ARB_shading_language_420pack : require
 
 in vec2 uv;
 
@@ -7,6 +9,7 @@ uniform sampler2D tex2d;
 uniform vec4 color = vec4(1.0);
 uniform vec4 fontColor = vec4(1.0);
 uniform float fade;
+uniform float renderHeight;
 
 // 9 slice stuff.
 uniform vec4 dimensions;
@@ -24,6 +27,58 @@ vec4 topColor = vec4(0.1, 0.1, 0.2, 1.0);
 float grid = 100.0;
 float size = 0.1;
 vec2 speed = vec2(0.0, 3.0);
+
+uniform int starCount;
+
+struct StarLight {
+  vec4 PosRange;
+  vec4 Color;
+};
+
+layout(std140) uniform starLightData { StarLight lights[1000]; };
+
+// 2D Random
+float random(in vec2 st) {
+  return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+}
+
+// 2D Noise based on Morgan McGuire @morgan3d
+// https://www.shadertoy.com/view/4dS3Wd
+float noise(in vec2 st) {
+  vec2 i = floor(st);
+  vec2 f = fract(st);
+
+  // Four corners in 2D of a tile
+  float a = random(i);
+  float b = random(i + vec2(1.0, 0.0));
+  float c = random(i + vec2(0.0, 1.0));
+  float d = random(i + vec2(1.0, 1.0));
+
+  // Smooth Interpolation
+
+  // Cubic Hermine Curve.  Same as SmoothStep()
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  // u = smoothstep(0.,1.,f);
+
+  // Mix 4 coorners percentages
+  return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+}
+
+#define OCTAVES 4
+float fbm(in vec2 st) {
+  // Initial values
+  float value = 0.0;
+  float amplitude = .5;
+  float frequency = 0.;
+  //
+  // Loop of octaves
+  for (int i = 0; i < OCTAVES; i++) {
+    value += amplitude * noise(st);
+    st *= 2.;
+    amplitude *= .5;
+  }
+  return value;
+}
 
 vec2 randVector(in vec2 vec, in float seed) {
   return vec2(fract(sin(vec.x * 999.9 + vec.y) * seed),
@@ -120,6 +175,24 @@ void main() {
             grid * 2.0 / 3.0, size, speed / 1.2, 345678.912);
   drawStars(fragColor, star3Color, gl_FragCoord.xy + offsetN / 2.0, grid / 2.0,
             size * 3.0 / 4.0, speed / 1.6, 567891.234);
+
+  vec2 pixel = gl_FragCoord.xy + offsetN;
+  pixel.y -= renderHeight;
+  for (int i = 0; i < starCount; i++) {
+    float distanceFrom = length(pixel - lights[i].PosRange.xy);
+    if (distanceFrom > lights[i].PosRange.z)
+      continue;
+
+    float distanceNoise = fbm(1000.0 + pixel / 50.0 + time / 10.0);
+    distanceFrom += distanceNoise * lights[i].PosRange.z * 1.0;
+
+    // 1.0 at center, 0.0 at range.
+    float attenuation =
+        1.0 - clamp(distanceFrom / lights[i].PosRange.z, 0.0, 1.0);
+    float power = fbm(pixel / 50.0 + time / 10.0) * attenuation;
+
+    fragColor += lights[i].Color * power;
+  }
 
   float fadeFactor = clamp(1.0 - fade, 0.0, 1.0);
   fragColor.a *= fadeFactor;
