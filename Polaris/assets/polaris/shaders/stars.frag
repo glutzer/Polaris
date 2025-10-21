@@ -9,7 +9,9 @@ uniform sampler2D tex2d;
 uniform vec4 color = vec4(1.0);
 uniform vec4 fontColor = vec4(1.0);
 uniform float fade;
+uniform float renderWidth;
 uniform float renderHeight;
+uniform float zoom;
 
 // 9 slice stuff.
 uniform vec4 dimensions;
@@ -168,16 +170,23 @@ void main() {
   vec2 offsetN = offset;
   offsetN.x = -offsetN.x;
 
+  vec2 offsetFromCenter =
+      gl_FragCoord.xy - vec2(renderWidth, renderHeight) / 2.0;
+  offsetFromCenter *= zoom;
+
+  // "World space" pixel.
+  vec2 unOffsetPixel = vec2(renderWidth, renderHeight) / 2.0 + offsetFromCenter;
+  vec2 pixel = unOffsetPixel + offsetN;
+  pixel.y -= renderHeight;
+
   // Stars.
-  drawStars(fragColor, star1Color, gl_FragCoord.xy + offsetN, grid, size, speed,
+  drawStars(fragColor, star1Color, unOffsetPixel + offsetN, grid, size, speed,
             123456.789);
-  drawStars(fragColor, star2Color, gl_FragCoord.xy + offsetN / 1.5,
+  drawStars(fragColor, star2Color, unOffsetPixel + offsetN / 1.5,
             grid * 2.0 / 3.0, size, speed / 1.2, 345678.912);
-  drawStars(fragColor, star3Color, gl_FragCoord.xy + offsetN / 2.0, grid / 2.0,
+  drawStars(fragColor, star3Color, unOffsetPixel + offsetN / 2.0, grid / 2.0,
             size * 3.0 / 4.0, speed / 1.6, 567891.234);
 
-  vec2 pixel = gl_FragCoord.xy + offsetN;
-  pixel.y -= renderHeight;
   for (int i = 0; i < starCount; i++) {
     float distanceFrom = length(pixel - lights[i].PosRange.xy);
     if (distanceFrom > lights[i].PosRange.z)

@@ -1,6 +1,7 @@
 ﻿using ProtoBuf;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Vintagestory.API.Client;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
@@ -152,13 +153,15 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
 
             if (p.Allocate)
             {
-                if (!constData.IsNodeAllocatable(node)) return;
-                constData.AllocatedNodeIds.Add(p.NodeId);
+                if (!constData.IsNodeAllocatable(node) || data.KnowledgePoints < node.Cost) return;
+                constData.AllocatedNodeIds.Add(node.Id);
+                data.SetKnowledgePoints(data.KnowledgePoints - node.Cost);
             }
             else
             {
                 if (!constData.IsNodeUnallocatable(node)) return;
-                constData.AllocatedNodeIds.Remove(p.NodeId);
+                constData.AllocatedNodeIds.Remove(node.Id);
+                data.SetKnowledgePoints(data.KnowledgePoints + node.Cost);
             }
 
             // Allocation successful, echo back to the player.
@@ -206,6 +209,7 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
         {
             playerData.Experience -= PlayerPolarisData.GetExpToReachLevel(playerData.Level + 1);
             playerData.Level++;
+            playerData.SetKnowledgePoints(playerData.KnowledgePoints + 1);
             shouldServerRecalculate = true;
         }
 
@@ -429,7 +433,7 @@ public class PlayerPolarisData
 
     public static float GetExpToReachLevel(int level)
     {
-        return 100f * MathF.Pow(level, 2f);
+        return 100f * MathF.Pow(level - 1, 2f);
     }
 
     public PlayerConstellationData GetConstellation(string name)
@@ -491,6 +495,9 @@ public class PlayerConstellationData
     /// </summary>
     public bool IsNodeUnallocatable(PassiveNode node)
     {
+        PassiveNode? firstConnection = node.Connections.Where(x => AllocatedNodeIds.Contains(x.Id)).FirstOrDefault();
+        if (firstConnection == null) return node.StartNode;
+
         int oldNodeCount = 0;
         HashSet<int> foundIds = [];
         Queue<PassiveNode> nodeQueue = [];
@@ -506,16 +513,16 @@ public class PlayerConstellationData
             foundIds.Add(currentNode.Id);
             oldNodeCount++;
 
-            if (AllocatedNodeIds.Contains(currentNode.Id))
+            foreach (PassiveNode connection in currentNode.Connections)
             {
-                foreach (PassiveNode connection in currentNode.Connections)
+                if (AllocatedNodeIds.Contains(connection.Id))
                 {
                     nodeQueue.Enqueue(connection);
                 }
             }
         }
 
-        nodeQueue.Enqueue(node.Connections[0]);
+        nodeQueue.Enqueue(firstConnection);
         foundIds.Clear();
         int newNodeCount = 0;
 
@@ -528,9 +535,9 @@ public class PlayerConstellationData
             foundIds.Add(currentNode.Id);
             newNodeCount++;
 
-            if (AllocatedNodeIds.Contains(currentNode.Id))
+            foreach (PassiveNode connection in currentNode.Connections)
             {
-                foreach (PassiveNode connection in currentNode.Connections)
+                if (AllocatedNodeIds.Contains(connection.Id))
                 {
                     nodeQueue.Enqueue(connection);
                 }
@@ -538,7 +545,7 @@ public class PlayerConstellationData
         }
 
         // Should path through all but one node (the removed one).
-        return newNodeCount == oldNodeCount - 1;
+        return newNodeCount == oldNodeCount - 1 && !node.StartNode;
     }
 
     /// <summary>
@@ -546,6 +553,9 @@ public class PlayerConstellationData
     /// </summary>
     public bool IsNodeUnallocatable(PassiveNode node, HashSet<PassiveNode> pendingNodes)
     {
+        PassiveNode? firstConnection = node.Connections.Where(x => AllocatedNodeIds.Contains(x.Id) || pendingNodes.Contains(x)).FirstOrDefault();
+        if (firstConnection == null) return node.StartNode;
+
         int oldNodeCount = 0;
         HashSet<int> foundIds = [];
         Queue<PassiveNode> nodeQueue = [];
@@ -561,16 +571,16 @@ public class PlayerConstellationData
             foundIds.Add(currentNode.Id);
             oldNodeCount++;
 
-            if (AllocatedNodeIds.Contains(currentNode.Id) || pendingNodes.Contains(currentNode))
+            foreach (PassiveNode connection in currentNode.Connections)
             {
-                foreach (PassiveNode connection in currentNode.Connections)
+                if (AllocatedNodeIds.Contains(connection.Id) || pendingNodes.Contains(connection))
                 {
                     nodeQueue.Enqueue(connection);
                 }
             }
         }
 
-        nodeQueue.Enqueue(node.Connections[0]);
+        nodeQueue.Enqueue(firstConnection);
         foundIds.Clear();
         int newNodeCount = 0;
 
@@ -583,9 +593,9 @@ public class PlayerConstellationData
             foundIds.Add(currentNode.Id);
             newNodeCount++;
 
-            if (AllocatedNodeIds.Contains(currentNode.Id) || pendingNodes.Contains(currentNode))
+            foreach (PassiveNode connection in currentNode.Connections)
             {
-                foreach (PassiveNode connection in currentNode.Connections)
+                if (AllocatedNodeIds.Contains(connection.Id) || pendingNodes.Contains(connection))
                 {
                     nodeQueue.Enqueue(connection);
                 }
@@ -593,6 +603,6 @@ public class PlayerConstellationData
         }
 
         // Should path through all but one node (the removed one).
-        return newNodeCount == oldNodeCount - 1;
+        return newNodeCount == oldNodeCount - 1 && !node.StartNode;
     }
 }

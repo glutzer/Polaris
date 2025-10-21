@@ -1,4 +1,6 @@
-﻿namespace Polaris;
+﻿using System;
+
+namespace Polaris;
 
 public class WidgetStarBackground : Widget
 {
@@ -41,12 +43,21 @@ public class WidgetStarBackground : Widget
             {
                 if (dragging)
                 {
-                    offset.Value.X += e.DeltaX;
-                    offset.Value.Y += e.DeltaY;
+                    offset.Value.X += e.DeltaX * offset.Zoom;
+                    offset.Value.Y += e.DeltaY * offset.Zoom;
                 }
 
                 e.Handled = true;
             }
+        };
+
+        guiEvents.MouseWheel += (e) =>
+        {
+            if (e.IsHandled) return;
+            e.SetHandled();
+
+            offset.Zoom += e.delta * -0.1f;
+            offset.Zoom = Math.Clamp(offset.Zoom, 0.2f, 2f);
         };
     }
 
@@ -56,11 +67,13 @@ public class WidgetStarBackground : Widget
         starShader.Use();
 
         starShader.Uniform("starCount", starScreen.StarCount);
+        starShader.Uniform("renderWidth", (float)MainAPI.RenderWidth);
         starShader.Uniform("renderHeight", (float)MainAPI.RenderHeight);
 
         starShader.Uniform("time", MainAPI.Capi.ElapsedMilliseconds / 1000f);
         starShader.Uniform("offset", offset.Value);
         starShader.Uniform("fade", Fade);
+        starShader.Uniform("zoom", offset.Zoom);
 
         // No texture needed.
         RenderTools.RenderQuad(starShader, X, Y, Width, Height);

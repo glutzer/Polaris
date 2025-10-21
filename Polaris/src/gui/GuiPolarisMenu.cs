@@ -3,7 +3,7 @@
 public class GuiPolarisMenu : Gui
 {
     public override double DrawOrder => 0;
-    public override double InputOrder => 1;
+    public override double InputOrder => 0;
 
     public override bool OnEscapePressed()
     {

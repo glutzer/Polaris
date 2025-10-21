@@ -8,15 +8,11 @@ namespace Polaris;
 public class WidgetNodes : Widget
 {
     private readonly HashSet<(PositionedConstellation constellation, PassiveNode node)> pendingNodes = [];
-    //private readonly HashSet<(PositionedConstellation constellation, PassiveNode node)> pendingUnallocationNodes = [];
-    private int pendingCount = 0;
 
     private readonly Offset offset;
     private readonly Texture blank = PolarisGuiThemes.Blank;
     private PassiveNode? hoveredNode;
     private readonly List<PositionedConstellation> positionedConstellations = [];
-
-    private readonly Texture newTex;
 
     private readonly NineSliceTexture expSides = PolarisGuiThemes.ExpSides;
     private readonly NineSliceTexture expInner = PolarisGuiThemes.ExpInner;
@@ -49,8 +45,6 @@ public class WidgetNodes : Widget
         starScreen = MainAPI.GetClientSystem<SystemPolarisStarScreen>();
         PositionConstellations();
         SystemPolarisPassiveTree.Instance(MainAPI.Capi).OnClientDataUpdated += OnClientDataUpdated;
-
-        newTex = TextureBuilder.Begin(128, 128, 4).SetColor(0.8f, 0.8f, 0.8f, 1f).FillMode().DrawHexagon(0, 0, 128, 128).End(false);
     }
 
     private void OnClientDataUpdated(PlayerPolarisData data)
@@ -65,7 +59,6 @@ public class WidgetNodes : Widget
             if (!constData.IsNodeAllocatable(tuple.node, onlyNodes) || constData.AllocatedNodeIds.Contains(tuple.node.Id))
             {
                 toRemove.Add(tuple);
-                pendingCount--;
             }
         }
 
@@ -207,32 +200,134 @@ public class WidgetNodes : Widget
 
             HashSet<PassiveNode> onlyNodes = [.. pendingNodes.Where(x => x.constellation.Constellation == hoveredNode.Constellation).Select(x => x.node)];
 
-            if (constData.IsNodeAllocatable(hoveredNode, onlyNodes))
+            // Lol.
+            PositionedConstellation posConst = positionedConstellations.Find(pc => pc.Constellation == hoveredNode.Constellation)!;
+            (PositionedConstellation, PassiveNode) tuple = (posConst, hoveredNode);
+
+            int remainingKnowledgePoints = ownData.KnowledgePoints - pendingNodes.Sum(x => x.node.Cost);
+
+            if (!pendingNodes.Contains(tuple) && !constData.AllocatedNodeIds.Contains(hoveredNode.Id) && constData.IsNodeAllocatable(hoveredNode, onlyNodes))
             {
+                // Too poor.
+                if (remainingKnowledgePoints < hoveredNode.Cost)
+                {
+                    return;
+                }
+
                 // Allocate node.
-                pendingNodes.Add((positionedConstellations.Find(pc => pc.Constellation == hoveredNode.Constellation)!, hoveredNode));
-                pendingCount += hoveredNode.Cost;
+                pendingNodes.Add(tuple);
+                MainAPI.Capi.Gui.PlaySound("stone_switch");
+                if (pendingNodes.Count == 1)
+                {
+                    AddChild(new WidgetAllocationButton(this, Gui, () =>
+                    {
+                        // Send allocation packet.
+                        MainAPI.Capi.Gui.PlaySound("effect/timeswitch");
+                        SendAllocationsInOrder();
+                        pendingNodes.Clear();
+                        DeleteChildren();
+                    }).Alignment(Align.CenterTop).Percent(0f, 0.05f, 0.1f, 0.05f));
+                }
+            }
+            else if (pendingNodes.Contains(tuple) && constData.IsNodeUnallocatable(hoveredNode, onlyNodes))
+            {
+                pendingNodes.Remove(tuple);
+                MainAPI.Capi.Gui.PlaySound("menubutton");
+                if (pendingNodes.Count == 0)
+                {
+                    DeleteChildren();
+                }
             }
         }
     }
 
-    private bool IsMouseOnNode(MouseEvent obj, PassiveNode node, Vector2 offset)
+    private void SendAllocationsInOrder()
     {
-        int mX = obj.X - (int)this.offset.X - node.Position.X - (int)offset.X;
-        int mY = obj.Y - (int)this.offset.Y - node.Position.Y - (int)offset.Y;
+        PlayerPolarisData ownData = SystemPolarisPassiveTree.Instance(MainAPI.Capi).GetClientData();
+
+        // Group each pending allocation by it's constellation into a dictionary.
+        Dictionary<Constellation, List<PassiveNode>> allocationsByConst = [];
+        foreach ((PositionedConstellation constellation, PassiveNode node) in pendingNodes)
+        {
+            if (!allocationsByConst.TryGetValue(constellation.Constellation, out List<PassiveNode>? value))
+            {
+                value = [];
+                allocationsByConst[constellation.Constellation] = value;
+            }
+
+            value.Add(node);
+        }
+
+        foreach (KeyValuePair<Constellation, List<PassiveNode>> kvp in allocationsByConst)
+        {
+            Constellation constellation = kvp.Key;
+            PlayerConstellationData constData = ownData.GetConstellation(constellation.Name);
+            SystemPolarisPassiveTree tree = SystemPolarisPassiveTree.Instance(MainAPI.Capi);
+            List<PassiveNode> allocations = kvp.Value;
+            HashSet<PassiveNode> allocatedNodes = [];
+
+            while (allocations.Count > 0)
+            {
+                bool didAllocation = false;
+
+                foreach (PassiveNode node in allocations)
+                {
+                    if (allocatedNodes.Contains(node)) continue;
+                    if (!constData.IsNodeAllocatable(node, allocatedNodes)) continue;
+
+                    allocatedNodes.Add(node);
+                    NodeAllocationRequest request = new()
+                    {
+                        ConstellationName = constellation.Name,
+                        NodeId = node.Id,
+                        Allocate = true
+                    };
+                    tree.SendPacket(request);
+                    didAllocation = true;
+                }
+
+                if (!didAllocation) break; // Prevent loop.
+            }
+        }
+    }
+
+    private bool IsMouseOnNode(MouseEvent obj, PassiveNode node, Vector2 constOffset)
+    {
+        Vector2 position = GetZoomedPosition(new Vector2(offset.X + node.Position.X, offset.Y + node.Position.Y) + constOffset);
+
+        int mX = obj.X - (int)position.X;
+        int mY = obj.Y - (int)position.Y;
 
         int nodeHalfSize = node.NodeSize;
         return mX >= -nodeHalfSize && mX <= nodeHalfSize && mY >= -nodeHalfSize && mY <= nodeHalfSize;
     }
 
+    private Vector2 GetNodePosition(PassiveNode node, PositionedConstellation posConst)
+    {
+        float x = node.Position.X + offset.X + posConst.Offset.X;
+        float y = node.Position.Y + offset.Y + posConst.Offset.Y;
+        return GetZoomedPosition(new Vector2(x, y));
+    }
+
+    private Vector2 GetZoomedPosition(Vector2 position)
+    {
+        Vector2 offsetFromCenter = position - new Vector2(MainAPI.RenderWidth / 2f, MainAPI.RenderHeight / 2f);
+        offsetFromCenter /= offset.Zoom;
+        return new Vector2(MainAPI.RenderWidth / 2f, MainAPI.RenderHeight / 2f) + offsetFromCenter;
+    }
+
     private bool IsConstellationInFrame(PositionedConstellation posConst)
     {
         // Frustum cull.
-        int x1 = posConst.Offset.X + posConst.Constellation.StartBounds.X + (int)offset.X;
-        int y1 = posConst.Offset.Y + posConst.Constellation.StartBounds.Y + (int)offset.Y;
-        int x2 = posConst.Offset.X + posConst.Constellation.EndBounds.X + (int)offset.X;
-        int y2 = posConst.Offset.Y + posConst.Constellation.EndBounds.Y + (int)offset.Y;
-        return x2 >= 0 && y2 >= 0 && x1 <= MainAPI.RenderWidth && y1 <= MainAPI.RenderHeight;
+        float x1 = posConst.Offset.X + posConst.Constellation.StartBounds.X + offset.X;
+        float y1 = posConst.Offset.Y + posConst.Constellation.StartBounds.Y + offset.Y;
+        float x2 = posConst.Offset.X + posConst.Constellation.EndBounds.X + offset.X;
+        float y2 = posConst.Offset.Y + posConst.Constellation.EndBounds.Y + offset.Y;
+
+        Vector2 start = GetZoomedPosition(new Vector2(x1, y1));
+        Vector2 end = GetZoomedPosition(new Vector2(x2, y2));
+
+        return end.X >= 0 && end.Y >= 0 && start.X <= MainAPI.RenderWidth && start.Y <= MainAPI.RenderHeight;
     }
 
     public override void OnRender(float dt, NuttyShader shader)
@@ -253,18 +348,27 @@ public class WidgetNodes : Widget
             {
                 if (node.ChildConnections.Count == 0) continue;
 
+                bool allocated = constData.AllocatedNodeIds.Contains(node.Id);
+
                 // Render line.
-                float x1 = node.Position.X + offset.X + posConst.Offset.X;
-                float y1 = node.Position.Y + offset.Y + posConst.Offset.Y;
+                Vector2 nodeA = GetNodePosition(node, posConst);
 
                 foreach (PassiveNode child in node.ChildConnections)
                 {
-                    float x2 = child.Position.X + offset.X + posConst.Offset.X;
-                    float y2 = child.Position.Y + offset.Y + posConst.Offset.Y;
-                    RenderTools.RenderLine(shader, x1, y1, x2, y2, 4);
+                    if (allocated && constData.AllocatedNodeIds.Contains(child.Id))
+                    {
+                        shader.Uniform("color", new Vector4(0f, 1f, 0.5f, 0.5f));
+                    }
+                    else
+                    {
+                        shader.Uniform("color", new Vector4(1f, 1f, 1f, 0.25f));
+                    }
+                    Vector2 nodeB = GetNodePosition(child, posConst);
+                    RenderTools.RenderLine(shader, nodeA.X, nodeA.Y, nodeB.X, nodeB.Y, 4f);
                 }
             }
         }
+
         shader.Uniform("color", Vector4.One);
 
         // Render pending lines.
@@ -272,18 +376,17 @@ public class WidgetNodes : Widget
         foreach ((PositionedConstellation constellation, PassiveNode node) in pendingNodes)
         {
             PlayerConstellationData constData = ownData.GetConstellation(constellation.Constellation.Name);
-            float x1 = node.Position.X + offset.X + constellation.Offset.X;
-            float y1 = node.Position.Y + offset.Y + constellation.Offset.Y;
+
+            Vector2 nodeA = GetNodePosition(node, constellation);
 
             // It can actually double render here.
             foreach (PassiveNode child in node.Connections)
             {
                 if (!constData.AllocatedNodeIds.Contains(child.Id) && !pendingNodes.Contains((constellation, child))) continue;
 
-                float x2 = child.Position.X + offset.X + constellation.Offset.X;
-                float y2 = child.Position.Y + offset.Y + constellation.Offset.Y;
+                Vector2 nodeB = GetNodePosition(child, constellation);
 
-                RenderTools.RenderLine(shader, x1, y1, x2, y2, 4);
+                RenderTools.RenderLine(shader, nodeA.X, nodeA.Y, nodeB.X, nodeB.Y, 4f);
             }
         }
         shader.Uniform("color", Vector4.One);
@@ -295,14 +398,14 @@ public class WidgetNodes : Widget
 
             PlayerConstellationData constData = ownData.GetConstellation(posConst.Constellation.Name);
 
-            shader.BindTexture(newTex, "tex2d");
+            shader.BindTexture(blank, "tex2d");
             foreach (PassiveNode node in posConst.Constellation.AllNodes)
             {
                 Vector4 color = node.Color;
 
                 if (constData.AllocatedNodeIds.Contains(node.Id))
                 {
-                    color = Vector4.Lerp(color, new Vector4(0f, 1f, 1f, 1f), 0.5f);
+                    color = Vector4.Lerp(color, new Vector4(0f, 1f, 0.5f, 1f), 0.5f);
                 }
 
                 if (node == hoveredNode)
@@ -312,8 +415,10 @@ public class WidgetNodes : Widget
 
                 shader.Uniform("color", color);
 
+                Vector2 pos = GetNodePosition(node, posConst);
+
                 int nodeHalfSize = node.NodeSize;
-                RenderTools.RenderQuad(shader, node.Position.X + offset.X - nodeHalfSize + posConst.Offset.X, node.Position.Y + offset.Y - nodeHalfSize + posConst.Offset.Y, nodeHalfSize * 2, nodeHalfSize * 2);
+                RenderTools.RenderQuad(shader, pos.X - nodeHalfSize, pos.Y - nodeHalfSize, nodeHalfSize * 2, nodeHalfSize * 2);
             }
 
             foreach (PassiveNode node in posConst.Constellation.AllNodes)
@@ -321,51 +426,63 @@ public class WidgetNodes : Widget
                 nodeText.Text = node.Name;
 
                 int nodeHalfSize = node.NodeSize;
-                nodeText.RenderCenteredLine(node.Position.X + offset.X + posConst.Offset.X, node.Position.Y + offset.Y + posConst.Offset.Y + (nodeHalfSize * 2), shader);
+
+                Vector2 pos = GetNodePosition(node, posConst);
+
+                nodeText.RenderCenteredLine(pos.X, pos.Y + (nodeHalfSize * 2), shader);
             }
         }
         shader.Uniform("color", Vector4.One);
 
         // Render pending nodes.
         shader.Uniform("color", new Vector4(1f, 1f, 0.3f, 0.4f));
-        shader.BindTexture(newTex, "tex2d");
+        shader.BindTexture(blank, "tex2d");
         foreach ((PositionedConstellation constellation, PassiveNode node) in pendingNodes)
         {
-            int nodeHalfSize = node.NodeSize + 5;
-            RenderTools.RenderQuad(shader, node.Position.X + offset.X - nodeHalfSize + constellation.Offset.X, node.Position.Y + offset.Y - nodeHalfSize + constellation.Offset.Y, nodeHalfSize * 2, nodeHalfSize * 2);
-            //RenderTools.RenderNineSlice(newTex, shader, node.Position.X + offset.X - nodeHalfSize + constellation.Offset.X, node.Position.Y + offset.Y - nodeHalfSize + constellation.Offset.Y, nodeHalfSize * 2, nodeHalfSize * 2);
+            int nodeHalfSize = node.NodeSize;
+            Vector2 nodePos = GetNodePosition(node, constellation);
+            RenderTools.RenderQuad(shader, nodePos.X - nodeHalfSize, nodePos.Y - nodeHalfSize, nodeHalfSize * 2, nodeHalfSize * 2);
         }
         shader.Uniform("color", Vector4.One);
 
         // Render bounds debug.
         //RenderTools.RenderQuad(shader, constellation.StartBounds.X + posConst.Offset.X + offset.X, constellation.StartBounds.Y + posConst.Offset.Y + offset.Y, constellation.EndBounds.X - constellation.StartBounds.X, constellation.EndBounds.Y - constellation.StartBounds.Y);
 
+        float invZoom = 1f / offset.Zoom;
+
         // Render constellation names, experience.
         foreach (PositionedConstellation posConst in positionedConstellations)
         {
             Constellation constellation = posConst.Constellation;
 
+            float barRadius = 150f * invZoom;
+
             float cx = posConst.Center.X + offset.X;
             float cy = posConst.Center.Y + offset.Y;
 
             cy += posConst.Constellation.EndBounds.Y - posConst.Constellation.StartBounds.Y;
-            cy += 10f;
+            cy += 10f * invZoom;
+
+            Vector2 cPos = GetZoomedPosition(new Vector2(cx, cy));
+
+            cx = cPos.X;
+            cy = cPos.Y;
 
             constText.color = constellation.Color;
             constText.Text = posConst.Constellation.Name;
             constText.RenderCenteredLine(cx, cy, shader);
 
-            cy += 10f;
+            cPos.Y += 10f;
 
             Vector4 expColor = constellation.Color;
             expColor.W *= 0.5f;
 
             shader.Uniform("color", expColor);
-            RenderTools.RenderNineSlice(expSides, shader, cx - 150f, cy, 300f, 40f);
+            RenderTools.RenderNineSlice(expSides, shader, cx - barRadius, cy, barRadius * 2f, 40f);
 
             float expPercent = posConst.CurrentExp / (float)posConst.RequiredExp;
-            RenderTools.PushScissor((int)cx - 150, (int)cy, (int)(300f * expPercent), 40);
-            RenderTools.RenderNineSlice(expInner, shader, cx - 150f, cy, 300f, 40f);
+            RenderTools.PushScissor((int)(cx - barRadius), (int)cy, (int)(barRadius * 2f * expPercent), 40);
+            RenderTools.RenderNineSlice(expInner, shader, cx - barRadius, cy, barRadius * 2f, 40f);
             RenderTools.PopScissor();
 
             cy += 20f;
@@ -374,7 +491,7 @@ public class WidgetNodes : Widget
             expText.RenderCenteredLine(cx, cy, shader, true);
 
             expText.Text = $"{posConst.CurrentLevel}";
-            expText.RenderLeftAlignedLine(cx - 160f, cy, shader, true);
+            expText.RenderLeftAlignedLine(cx - barRadius - 10f, cy, shader, true);
         }
 
         // Render own level.
@@ -390,13 +507,12 @@ public class WidgetNodes : Widget
         expText.Text = $"{currentExp} / {nextLevelExp}";
         expText.RenderCenteredLine(150f, 20f, shader, true);
 
-        expText.Text = $"Level {currentLevel}";
+        expText.Text = $"Level {currentLevel}, {ownData.KnowledgePoints} Knowledge Points";
         expText.RenderLine(310f, 20f, shader, 0f, true);
     }
 
     public override void Dispose()
     {
-        newTex.Dispose();
         if (MainAPI.Capi == null) return;
         SystemPolarisPassiveTree.Instance(MainAPI.Capi).OnClientDataUpdated -= OnClientDataUpdated;
     }

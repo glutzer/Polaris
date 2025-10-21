@@ -19,7 +19,7 @@ public class PolarisModSystem : ModSystem
 
     private void Event_OnPlayerInteractEntity(Entity entity, IPlayer byPlayer, ItemSlot slot, Vec3d hitPosition, int mode, ref EnumHandling handling)
     {
-        SystemPolarisPassiveTree.Instance(byPlayer.Entity.Api).AddExperience("Survival", byPlayer.PlayerUID, Random.Shared.NextSingle() * 10f);
+        SystemPolarisPassiveTree.Instance(byPlayer.Entity.Api).AddExperience("Survival", byPlayer.PlayerUID, Random.Shared.NextSingle() * 500f);
     }
 
     public override void StartClientSide(ICoreClientAPI api)

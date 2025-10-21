@@ -94,6 +94,7 @@ public class WidgetExpGainParticles : Widget
 
     public override void Dispose()
     {
+        if (MainAPI.Capi == null) return;
         SystemPolarisPassiveTree.Instance(MainAPI.Capi).OnClientExperienceGain -= OnExpGain;
     }
 }
