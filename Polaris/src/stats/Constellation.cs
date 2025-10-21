@@ -10,6 +10,7 @@ public class Constellation
 {
     public string Name { get; }
     private readonly List<PassiveNode> nodes = [];
+    private readonly Dictionary<string, PassiveNode> nodesByCode = [];
     public IEnumerable<PassiveNode> AllNodes => nodes;
 
     public Vector4 Color { get; private set; } = new(1f, 1f, 1f, 1f);
@@ -25,6 +26,11 @@ public class Constellation
     public Constellation(string name)
     {
         Name = name;
+    }
+
+    public int GrabNextId()
+    {
+        return indexCounter++;
     }
 
     /// <summary>
@@ -57,10 +63,21 @@ public class Constellation
         return nodeId < 0 || nodeId >= nodes.Count ? null : nodes[nodeId];
     }
 
+    public PassiveNode? GetNodeByCode(string code)
+    {
+        nodesByCode.TryGetValue(code, out PassiveNode? node);
+        return node;
+    }
+
     public void AddNode(PassiveNode node)
     {
+        if (nodesByCode.ContainsKey(node.Code))
+        {
+            throw new Exception($"Constellation {Name} already has a node with code {node.Code}!");
+        }
+
         nodes.Add(node);
-        node.SetId(indexCounter++, this);
+        nodesByCode[node.Code] = node;
         RecalculateBounds();
     }
 

@@ -107,7 +107,7 @@ public class SystemPolarisStarScreen : GameSystem, IRenderer
 
         // Open gui.
         BeginLightRendering();
-        gui.FadeIn(2f);
+        gui.FadeIn(1f);
     }
 
     public void StopLookingAtStars()
@@ -117,8 +117,6 @@ public class SystemPolarisStarScreen : GameSystem, IRenderer
         state = AscensionState.Descending;
         MainAPI.GetClientSystem<SystemPolarisAmbient>().ReturnToNormalMusic();
         gui.FadeOut(1f);
-
-        StopLightRendering();
     }
 
     public void OnRenderFrame(float dt, EnumRenderStage stage)
@@ -137,6 +135,7 @@ public class SystemPolarisStarScreen : GameSystem, IRenderer
             {
                 MainAPI.Capi.Event.UnregisterRenderer(this, EnumRenderStage.Before);
                 state = AscensionState.Not;
+                StopLightRendering();
             }
         }
 

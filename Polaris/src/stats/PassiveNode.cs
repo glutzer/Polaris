@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Polaris;
 
@@ -22,10 +23,9 @@ public struct NodePosition
 public abstract class PassiveNode : IEquatable<PassiveNode>
 {
     public string Name { get; }
+    public string Code { get; }
     public NodePosition Position { get; }
-
-    // Set when adding to constellation.
-    public Constellation Constellation { get; private set; } = null!;
+    public Constellation Constellation { get; }
 
     public virtual Vector4 Color => new(1f, 1f, 1f, 1f);
 
@@ -37,6 +37,7 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
     // For drawing.
     public List<PassiveNode> ChildConnections { get; } = [];
     public List<PassiveNode> Connections { get; } = [];
+    public List<PassiveNodeRequirement> Requirements { get; } = [];
 
     public bool StartNode { get; private set; }
 
@@ -44,12 +45,17 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
     /// Unique identifier for this node. Will be used to record if it's allocated.
     /// Per constellation.
     /// </summary>
-    public int Id { get; private set; } = -1;
+    public int Id { get; }
 
-    public PassiveNode(string name, NodePosition position)
+    public PassiveNode(string name, string code, NodePosition position, Constellation constellation)
     {
         Name = name;
+        Code = code;
         Position = position;
+        Constellation = constellation;
+
+        Id = constellation.GrabNextId();
+        constellation.AddNode(this);
     }
 
     public override int GetHashCode()
@@ -57,17 +63,45 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
         return Id;
     }
 
-    public void SetId(int id, Constellation constellation)
+    public bool CanAllocate(EntityPlayer player, PlayerPolarisData data, HashSet<string> allocatedNodes)
     {
-        if (Id != -1) throw new InvalidOperationException("Id is being set twice, it should only be set by the stat system when registering.");
-        Id = id;
-        Constellation = constellation;
+        foreach (PassiveNodeRequirement requirement in Requirements)
+        {
+            if (!requirement.CanAllocate(player, data, allocatedNodes)) return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Called when:
+    /// Trying to unallocate node in passive tree on client on every other node.
+    /// A server processing an unallocation request.
+    /// Called on all allocated nodes.
+    /// </summary>
+    public bool ReliesOnNode(string nodeCode)
+    {
+        foreach (PassiveNodeRequirement requirement in Requirements)
+        {
+            if (requirement.ReliesOnNode(nodeCode)) return true;
+        }
+        return false;
+    }
+
+    public virtual void BuildDescription(StringBuilder builder, PlayerPolarisData data)
+    {
+
+    }
+
+    public PassiveNode AddRequirement(PassiveNodeRequirement requirement)
+    {
+        Requirements.Add(requirement);
+        return this;
     }
 
     /// <summary>
     /// Connect two nodes.
     /// </summary>
-    public PassiveNode AddParentConnection(PassiveNode node)
+    public PassiveNode AddParent(PassiveNode node)
     {
         if (node.Connections.Contains(this)) return this; // Already connected, maybe log?
 
@@ -76,6 +110,14 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
         node.ChildConnections.Add(this);
 
         return this;
+    }
+
+    public PassiveNode AddParent(string nodeCode)
+    {
+        PassiveNode? node = Constellation.GetNodeByCode(nodeCode);
+        return node == null
+            ? throw new ArgumentException($"No node with code {nodeCode} found in constellation {Constellation.Name}.")
+            : AddParent(node);
     }
 
     /// <summary>
@@ -92,11 +134,6 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
     /// </summary>
     public abstract void ContributeStats(PassiveContext context);
 
-    public NodePosition GetOffsetPosition(int x, int y)
-    {
-        return new NodePosition(Position.X + x, Position.Y + y);
-    }
-
     public bool Equals(PassiveNode? other)
     {
         return other is not null && Id == other.Id;
@@ -107,9 +144,8 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
         return Equals(obj as PassiveNode);
     }
 
-    public PassiveNode AddTo(Constellation constellation)
+    public string GetFullCode()
     {
-        constellation.AddNode(this);
-        return this;
+        return $"{Constellation.Name}:{Code}";
     }
 }

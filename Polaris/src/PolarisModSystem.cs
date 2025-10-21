@@ -2,6 +2,7 @@
 global using OpenTK.Mathematics;
 global using Vintagestory.API.Common;
 using System;
+using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;

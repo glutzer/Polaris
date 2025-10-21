@@ -66,7 +66,7 @@ float noise(in vec2 st) {
   return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
 }
 
-#define OCTAVES 4
+#define OCTAVES 6
 float fbm(in vec2 st) {
   // Initial values
   float value = 0.0;
@@ -192,7 +192,7 @@ void main() {
     if (distanceFrom > lights[i].PosRange.z)
       continue;
 
-    float distanceNoise = fbm(1000.0 + pixel / 50.0 + time / 10.0);
+    float distanceNoise = fbm(1000.0 + pixel / 50.0 + time / 30.0);
     distanceFrom += distanceNoise * lights[i].PosRange.z * 1.0;
 
     // 1.0 at center, 0.0 at range.

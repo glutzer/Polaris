@@ -7,6 +7,10 @@ public static class PolarisGuiThemes
 {
     public static Font Font => FontRegistry.GetFont("lora");
 
+    public static Vector4 TemporalColor => new(0f, 1f, 0.55f, 1f);
+    public static Vector4 TemporalColorDark => new(0f, 0.9f, 0.45f, 0.5f);
+    public static Vector4 VintageBrown => new(0.3f, 0.25f, 0.2f, 1f);
+
     public static Vector3 Red => new(1f, 0f, 0f);
     public static Vector3 Green => new(0f, 1f, 0f);
     public static Vector3 Blue => new(0f, 0f, 1f);

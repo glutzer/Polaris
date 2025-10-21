@@ -20,7 +20,7 @@ public class WidgetExpGainParticles : Widget
         public Vector2 Velocity;
         public bool IsAlive => Age < Lifetime;
 
-        public ExpGainParticle(string text, Vector3 color, float lifetime, Vector2 position, Vector2 velocity, int scale)
+        public ExpGainParticle(string text, Vector3 color, float lifetime, Vector2 position, Vector2 velocity, float scale)
         {
             Text = new TextObject(text, PolarisGuiThemes.Font, scale, new Vector4(color.X, color.Y, color.Z, 1f))
             {
@@ -62,7 +62,7 @@ public class WidgetExpGainParticles : Widget
 
         float expToNextLevel = constellation.GetExpToReachLevel(currentLevel + 1);
         float ratio = Math.Clamp(amount / expToNextLevel, 0.05f, 1f);
-        int size = (int)(TEXT_SIZE * ratio * MainAPI.GuiScale);
+        float size = TEXT_SIZE * ratio * MainAPI.GuiScale;
 
         ExpGainParticle particle = new(text, constellation.Color.Xyz, 2f, position, velocity, size);
 

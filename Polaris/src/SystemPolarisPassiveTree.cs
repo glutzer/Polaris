@@ -60,14 +60,18 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
     {
         PlayerPolarisData data = GetPlayerData(context.Player.PlayerUID);
 
-        foreach (Constellation constellation in constellations)
+        for (int i = 0; i < 3; i++)
         {
-            PlayerConstellationData constData = data.GetConstellation(constellation.Name);
-
-            foreach (int nodeId in constData.AllocatedNodeIds)
+            EnumCalculationPriority priority = (EnumCalculationPriority)i;
+            foreach (Constellation constellation in constellations)
             {
-                PassiveNode? node = constellation.GetNodeById(nodeId);
-                node?.ContributeStats(context);
+                PlayerConstellationData constData = data.GetConstellation(constellation.Name);
+
+                foreach (int nodeId in constData.AllocatedNodeIds)
+                {
+                    PassiveNode? node = constellation.GetNodeById(nodeId);
+                    if (node?.Priority == priority) node.ContributeStats(context);
+                }
             }
         }
     }
@@ -78,27 +82,17 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
         Constellation survival = new Constellation("Survival").SetColor(1f, 0.7f, 0.7f, 1f);
         AddConstellation(survival);
 
-        PassiveNode surv1 = new FreeNode("", new NodePosition()).AddTo(survival).MakeStartNode();
-        PassiveNode surv2 = new AdditiveValueNode("movespeed", "walkspeed", 0.05f, surv1.GetOffsetPosition(50, 50)).AddTo(survival).AddParentConnection(surv1);
-        new AdditiveValueNode("movespeed", "walkspeed", 0.1f, surv2.GetOffsetPosition(40, 60)).AddTo(survival).AddParentConnection(surv2);
-
-        // Combat.
-        Constellation combat = new Constellation("Combat").SetColor(1f, 0.3f, 0f, 1f);
-        AddConstellation(combat);
-
-        PassiveNode combat1 = new FreeNode("", new NodePosition()).AddTo(combat).MakeStartNode();
-        new AdditiveValueNode("meleedamage", "meleeWeaponsDamage", 0.1f, combat1.GetOffsetPosition(50, 50)).AddTo(combat).AddParentConnection(combat1);
-        new AdditiveValueNode("meleedamage", "meleeWeaponsDamage", 0.1f, combat1.GetOffsetPosition(50, -50)).AddTo(combat).AddParentConnection(combat1);
-        new AdditiveValueNode("meleedamage", "meleeWeaponsDamage", 0.1f, combat1.GetOffsetPosition(100, 50)).AddTo(combat).AddParentConnection(combat1);
+        new FreeNode("", "start1", new NodePosition(), survival).MakeStartNode();
+        new AdditiveValueNode("Movement Speed", "walkspeed", 0.05f, "move1", new NodePosition(100, 100), survival).AddParent("start1").AddLevelRequirement("Survival", 3);
+        new AdditiveValueNode("Movement Speed", "walkspeed", 0.05f, "move2", new NodePosition(200, 150), survival).AddParent("move1").AddLevelRequirement("Survival", 5);
+        new AdditiveValueNode("Movement Speed", "walkspeed", 0.05f, "move3", new NodePosition(300, 175), survival).AddParent("move2").AddLevelRequirement("Survival", 7);
+        new MultiplicativeValueNode("Movement Speed", "walkspeed", 1.5f, "move4", new NodePosition(400, 190), survival).AddParent("move3").AddLevelRequirement("Survival", 9);
 
         // Time.
         Constellation time = new Constellation("Time").SetColor(0.2f, 1f, 0.6f, 0.5f);
         AddConstellation(time);
 
-        PassiveNode time1 = new FreeNode("", new NodePosition()).AddTo(time).MakeStartNode();
-        new AdditiveValueNode("miningspeed", "miningSpeedMul", 0.1f, time1.GetOffsetPosition(50, 50)).AddTo(time).AddParentConnection(time1);
-        new AdditiveValueNode("miningspeed", "miningSpeedMul", 0.1f, time1.GetOffsetPosition(50, -50)).AddTo(time).AddParentConnection(time1);
-        new AdditiveValueNode("miningspeed", "miningSpeedMul", 0.1f, time1.GetOffsetPosition(300, 50)).AddTo(time).AddParentConnection(time1);
+        new FreeNode("", "start1", new NodePosition(), time).MakeStartNode();
     }
 
     protected override void RegisterMessages(INetworkChannel channel)
@@ -144,6 +138,8 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
     {
         channel.SetMessageHandler<NodeAllocationRequest>((player, p) =>
         {
+            if (player.Entity == null) return;
+
             if (!constellationByName.TryGetValue(p.ConstellationName, out Constellation? constellation)) return;
             PlayerPolarisData data = GetPlayerData(player.PlayerUID);
             PlayerConstellationData constData = data.GetConstellation(p.ConstellationName);
@@ -151,9 +147,14 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
             PassiveNode? node = constellation.GetNodeById(p.NodeId);
             if (node == null) return;
 
+            if (p.Allocate && data.KnowledgePoints < node.Cost) return;
+
+            HashSet<string> allocatedNodes = data.GetAllAllocatedNodeCodes(this);
+
             if (p.Allocate)
             {
-                if (!constData.IsNodeAllocatable(node) || data.KnowledgePoints < node.Cost) return;
+                if (!constData.IsNodeAllocatable(node)) return;
+                if (!node.CanAllocate(player.Entity, data, allocatedNodes)) return;
                 constData.AllocatedNodeIds.Add(node.Id);
                 data.SetKnowledgePoints(data.KnowledgePoints - node.Cost);
             }
@@ -170,6 +171,18 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
             // Do stat re-calculation here, now that something is changed. Passive bonuses are server only. Effects or watched attribute booleans will determine client behavior.
             RecalculatePlayerStats(player.Entity);
         });
+    }
+
+    public Constellation? GetConstellation(string constellation)
+    {
+        constellationByName.TryGetValue(constellation, out Constellation? constel);
+        return constel;
+    }
+
+    public PassiveNode? GetNode(string constellation, string nodeCode)
+    {
+        Constellation? constel = GetConstellation(constellation);
+        return constel?.GetNodeByCode(nodeCode);
     }
 
     /// <summary>
@@ -413,7 +426,72 @@ public class PlayerPolarisData
     public float Experience;
 
     // Knowledge points, loaded when verifying data.
+    [ProtoMember(4)]
     public int KnowledgePoints { get; private set; }
+
+    /// <summary>
+    /// Check if any current allocated node relies on this node.
+    /// If anything relies on it, it can't be unallocated.
+    /// Also check pending nodes, it's not done here.
+    /// </summary>
+    public bool DoesAnythingRelyOnNode(PassiveNode node, SystemPolarisPassiveTree treeSystem)
+    {
+        List<PassiveNode> list = GetAllAllocatedNodes(treeSystem);
+        string code = node.GetFullCode();
+        foreach (PassiveNode allocatedNode in list)
+        {
+            if (allocatedNode.ReliesOnNode(code)) return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Returns a list of allocated nodes.
+    /// </summary>
+    public List<PassiveNode> GetAllAllocatedNodes(SystemPolarisPassiveTree treeSystem)
+    {
+        List<PassiveNode> nodes = [];
+
+        foreach (KeyValuePair<string, PlayerConstellationData> constKvp in ConstellationData)
+        {
+            Constellation? constellation = treeSystem.GetConstellation(constKvp.Key);
+            if (constellation == null) continue;
+
+            PlayerConstellationData constData = constKvp.Value;
+            foreach (int nodeId in constData.AllocatedNodeIds)
+            {
+                PassiveNode? node = constellation.GetNodeById(nodeId);
+                if (node == null) continue;
+                nodes.Add(node);
+            }
+        }
+
+        return nodes;
+    }
+
+    /// <summary>
+    /// Returns all allocated nodes in the format constellation:code.
+    /// </summary>
+    public HashSet<string> GetAllAllocatedNodeCodes(SystemPolarisPassiveTree treeSystem)
+    {
+        HashSet<string> nodes = [];
+
+        foreach (KeyValuePair<string, PlayerConstellationData> constKvp in ConstellationData)
+        {
+            Constellation? constellation = treeSystem.GetConstellation(constKvp.Key);
+            if (constellation == null) continue;
+
+            PlayerConstellationData constData = constKvp.Value;
+            foreach (int nodeId in constData.AllocatedNodeIds)
+            {
+                PassiveNode? node = constellation.GetNodeById(nodeId);
+                if (node == null) continue;
+                nodes.Add(node.GetFullCode());
+            }
+        }
+
+        return nodes;
+    }
 
     public void SetKnowledgePoints(int amount)
     {

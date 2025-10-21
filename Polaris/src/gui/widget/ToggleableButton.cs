@@ -2,22 +2,24 @@
 
 namespace Polaris;
 
-public class WidgetAllocationButton : WidgetBaseButton
+public class ToggleableButton : WidgetBaseToggleableButton
 {
     private readonly NineSliceTexture button = PolarisGuiThemes.Button;
-    private readonly TextObject expText = new("Allocate", PolarisGuiThemes.Font, 24f, Vector4.One)
-    {
-        Shadow = true
-    };
+    private readonly TextObject text;
 
-    public WidgetAllocationButton(Widget? parent, Gui gui, Action onClick) : base(parent, gui, onClick)
+    public ToggleableButton(Widget? parent, Gui gui, Action<bool> onClick, bool allowRelease, bool currentValue, string name) : base(parent, gui, onClick, allowRelease, currentValue)
     {
         OnResize += WidgetAllocationButton_OnResize;
+
+        text = new(name, PolarisGuiThemes.Font, 24f, Vector4.One)
+        {
+            Shadow = true
+        };
     }
 
     private void WidgetAllocationButton_OnResize()
     {
-        expText.SetScaleFromWidget(this, 0.6f, 0.9f);
+        text.SetScaleFromWidget(this, 0.6f, 0.9f);
     }
 
     public override void OnRender(float dt, NuttyShader shader)
@@ -31,7 +33,7 @@ public class WidgetAllocationButton : WidgetBaseButton
         RenderTools.RenderNineSlice(button, shader, X, Y, Width, Height);
         shader.Uniform("color", Vector4.One);
 
-        expText.color = state == EnumButtonState.Active ? new Vector4(0.8f, 0.8f, 0.8f, 1f) : Vector4.One;
-        expText.RenderCenteredLine(XCenter, YCenter, shader, true);
+        text.color = state == EnumButtonState.Active ? new Vector4(0.8f, 0.8f, 0.8f, 1f) : Vector4.One;
+        text.RenderCenteredLine(XCenter, YCenter, shader, true);
     }
 }
