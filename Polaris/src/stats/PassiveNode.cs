@@ -27,6 +27,9 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
     public NodePosition Position { get; }
     public Constellation Constellation { get; }
 
+    // Node tags which will be gathered.
+    public HashSet<string> Tags { get; } = [];
+
     public virtual Vector4 Color => new(1f, 1f, 1f, 1f);
 
     public virtual int NodeSize => 10;
@@ -63,11 +66,11 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
         return Id;
     }
 
-    public bool CanAllocate(EntityPlayer player, PlayerPolarisData data, HashSet<string> allocatedNodes)
+    public bool CanAllocate(EntityPlayer player, PlayerPolarisData data, AllocatedNodesInfo info)
     {
         foreach (PassiveNodeRequirement requirement in Requirements)
         {
-            if (!requirement.CanAllocate(player, data, allocatedNodes)) return false;
+            if (!requirement.CanAllocate(player, data, info)) return false;
         }
         return true;
     }
@@ -136,7 +139,7 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
 
     public bool Equals(PassiveNode? other)
     {
-        return other is not null && Id == other.Id;
+        return other is not null && Id == other.Id && Constellation == other.Constellation;
     }
 
     public override bool Equals(object? obj)

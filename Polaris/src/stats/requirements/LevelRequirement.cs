@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace Polaris;
 
@@ -14,15 +13,15 @@ public class LevelRequirement : PassiveNodeRequirement
         requirement = level;
     }
 
-    public override bool CanAllocate(EntityPlayer player, PlayerPolarisData data, HashSet<string> allocatedNodes)
+    public override bool CanAllocate(EntityPlayer player, PlayerPolarisData data, AllocatedNodesInfo info)
     {
         int level = data.GetConstellation(constellation).Level;
         return level >= requirement;
     }
 
-    public override void BuildDescription(StringBuilder builder, PlayerPolarisData data, EntityPlayer player, HashSet<string> allocatedNodes)
+    public override void BuildDescription(StringBuilder builder, PlayerPolarisData data, EntityPlayer player, AllocatedNodesInfo info)
     {
-        bool canAllocate = CanAllocate(player, data, allocatedNodes);
+        bool canAllocate = CanAllocate(player, data, info);
         string color = canAllocate ? "#00FF88" : "#FF4444";
         builder.AppendLine($"<font color=\"{color}\">Requires {constellation} Level {requirement}</font>");
     }
@@ -37,14 +36,14 @@ public class PlayerLevelRequirement : PassiveNodeRequirement
         requirement = level;
     }
 
-    public override bool CanAllocate(EntityPlayer player, PlayerPolarisData data, HashSet<string> allocatedNodes)
+    public override bool CanAllocate(EntityPlayer player, PlayerPolarisData data, AllocatedNodesInfo info)
     {
         return data.Level >= requirement;
     }
 
-    public override void BuildDescription(StringBuilder builder, PlayerPolarisData data, EntityPlayer player, HashSet<string> allocatedNodes)
+    public override void BuildDescription(StringBuilder builder, PlayerPolarisData data, EntityPlayer player, AllocatedNodesInfo info)
     {
-        bool canAllocate = CanAllocate(player, data, allocatedNodes);
+        bool canAllocate = CanAllocate(player, data, info);
         string color = canAllocate ? "#00FF88" : "#FF4444";
         builder.AppendLine($"<font color=\"{color}\">Requires Knowledge Level {requirement}</font>");
     }

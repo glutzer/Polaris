@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace Polaris;
 
@@ -14,24 +13,24 @@ public class ExclusiveRequirement : PassiveNodeRequirement
         this.code = code;
     }
 
-    public override bool CanAllocate(EntityPlayer player, PlayerPolarisData data, HashSet<string> allocatedNodes)
+    public override bool CanAllocate(EntityPlayer player, PlayerPolarisData data, AllocatedNodesInfo info)
     {
         PlayerConstellationData? constellationData = data.GetConstellation(constellationName);
         if (constellationData == null) return true;
 
-        PassiveNode? node = SystemPolarisPassiveTree.Instance(player.Api).GetNode(constellationName, code);
+        PassiveNode? node = Polaris.Instance(player.Api).GetNode(constellationName, code);
         return node == null || node == null || !constellationData.AllocatedNodeIds.Contains(node.Id);
     }
 
-    public override void BuildDescription(StringBuilder builder, PlayerPolarisData data, EntityPlayer player, HashSet<string> allocatedNodes)
+    public override void BuildDescription(StringBuilder builder, PlayerPolarisData data, EntityPlayer player, AllocatedNodesInfo info)
     {
-        bool canAllocate = CanAllocate(player, data, allocatedNodes);
+        bool canAllocate = CanAllocate(player, data, info);
         string color = canAllocate ? "#00FF88" : "#FF4444";
 
         PlayerConstellationData? constellationData = data.GetConstellation(constellationName);
         if (constellationData == null) return;
 
-        PassiveNode? node = SystemPolarisPassiveTree.Instance(player.Api).GetNode(constellationName, code);
+        PassiveNode? node = Polaris.Instance(player.Api).GetNode(constellationName, code);
         if (node == null) return;
 
         builder.AppendLine($"<font color=\"{color}\">Exclusive with {node.Name}</font>");

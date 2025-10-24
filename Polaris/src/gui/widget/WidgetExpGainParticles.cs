@@ -45,7 +45,7 @@ public class WidgetExpGainParticles : Widget
 
     public WidgetExpGainParticles(Widget? parent, Gui gui) : base(parent, gui)
     {
-        SystemPolarisPassiveTree.Instance(MainAPI.Capi).OnClientExperienceGain += OnExpGain;
+        Polaris.Instance(MainAPI.Capi).OnClientExperienceGain += OnExpGain;
     }
 
     private void OnExpGain(Constellation constellation, float amount, int currentLevel)
@@ -95,6 +95,6 @@ public class WidgetExpGainParticles : Widget
     public override void Dispose()
     {
         if (MainAPI.Capi == null) return;
-        SystemPolarisPassiveTree.Instance(MainAPI.Capi).OnClientExperienceGain -= OnExpGain;
+        Polaris.Instance(MainAPI.Capi).OnClientExperienceGain -= OnExpGain;
     }
 }

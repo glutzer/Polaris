@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace Polaris;
 
@@ -8,9 +7,9 @@ namespace Polaris;
 /// </summary>
 public abstract class PassiveNodeRequirement
 {
-    public abstract bool CanAllocate(EntityPlayer player, PlayerPolarisData data, HashSet<string> allocatedNodes);
+    public abstract bool CanAllocate(EntityPlayer player, PlayerPolarisData data, AllocatedNodesInfo info);
 
-    public virtual void BuildDescription(StringBuilder builder, PlayerPolarisData data, EntityPlayer player, HashSet<string> allocatedNodes)
+    public virtual void BuildDescription(StringBuilder builder, PlayerPolarisData data, EntityPlayer player, AllocatedNodesInfo info)
     {
 
     }

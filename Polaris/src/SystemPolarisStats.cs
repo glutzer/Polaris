@@ -105,7 +105,7 @@ public class SystemPolarisStats : NetworkedGameSystem
             };
 
             // Load passive data from world...
-            MainAPI.GetServerSystem<SystemPolarisPassiveTree>().LoadDataFromWorld();
+            MainAPI.GetServerSystem<Polaris>().LoadDataFromWorld();
         }
     }
 
@@ -122,6 +122,8 @@ public class SystemPolarisStats : NetworkedGameSystem
     {
         PassiveContext context = new(player);
 
+        context.SkillBehavior.ResetForPassiveChange();
+
         foreach (PassiveAggregator aggregator in aggregators)
         {
             aggregator.RemoveStats(context);
@@ -130,12 +132,14 @@ public class SystemPolarisStats : NetworkedGameSystem
         if (onlyRemove) return;
 
         // Gather stats from player's passive information...
-        SystemPolarisPassiveTree.Instance(api).GatherPassiveInformation(context);
+        Polaris.Instance(api).GatherPassiveInformation(context);
 
         foreach (PassiveAggregator aggregator in aggregators)
         {
             aggregator.AddStats(context);
         }
+
+        context.SkillBehavior.SyncToPlayer();
     }
 
     public override void OnClose()
@@ -148,6 +152,6 @@ public class SystemPolarisStats : NetworkedGameSystem
         }
 
         // Save and unload passive data...
-        MainAPI.GetServerSystem<SystemPolarisPassiveTree>().SaveDataToWorld();
+        MainAPI.GetServerSystem<Polaris>().SaveDataToWorld();
     }
 }

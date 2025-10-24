@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace Polaris;
 
@@ -37,8 +36,8 @@ public class WidgetNodeDescription : Widget
 
         StringBuilder builder = new();
 
-        PlayerPolarisData playerData = SystemPolarisPassiveTree.Instance(MainAPI.Capi).GetClientData();
-        HashSet<string> allocatedNodes = playerData.GetAllAllocatedNodeCodes(SystemPolarisPassiveTree.Instance(MainAPI.Capi));
+        PlayerPolarisData playerData = Polaris.Instance(MainAPI.Capi).GetClientData();
+        AllocatedNodesInfo allocatedNodesInfo = playerData.GetAllocatedNodesInfo(Polaris.Instance(MainAPI.Capi));
 
         if (node.Name.Length > 0)
         {
@@ -53,7 +52,7 @@ public class WidgetNodeDescription : Widget
         {
             foreach (PassiveNodeRequirement requirement in node.Requirements)
             {
-                requirement.BuildDescription(builder, playerData, MainAPI.Capi.World.Player.Entity, allocatedNodes);
+                requirement.BuildDescription(builder, playerData, MainAPI.Capi.World.Player.Entity, allocatedNodesInfo);
             }
         }
 

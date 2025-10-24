@@ -6,6 +6,7 @@ public class PassiveContext
 {
     public Dictionary<string, int> StatValues { get; } = [];
     public EntityPlayer Player { get; }
+    public PlayerBehaviorPolaris SkillBehavior { get; }
 
     public void MultiplyStat(string name, float multiplier)
     {
@@ -30,5 +31,6 @@ public class PassiveContext
     public PassiveContext(EntityPlayer player)
     {
         Player = player;
+        SkillBehavior = player.GetBehavior<PlayerBehaviorPolaris>()!; // This better be here.
     }
 }

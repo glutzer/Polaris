@@ -8,6 +8,7 @@ namespace Polaris;
 public class WidgetNodes : Widget
 {
     private readonly HashSet<(PositionedConstellation constellation, PassiveNode node)> pendingNodes = [];
+    private bool refunding;
 
     private readonly Offset offset;
     private readonly Texture blank = PolarisGuiThemes.Blank;
@@ -25,7 +26,6 @@ public class WidgetNodes : Widget
     private int nextLevelExp = 100;
 
     private readonly WidgetNodeDescription nodeDescription;
-    private bool refunding;
 
     private readonly TextObject nodeText = new("none", PolarisGuiThemes.Font, 12f, new Vector4(0.8f, 0.8f, 0.9f, 0.9f))
     {
@@ -47,7 +47,8 @@ public class WidgetNodes : Widget
         this.offset = offset;
         starScreen = MainAPI.GetClientSystem<SystemPolarisStarScreen>();
         PositionConstellations();
-        SystemPolarisPassiveTree.Instance(MainAPI.Capi).OnClientDataUpdated += OnClientDataUpdated;
+        Polaris.Instance(MainAPI.Capi).OnClientDataUpdated += OnClientDataUpdated;
+        Polaris.Instance(MainAPI.Capi).OnClientExperienceGain += UpdateConstellationExperience;
         nodeDescription = new WidgetNodeDescription(this, gui);
 
         new ToggleableButton(this, gui, OnRefundToggle, true, false, "Refund Passives").Alignment(Align.LeftTop).Percent(0f, 0.25f, 0.1f, 0.05f);
@@ -82,6 +83,26 @@ public class WidgetNodes : Widget
         refunding = on;
     }
 
+    /// <summary>
+    /// Spaghetti from refunding.
+    /// </summary>
+    private void UpdateConstellationExperience(Constellation constellation, float amount, int currentLevel)
+    {
+        PlayerPolarisData playerData = Polaris.Instance(MainAPI.Capi).GetClientData();
+        foreach (PositionedConstellation posConst in positionedConstellations)
+        {
+            PlayerConstellationData constData = playerData.GetConstellation(posConst.Constellation.Name);
+            posConst.CurrentExp = (int)constData.Experience;
+            posConst.RequiredExp = (int)posConst.Constellation.GetExpToReachLevel(constData.Level + 1);
+            posConst.CurrentLevel = constData.Level;
+        }
+
+        // Update player exp.
+        currentExp = (int)playerData.Experience;
+        nextLevelExp = (int)PlayerPolarisData.GetExpToReachLevel(this.currentLevel + 1);
+        this.currentLevel = playerData.Level;
+    }
+
     private void PositionConstellations()
     {
         const float step = 10f;
@@ -98,13 +119,13 @@ public class WidgetNodes : Widget
             return false;
         }
 
-        PlayerPolarisData playerData = SystemPolarisPassiveTree.Instance(MainAPI.Capi).GetClientData();
+        PlayerPolarisData playerData = Polaris.Instance(MainAPI.Capi).GetClientData();
 
         currentExp = (int)playerData.Experience;
         currentLevel = playerData.Level;
         nextLevelExp = (int)PlayerPolarisData.GetExpToReachLevel(currentLevel + 1);
 
-        foreach (Constellation constellation in SystemPolarisPassiveTree.Instance(MainAPI.Capi).AllConstellations)
+        foreach (Constellation constellation in Polaris.Instance(MainAPI.Capi).AllConstellations)
         {
             PlayerConstellationData constData = playerData.GetConstellation(constellation.Name);
             PositionedConstellation positionedConstellation = new(constellation, (int)constData.Experience, (int)constellation.GetExpToReachLevel(constData.Level + 1), constData.Level);
@@ -152,6 +173,7 @@ public class WidgetNodes : Widget
         }
 
         List<StarLight> lights = [];
+
         // Update light positions, without offset.
         foreach (PositionedConstellation posConst in positionedConstellations)
         {
@@ -211,118 +233,170 @@ public class WidgetNodes : Widget
         {
             obj.Handled = true;
 
-            PlayerPolarisData ownData = SystemPolarisPassiveTree.Instance(MainAPI.Capi).GetClientData();
+            PlayerPolarisData ownData = Polaris.Instance(MainAPI.Capi).GetClientData();
             PlayerConstellationData constData = ownData.GetConstellation(hoveredNode.Constellation.Name);
-
-            HashSet<string> allocatedNodes = ownData.GetAllAllocatedNodeCodes(SystemPolarisPassiveTree.Instance(MainAPI.Capi));
-            // Add pending nodes to allocated nodes.
-            foreach ((PositionedConstellation constellation, PassiveNode node) in pendingNodes)
-            {
-                allocatedNodes.Add($"{constellation.Constellation.Name}:{node.Code}");
-            }
-
-            HashSet<PassiveNode> onlyNodes = [.. pendingNodes.Where(x => x.constellation.Constellation == hoveredNode.Constellation).Select(x => x.node)];
+            Polaris treeSystem = Polaris.Instance(MainAPI.Capi);
 
             // Lol.
             PositionedConstellation posConst = positionedConstellations.Find(pc => pc.Constellation == hoveredNode.Constellation)!;
             (PositionedConstellation, PassiveNode) tuple = (posConst, hoveredNode);
 
-            int remainingKnowledgePoints = ownData.KnowledgePoints - pendingNodes.Sum(x => x.node.Cost);
-
-            if (!pendingNodes.Contains(tuple) && !constData.AllocatedNodeIds.Contains(hoveredNode.Id) && constData.IsNodeAllocatable(hoveredNode, onlyNodes))
+            AllocatedNodesInfo allocatedNodes = ownData.GetAllocatedNodesInfo(Polaris.Instance(MainAPI.Capi));
+            foreach ((PositionedConstellation constel, PassiveNode node) in pendingNodes)
             {
-                // Too poor.
-                if (remainingKnowledgePoints < hoveredNode.Cost)
+                if (refunding)
                 {
-                    return;
+                    allocatedNodes.AllocatedNodeCodes.Remove($"{constel.Constellation.Name}:{node.Code}");
+                    allocatedNodes.DecrementTags(node.Tags);
                 }
-
-                if (MainAPI.Capi.World.Player.Entity == null || !hoveredNode.CanAllocate(MainAPI.Capi.World.Player.Entity, ownData, allocatedNodes))
+                else
                 {
-                    return;
-                }
-
-                // Allocate node.
-                pendingNodes.Add(tuple);
-                MainAPI.Capi.Gui.PlaySound("stone_switch");
-                if (pendingNodes.Count == 1)
-                {
-                    AddChild(new WidgetAllocationButton(this, Gui, () =>
-                    {
-                        // Send allocation packet.
-                        MainAPI.Capi.Gui.PlaySound("effect/timeswitch");
-                        SendAllocationsInOrder();
-                        pendingNodes.Clear();
-                        DeleteChildren<WidgetAllocationButton>();
-                    }).Alignment(Align.LeftTop).Percent(0f, 0.3f, 0.1f, 0.05f));
+                    allocatedNodes.AllocatedNodeCodes.Add($"{constel.Constellation.Name}:{node.Code}");
+                    allocatedNodes.IncrementTags(node.Tags);
                 }
             }
-            else if (pendingNodes.Contains(tuple) && constData.IsNodeUnallocatable(hoveredNode, onlyNodes))
+
+            HashSet<PassiveNode> onlyNodes = [.. pendingNodes.Where(x => x.constellation.Constellation == hoveredNode.Constellation).Select(x => x.node)];
+
+            // Add pending nodes to allocated nodes.
+            if (refunding)
             {
-                pendingNodes.Remove(tuple);
-                MainAPI.Capi.Gui.PlaySound("menubutton");
-                if (pendingNodes.Count == 0)
+                // Costs 1 level to refund a node.
+                // If this refund would cause the player to go below level 1, don't allow it.
+                int remainingLevels = constData.Level - pendingNodes.Count(x => x.constellation.Constellation == hoveredNode.Constellation);
+                HashSet<PassiveNode> allNodes = [.. pendingNodes.Select(x => x.node)];
+
+                if (!pendingNodes.Contains(tuple) && constData.AllocatedNodeIds.Contains(hoveredNode.Id) && constData.IsNodeUnallocatable(hoveredNode, onlyNodes, true) && !ownData.DoesAnythingRelyOnNode(hoveredNode, treeSystem, allNodes))
                 {
-                    DeleteChildren<WidgetAllocationButton>();
+                    if (remainingLevels < 2) return;
+
+                    // Unallocate node.
+                    pendingNodes.Add(tuple);
+                    MainAPI.Capi.Gui.PlaySound("stone_switch");
+                    if (pendingNodes.Count == 1)
+                    {
+                        AddChild(new WidgetAllocationButton(this, Gui, () =>
+                        {
+                            // Send allocation packet.
+                            MainAPI.Capi.Gui.PlaySound("effect/timeswitch");
+                            SendAllocationsInOrder(true);
+                            pendingNodes.Clear();
+                            DeleteChildren<WidgetAllocationButton>();
+                        }).Alignment(Align.LeftTop).Percent(0f, 0.3f, 0.1f, 0.05f));
+                    }
+                }
+                else if (pendingNodes.Contains(tuple) && constData.IsNodeAllocatable(hoveredNode, onlyNodes, true))
+                {
+                    if (MainAPI.Capi.World.Player.Entity == null || !hoveredNode.CanAllocate(MainAPI.Capi.World.Player.Entity, ownData, allocatedNodes))
+                    {
+                        return;
+                    }
+
+                    pendingNodes.Remove(tuple);
+                    MainAPI.Capi.Gui.PlaySound("menubutton");
+                    if (pendingNodes.Count == 0)
+                    {
+                        DeleteChildren<WidgetAllocationButton>();
+                    }
+                }
+            }
+            else
+            {
+                int remainingKnowledgePoints = ownData.KnowledgePoints - pendingNodes.Sum(x => x.node.Cost);
+
+                if (!pendingNodes.Contains(tuple) && !constData.AllocatedNodeIds.Contains(hoveredNode.Id) && constData.IsNodeAllocatable(hoveredNode, onlyNodes))
+                {
+                    // Too poor.
+                    if (remainingKnowledgePoints < hoveredNode.Cost)
+                    {
+                        return;
+                    }
+
+                    if (MainAPI.Capi.World.Player.Entity == null || !hoveredNode.CanAllocate(MainAPI.Capi.World.Player.Entity, ownData, allocatedNodes))
+                    {
+                        return;
+                    }
+
+                    // Allocate node.
+                    pendingNodes.Add(tuple);
+                    MainAPI.Capi.Gui.PlaySound("stone_switch");
+                    if (pendingNodes.Count == 1)
+                    {
+                        AddChild(new WidgetAllocationButton(this, Gui, () =>
+                        {
+                            // Send allocation packet.
+                            MainAPI.Capi.Gui.PlaySound("effect/timeswitch");
+                            SendAllocationsInOrder(false);
+                            pendingNodes.Clear();
+                            DeleteChildren<WidgetAllocationButton>();
+                        }).Alignment(Align.LeftTop).Percent(0f, 0.3f, 0.1f, 0.05f));
+                    }
+                }
+                else if (pendingNodes.Contains(tuple) && constData.IsNodeUnallocatable(hoveredNode, onlyNodes))
+                {
+                    pendingNodes.Remove(tuple);
+                    MainAPI.Capi.Gui.PlaySound("menubutton");
+                    if (pendingNodes.Count == 0)
+                    {
+                        DeleteChildren<WidgetAllocationButton>();
+                    }
                 }
             }
         }
     }
 
-    private void SendAllocationsInOrder()
+    private void SendAllocationsInOrder(bool refund)
     {
-        PlayerPolarisData ownData = SystemPolarisPassiveTree.Instance(MainAPI.Capi).GetClientData();
+        PlayerPolarisData ownData = Polaris.Instance(MainAPI.Capi).GetClientData();
         EntityPlayer? self = MainAPI.Capi.World.Player.Entity;
+        Polaris tree = Polaris.Instance(MainAPI.Capi);
         if (self == null) return;
 
-        HashSet<string> allocatedNodes = ownData.GetAllAllocatedNodeCodes(SystemPolarisPassiveTree.Instance(MainAPI.Capi));
+        // Every current allocated node.
+        AllocatedNodesInfo allocatedNodes = ownData.GetAllocatedNodesInfo(Polaris.Instance(MainAPI.Capi));
 
-        // Group each pending allocation by it's constellation into a dictionary.
-        Dictionary<Constellation, List<PassiveNode>> allocationsByConst = [];
-        foreach ((PositionedConstellation constellation, PassiveNode node) in pendingNodes)
+        int toSend = pendingNodes.Count;
+        HashSet<PassiveNode> sentNodes = [];
+
+        while (sentNodes.Count < toSend)
         {
-            if (!allocationsByConst.TryGetValue(constellation.Constellation, out List<PassiveNode>? value))
+            bool didAllocation = false;
+
+            foreach ((PositionedConstellation constellation, PassiveNode node) tuple in pendingNodes)
             {
-                value = [];
-                allocationsByConst[constellation.Constellation] = value;
-            }
+                if (sentNodes.Contains(tuple.node)) continue;
 
-            value.Add(node);
-        }
+                PlayerConstellationData constData = ownData.GetConstellation(tuple.node.Constellation.Name);
 
-        foreach (KeyValuePair<Constellation, List<PassiveNode>> kvp in allocationsByConst)
-        {
-            Constellation constellation = kvp.Key;
-            PlayerConstellationData constData = ownData.GetConstellation(constellation.Name);
-            SystemPolarisPassiveTree tree = SystemPolarisPassiveTree.Instance(MainAPI.Capi);
-            List<PassiveNode> allocations = kvp.Value;
-            HashSet<PassiveNode> sentNodes = [];
-
-            while (allocations.Count > 0)
-            {
-                bool didAllocation = false;
-
-                foreach (PassiveNode node in allocations)
+                if (refund)
                 {
-                    if (sentNodes.Contains(node)) continue;
-                    if (!constData.IsNodeAllocatable(node, sentNodes)) continue;
-                    if (!node.CanAllocate(self, ownData, allocatedNodes)) continue;
+                    if (!constData.IsNodeUnallocatable(tuple.node, sentNodes, true)) continue;
+                    if (ownData.DoesAnythingRelyOnNode(tuple.node, tree, sentNodes)) continue;
+                }
+                else
+                {
+                    if (!constData.IsNodeAllocatable(tuple.node, sentNodes)) continue;
+                    if (!tuple.node.CanAllocate(self, ownData, allocatedNodes)) continue;
 
-                    sentNodes.Add(node);
-                    NodeAllocationRequest request = new()
-                    {
-                        ConstellationName = constellation.Name,
-                        NodeId = node.Id,
-                        Allocate = true
-                    };
-                    tree.SendPacket(request);
-                    didAllocation = true;
-                    allocatedNodes.Add($"{constellation.Name}:{node.Code}");
+                    allocatedNodes.AllocatedNodeCodes.Add($"{tuple.node.Constellation.Name}:{tuple.node.Code}");
+                    allocatedNodes.IncrementTags(tuple.node.Tags);
                 }
 
-                if (!didAllocation) break; // Prevent loop.
+                sentNodes.Add(tuple.node);
+                NodeAllocationRequest request = new()
+                {
+                    ConstellationName = tuple.node.Constellation.Name,
+                    NodeId = tuple.node.Id,
+                    Allocate = !refund
+                };
+                tree.SendPacket(request);
+                didAllocation = true;
             }
+
+            // Infinite loop.
+            if (!didAllocation) break;
         }
+
     }
 
     private bool IsMouseOnNode(MouseEvent obj, PassiveNode node, Vector2 constOffset)
@@ -366,7 +440,7 @@ public class WidgetNodes : Widget
 
     public override void OnRender(float dt, NuttyShader shader)
     {
-        PlayerPolarisData ownData = SystemPolarisPassiveTree.Instance(MainAPI.Capi).GetClientData();
+        PlayerPolarisData ownData = Polaris.Instance(MainAPI.Capi).GetClientData();
 
         shader.BindTexture(blank, "tex2d");
         float invZoom = 1f / offset.Zoom;
@@ -408,7 +482,7 @@ public class WidgetNodes : Widget
         shader.Uniform("color", Vector4.One);
 
         // Render pending lines.
-        shader.Uniform("color", new Vector4(1f, 1f, 0.3f, 0.4f));
+        shader.Uniform("color", refunding ? new Vector4(1f, 0.2f, 0.2f, 0.4f) : new Vector4(1f, 1f, 0.3f, 0.4f));
         foreach ((PositionedConstellation constellation, PassiveNode node) in pendingNodes)
         {
             PlayerConstellationData constData = ownData.GetConstellation(constellation.Constellation.Name);
@@ -471,17 +545,13 @@ public class WidgetNodes : Widget
         shader.Uniform("color", Vector4.One);
 
         // Render pending nodes.
-        shader.Uniform("color", new Vector4(1f, 1f, 0.3f, 0.4f));
+        shader.Uniform("color", refunding ? new Vector4(1f, 0.2f, 0.2f, 0.4f) : new Vector4(1f, 1f, 0.3f, 0.4f));
         shader.BindTexture(blank, "tex2d");
         foreach ((PositionedConstellation posConst, PassiveNode node) in pendingNodes)
         {
             float nodeHalfSize = node.NodeSize * invZoom;
             Vector2 nodePos = GetNodePosition(node, posConst);
             RenderTools.RenderQuad(shader, nodePos.X - nodeHalfSize, nodePos.Y - nodeHalfSize, nodeHalfSize * 2f, nodeHalfSize * 2f);
-
-            // Render bounds debug.
-            //Constellation constellation = posConst.Constellation;
-            //RenderTools.RenderQuad(shader, constellation.StartBounds.X + posConst.Offset.X + offset.X, constellation.StartBounds.Y + posConst.Offset.Y + offset.Y, constellation.EndBounds.X - constellation.StartBounds.X, constellation.EndBounds.Y - constellation.StartBounds.Y);
         }
         shader.Uniform("color", Vector4.One);
 
@@ -549,7 +619,8 @@ public class WidgetNodes : Widget
     public override void Dispose()
     {
         if (MainAPI.Capi == null) return;
-        SystemPolarisPassiveTree.Instance(MainAPI.Capi).OnClientDataUpdated -= OnClientDataUpdated;
+        Polaris.Instance(MainAPI.Capi).OnClientDataUpdated -= OnClientDataUpdated;
+        Polaris.Instance(MainAPI.Capi).OnClientExperienceGain -= UpdateConstellationExperience;
     }
 
     private class PositionedConstellation

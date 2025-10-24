@@ -12,7 +12,7 @@ namespace Polaris;
 /// Loads passive tree from mods, tells client to allocate nodes for him on success.
 /// </summary>
 [GameSystem]
-public class SystemPolarisPassiveTree : NetworkedGameSystem
+public class Polaris : NetworkedGameSystem
 {
     private readonly List<Constellation> constellations = [];
     public IEnumerable<Constellation> AllConstellations => constellations;
@@ -23,14 +23,14 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
     public event Action<PlayerPolarisData>? OnClientDataUpdated;
     public event Action<Constellation, float, int>? OnClientExperienceGain;
 
-    private static SystemPolarisPassiveTree clientInst = null!;
-    private static SystemPolarisPassiveTree serverInst = null!;
+    private static Polaris clientInst = null!;
+    private static Polaris serverInst = null!;
 
-    public SystemPolarisPassiveTree(bool isServer, ICoreAPI api) : base(isServer, api, "polaristree")
+    public Polaris(bool isServer, ICoreAPI api) : base(isServer, api, "polaristree")
     {
     }
 
-    public static SystemPolarisPassiveTree Instance(ICoreAPI api)
+    public static Polaris Instance(ICoreAPI api)
     {
         return api.Side == EnumAppSide.Client ? clientInst : serverInst;
     }
@@ -88,6 +88,52 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
         new AdditiveValueNode("Movement Speed", "walkspeed", 0.05f, "move3", new NodePosition(300, 175), survival).AddParent("move2").AddLevelRequirement("Survival", 7);
         new MultiplicativeValueNode("Movement Speed", "walkspeed", 1.5f, "move4", new NodePosition(400, 190), survival).AddParent("move3").AddLevelRequirement("Survival", 9);
 
+        new KeystoneNode("Primalist", "primalist", new NodePosition(-200, 100), survival, "You can eat raw meat\r\nGrain contributes no nutrition", "primalist").AddParent("start1");
+
+        // healingeffectivness
+        // maxhealthExtraPoints - 2240 = 22.40 extra max health.
+        // walkspeed
+        // hungerrate
+        // rangedWeaponsAcc
+        // rangedWeaponsSpeed
+        // rangedWeaponsDamage
+        // meleeWeaponsDamage
+        // mechanicalsDamage
+        // animalLootDropRate
+        // forageDropRate
+        // wildCropDropRate
+        // vesselContentsDropRate
+        // oreDropRate
+        // rustyGearDropRate
+        // miningSpeedMul
+        // animalSeekingRange
+        // armorDurabilityLoss
+        // armorWalkSpeedAffectedness - Blackguard has -0.25, which means the affectedness will be 75%.
+        // bowDrawingStrength
+        // wholeVesselLootChance - Flat sum?
+        // temporalGearTLRepairCost - Flat sum?
+        // animalHarvestingTime
+        // gliderLiftMax
+        // gliderSpeedMax
+        // jumpHeightMul
+
+        // Add 10 random nodes based on the listed stats.
+        // Example stats: healingeffectivness, maxhealthExtraPoints, hungerrate, rangedWeaponsAcc, rangedWeaponsSpeed, rangedWeaponsDamage, meleeWeaponsDamage, miningSpeedMul, jumpHeightMul, armorDurabilityLoss
+
+        new AdditiveValueNode("Healing Effectiveness", "healingeffectivness", 0.10f, "heal1", new NodePosition(120, 80), survival).AddParent("start1").AddLevelRequirement("Survival", 2);
+        new AdditiveValueNode("Max Health", "maxhealthExtraPoints", 100f, "health1", new NodePosition(180, 60), survival).AddParent("heal1").AddLevelRequirement("Survival", 4);
+        new MultiplicativeValueNode("Hunger Rate", "hungerrate", 0.85f, "hunger1", new NodePosition(250, 90), survival).AddParent("move2").AddLevelRequirement("Survival", 6);
+        new AdditiveValueNode("Ranged Weapons Accuracy", "rangedWeaponsAcc", 5f, "racc1", new NodePosition(320, 120), survival).AddParent("move3").AddLevelRequirement("Survival", 8);
+        new MultiplicativeValueNode("Ranged Weapons Speed", "rangedWeaponsSpeed", 1.2f, "rspeed1", new NodePosition(380, 160), survival).AddParent("racc1").AddLevelRequirement("Survival", 10);
+        new AdditiveValueNode("Ranged Weapons Damage", "rangedWeaponsDamage", 3f, "rdmg1", new NodePosition(440, 200), survival).AddParent("rspeed1").AddLevelRequirement("Survival", 2);
+        new AdditiveValueNode("Melee Weapons Damage", "meleeWeaponsDamage", 4f, "mdmg1", new NodePosition(500, 240), survival).AddParent("rdmg1").AddLevelRequirement("Survival", 4);
+        new MultiplicativeValueNode("Mining Speed", "miningSpeedMul", 1.3f, "minespeed1", new NodePosition(560, 280), survival).AddParent("mdmg1").AddLevelRequirement("Survival", 6);
+        new AdditiveValueNode("Jump Height", "jumpHeightMul", 0.2f, "jump1", new NodePosition(620, 320), survival).AddParent("minespeed1").AddLevelRequirement("Survival", 8);
+        new MultiplicativeValueNode("Armor Durability Loss", "armorDurabilityLoss", 0.8f, "armor1", new NodePosition(680, 360), survival).AddParent("jump1").AddLevelRequirement("Survival", 2);
+
+
+
+
         // Time.
         Constellation time = new Constellation("Time").SetColor(0.2f, 1f, 0.6f, 0.5f);
         AddConstellation(time);
@@ -119,11 +165,25 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
             // Don't verify server -> client.
             PlayerPolarisData data = GetClientData();
             PlayerConstellationData constData = data.GetConstellation(p.ConstellationName);
+            PassiveNode? node = GetConstellation(p.ConstellationName)?.GetNodeById(p.NodeId);
+            if (node == null) return;
 
             if (p.Allocate)
+            {
                 constData.AllocatedNodeIds.Add(p.NodeId);
+                data.SetKnowledgePoints(data.KnowledgePoints - node.Cost);
+            }
             else
+            {
+                float totalExpLoss = constData.Experience + node.Constellation.GetExpToReachLevel(constData.Level);
+
                 constData.AllocatedNodeIds.Remove(p.NodeId);
+                constData.Level--;
+                constData.Experience = 0f;
+                data.SetLevelAndKnowledgeFromTotalExp(this);
+
+                OnClientExperienceGain?.Invoke(node.Constellation, -totalExpLoss, constData.Level);
+            }
 
             OnClientDataUpdated?.Invoke(data);
         });
@@ -149,7 +209,7 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
 
             if (p.Allocate && data.KnowledgePoints < node.Cost) return;
 
-            HashSet<string> allocatedNodes = data.GetAllAllocatedNodeCodes(this);
+            AllocatedNodesInfo allocatedNodes = data.GetAllocatedNodesInfo(this);
 
             if (p.Allocate)
             {
@@ -161,12 +221,24 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
             else
             {
                 if (!constData.IsNodeUnallocatable(node)) return;
+                if (data.DoesAnythingRelyOnNode(node, this, [])) return;
+                if (constData.Level < 2) return; // Can't unallocate if level 1, would cause negative points.
+
                 constData.AllocatedNodeIds.Remove(node.Id);
-                data.SetKnowledgePoints(data.KnowledgePoints + node.Cost);
+                constData.Level--;
+                constData.Experience = 0f;
+                data.SetLevelAndKnowledgeFromTotalExp(this);
             }
 
+            NodeAllocationRequest packet = new()
+            {
+                ConstellationName = p.ConstellationName,
+                NodeId = p.NodeId,
+                Allocate = p.Allocate
+            };
+
             // Allocation successful, echo back to the player.
-            SendPacket(data, player);
+            SendPacket(packet, player);
 
             // Do stat re-calculation here, now that something is changed. Passive bonuses are server only. Effects or watched attribute booleans will determine client behavior.
             RecalculatePlayerStats(player.Entity);
@@ -317,50 +389,32 @@ public class SystemPolarisPassiveTree : NetworkedGameSystem
     /// </summary>
     private void VerifyPlayerData(PlayerPolarisData data)
     {
-        int pointsSpent = 0;
-        float totalExpGained = 0f;
-
+        List<string> invalidConstellations = [];
         foreach (KeyValuePair<string, PlayerConstellationData> constData in data.ConstellationData)
         {
             // Remove invalid node ids.
-            if (!constellationByName.TryGetValue(constData.Key, out Constellation? constellation)) continue;
+            if (!constellationByName.TryGetValue(constData.Key, out Constellation? constellation))
+            {
+                invalidConstellations.Add(constData.Key);
+                continue;
+            }
 
-            // Remove allocated nodes that don't exist, get allocation count.
             HashSet<int> validNodeIds = [];
             foreach (PassiveNode node in constellation.AllNodes)
             {
                 validNodeIds.Add(node.Id);
-
-                if (constData.Value.AllocatedNodeIds.Contains(node.Id))
-                {
-                    pointsSpent += node.Cost;
-                }
             }
+
             constData.Value.AllocatedNodeIds.RemoveWhere(id => !validNodeIds.Contains(id));
-
-            // Calculate total exp gained.
-            totalExpGained += constellation.GetTotalExpGained(constData.Value.Level, constData.Value.Experience);
         }
 
-        // Remove all non-existent constellations, from old versions.
-        List<string> toRemove = [];
-        foreach (string constName in data.ConstellationData.Keys)
+        foreach (string invalid in invalidConstellations)
         {
-            if (!constellationByName.ContainsKey(constName))
-            {
-                toRemove.Add(constName);
-            }
-        }
-        foreach (string constName in toRemove)
-        {
-            data.ConstellationData.Remove(constName);
+            data.ConstellationData.Remove(invalid);
         }
 
         // Set new level from total experience gained.
-        data.SetLevelFromTotalExp(totalExpGained);
-
-        // At this point a player may have negative points, but they can simply not spend them until it's positive.
-        data.SetKnowledgePoints(data.Level - 1 - pointsSpent);
+        data.SetLevelAndKnowledgeFromTotalExp(this);
     }
 
     public void LoadDataFromWorld()
@@ -429,17 +483,51 @@ public class PlayerPolarisData
     [ProtoMember(4)]
     public int KnowledgePoints { get; private set; }
 
+    public void SetLevelAndKnowledgeFromTotalExp(Polaris tree)
+    {
+        float exp = 0f;
+        int pointsSpent = 0;
+
+        foreach (KeyValuePair<string, PlayerConstellationData> constData in ConstellationData)
+        {
+            Constellation? constellation = tree.GetConstellation(constData.Key);
+            if (constellation == null) continue;
+
+            exp += constellation.GetTotalExpGained(constData.Value.Level, constData.Value.Experience);
+
+            foreach (PassiveNode node in constellation.AllNodes)
+            {
+                if (constData.Value.AllocatedNodeIds.Contains(node.Id))
+                {
+                    pointsSpent += node.Cost;
+                }
+            }
+        }
+
+        // Set level.
+        Level = 1;
+        Experience = exp;
+        while (Experience >= GetExpToReachLevel(Level + 1))
+        {
+            Experience -= GetExpToReachLevel(Level + 1);
+            Level++;
+        }
+
+        SetKnowledgePoints(Level - 1 - pointsSpent);
+    }
+
     /// <summary>
     /// Check if any current allocated node relies on this node.
     /// If anything relies on it, it can't be unallocated.
     /// Also check pending nodes, it's not done here.
     /// </summary>
-    public bool DoesAnythingRelyOnNode(PassiveNode node, SystemPolarisPassiveTree treeSystem)
+    public bool DoesAnythingRelyOnNode(PassiveNode node, Polaris treeSystem, HashSet<PassiveNode> pendingUnallocations)
     {
         List<PassiveNode> list = GetAllAllocatedNodes(treeSystem);
         string code = node.GetFullCode();
         foreach (PassiveNode allocatedNode in list)
         {
+            if (pendingUnallocations.Contains(allocatedNode) || node == allocatedNode) continue;
             if (allocatedNode.ReliesOnNode(code)) return true;
         }
         return false;
@@ -448,7 +536,7 @@ public class PlayerPolarisData
     /// <summary>
     /// Returns a list of allocated nodes.
     /// </summary>
-    public List<PassiveNode> GetAllAllocatedNodes(SystemPolarisPassiveTree treeSystem)
+    public List<PassiveNode> GetAllAllocatedNodes(Polaris treeSystem)
     {
         List<PassiveNode> nodes = [];
 
@@ -472,9 +560,9 @@ public class PlayerPolarisData
     /// <summary>
     /// Returns all allocated nodes in the format constellation:code.
     /// </summary>
-    public HashSet<string> GetAllAllocatedNodeCodes(SystemPolarisPassiveTree treeSystem)
+    public AllocatedNodesInfo GetAllocatedNodesInfo(Polaris treeSystem)
     {
-        HashSet<string> nodes = [];
+        AllocatedNodesInfo info = new();
 
         foreach (KeyValuePair<string, PlayerConstellationData> constKvp in ConstellationData)
         {
@@ -486,27 +574,17 @@ public class PlayerPolarisData
             {
                 PassiveNode? node = constellation.GetNodeById(nodeId);
                 if (node == null) continue;
-                nodes.Add(node.GetFullCode());
+                info.AllocatedNodeCodes.Add(node.GetFullCode());
+                info.IncrementTags(node.Tags);
             }
         }
 
-        return nodes;
+        return info;
     }
 
     public void SetKnowledgePoints(int amount)
     {
         KnowledgePoints = amount;
-    }
-
-    public void SetLevelFromTotalExp(float exp)
-    {
-        Level = 1;
-        Experience = exp;
-        while (Experience >= GetExpToReachLevel(Level + 1))
-        {
-            Experience -= GetExpToReachLevel(Level + 1);
-            Level++;
-        }
     }
 
     public static float GetExpToReachLevel(int level)
@@ -556,13 +634,23 @@ public class PlayerConstellationData
     /// <summary>
     /// Check if a node is a start node or connected to an allocated node, for client.
     /// </summary>
-    public bool IsNodeAllocatable(PassiveNode node, HashSet<PassiveNode> pendingNodes)
+    public bool IsNodeAllocatable(PassiveNode node, HashSet<PassiveNode> pendingNodes, bool exceptNodes = false)
     {
         if (node.StartNode) return true;
 
-        foreach (PassiveNode connection in node.Connections)
+        if (exceptNodes)
         {
-            if (AllocatedNodeIds.Contains(connection.Id) || pendingNodes.Contains(connection)) return true;
+            foreach (PassiveNode connection in node.Connections)
+            {
+                if (AllocatedNodeIds.Contains(connection.Id) && !pendingNodes.Contains(connection)) return true;
+            }
+        }
+        else
+        {
+            foreach (PassiveNode connection in node.Connections)
+            {
+                if (AllocatedNodeIds.Contains(connection.Id) || pendingNodes.Contains(connection)) return true;
+            }
         }
 
         return false;
@@ -629,9 +717,11 @@ public class PlayerConstellationData
     /// <summary>
     /// Use graph to check if node can be unallocated without breaking allocation of other nodes, for client.
     /// </summary>
-    public bool IsNodeUnallocatable(PassiveNode node, HashSet<PassiveNode> pendingNodes)
+    public bool IsNodeUnallocatable(PassiveNode node, HashSet<PassiveNode> pendingNodes, bool exceptNodes = false)
     {
-        PassiveNode? firstConnection = node.Connections.Where(x => AllocatedNodeIds.Contains(x.Id) || pendingNodes.Contains(x)).FirstOrDefault();
+        PassiveNode? firstConnection = !exceptNodes
+            ? node.Connections.FirstOrDefault(x => AllocatedNodeIds.Contains(x.Id) || pendingNodes.Contains(x))
+            : node.Connections.FirstOrDefault(x => AllocatedNodeIds.Contains(x.Id) && !pendingNodes.Contains(x));
         if (firstConnection == null) return node.StartNode;
 
         int oldNodeCount = 0;
@@ -651,9 +741,19 @@ public class PlayerConstellationData
 
             foreach (PassiveNode connection in currentNode.Connections)
             {
-                if (AllocatedNodeIds.Contains(connection.Id) || pendingNodes.Contains(connection))
+                if (exceptNodes)
                 {
-                    nodeQueue.Enqueue(connection);
+                    if (AllocatedNodeIds.Contains(connection.Id) && !pendingNodes.Contains(connection))
+                    {
+                        nodeQueue.Enqueue(connection);
+                    }
+                }
+                else
+                {
+                    if (AllocatedNodeIds.Contains(connection.Id) || pendingNodes.Contains(connection))
+                    {
+                        nodeQueue.Enqueue(connection);
+                    }
                 }
             }
         }
@@ -673,9 +773,19 @@ public class PlayerConstellationData
 
             foreach (PassiveNode connection in currentNode.Connections)
             {
-                if (AllocatedNodeIds.Contains(connection.Id) || pendingNodes.Contains(connection))
+                if (exceptNodes)
                 {
-                    nodeQueue.Enqueue(connection);
+                    if (AllocatedNodeIds.Contains(connection.Id) && !pendingNodes.Contains(connection))
+                    {
+                        nodeQueue.Enqueue(connection);
+                    }
+                }
+                else
+                {
+                    if (AllocatedNodeIds.Contains(connection.Id) || pendingNodes.Contains(connection))
+                    {
+                        nodeQueue.Enqueue(connection);
+                    }
                 }
             }
         }

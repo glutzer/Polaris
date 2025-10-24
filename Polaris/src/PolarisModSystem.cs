@@ -2,7 +2,6 @@
 global using OpenTK.Mathematics;
 global using Vintagestory.API.Common;
 using System;
-using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
@@ -20,7 +19,7 @@ public class PolarisModSystem : ModSystem
 
     private void Event_OnPlayerInteractEntity(Entity entity, IPlayer byPlayer, ItemSlot slot, Vec3d hitPosition, int mode, ref EnumHandling handling)
     {
-        SystemPolarisPassiveTree.Instance(byPlayer.Entity.Api).AddExperience("Survival", byPlayer.PlayerUID, Random.Shared.NextSingle() * 500f);
+        Polaris.Instance(byPlayer.Entity.Api).AddExperience("Survival", byPlayer.PlayerUID, Random.Shared.NextSingle() * 500f);
     }
 
     public override void StartClientSide(ICoreClientAPI api)
