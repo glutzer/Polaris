@@ -95,7 +95,7 @@ public class Polaris : NetworkedGameSystem
             Grain provides no nutrition
             """);
 
-        PassiveNode.Create("Clothier", "clothier", -200, 200, survival).SetSize(2f).AddParent("start1").AddSkillStat("primalist", 1, """
+        PassiveNode.Create("Clothier", "clothier", -200, 200, survival).SetSize(2f).AddParent("start1").AddSkillStat("clothier", 1, """
             You may sew certain kinds of clothing
             """).AddTagExclusiveRequirement("class", 2).WithTag("class");
 
@@ -161,11 +161,14 @@ public class Polaris : NetworkedGameSystem
             }
             else
             {
-                float totalExpLoss = constData.Experience + node.Constellation.GetExpToReachLevel(constData.Level);
+                float currentExpRatio = constData.Experience / node.Constellation.GetExpToReachLevel(constData.Level + 1);
+                float newExp = MathF.Round(currentExpRatio * node.Constellation.GetExpToReachLevel(constData.Level), 2);
+
+                float totalExpLoss = constData.Experience + node.Constellation.GetExpToReachLevel(constData.Level) + newExp;
 
                 constData.AllocatedNodeIds.Remove(p.NodeId);
                 constData.Level--;
-                constData.Experience = 0f;
+                constData.Experience = newExp;
                 data.SetLevelAndKnowledgeFromTotalExp(this);
 
                 OnClientExperienceGain?.Invoke(node.Constellation, -totalExpLoss, constData.Level);
@@ -210,9 +213,11 @@ public class Polaris : NetworkedGameSystem
                 if (data.DoesAnythingRelyOnNode(node, this, [])) return;
                 if (constData.Level < 2) return; // Can't unallocate if level 1, would cause negative points.
 
+                float currentExpRatio = MathF.Round(constData.Experience / constellation.GetExpToReachLevel(constData.Level + 1), 2);
+
                 constData.AllocatedNodeIds.Remove(node.Id);
                 constData.Level--;
-                constData.Experience = 0f;
+                constData.Experience = currentExpRatio * constellation.GetExpToReachLevel(constData.Level + 1);
                 data.SetLevelAndKnowledgeFromTotalExp(this);
             }
 

@@ -36,7 +36,11 @@ public class TotalClassDeath
         [HarmonyPrefix]
         public static bool Prefix(ref bool __result, IPlayer player, GridRecipe recipe)
         {
-            if (recipe.RequiresTrait == null) return true;
+            if (recipe.RequiresTrait == null)
+            {
+                __result = true;
+                return false;
+            }
 
             int level = player.Entity.GetSkillLevel(recipe.RequiresTrait);
 
