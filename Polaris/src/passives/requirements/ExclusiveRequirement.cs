@@ -6,20 +6,24 @@ public class ExclusiveRequirement : PassiveNodeRequirement
 {
     private readonly string constellationName;
     private readonly string code;
+    private readonly string fullCode;
 
     public ExclusiveRequirement(string constellationName, string code)
     {
         this.constellationName = constellationName;
         this.code = code;
+        fullCode = $"{constellationName}:{code}";
     }
 
     public override bool CanAllocate(EntityPlayer player, PlayerPolarisData data, AllocatedNodesInfo info)
     {
-        PlayerConstellationData? constellationData = data.GetConstellation(constellationName);
-        if (constellationData == null) return true;
+        //PlayerConstellationData? constellationData = data.GetConstellation(constellationName);
+        //if (constellationData == null) return true;
 
-        PassiveNode? node = Polaris.Instance(player.Api).GetNode(constellationName, code);
-        return node == null || node == null || !constellationData.AllocatedNodeIds.Contains(node.Id);
+        //PassiveNode? node = Polaris.Instance(player.Api).GetNode(constellationName, code);
+        //return node == null || node == null || !constellationData.AllocatedNodeIds.Contains(node.Id);
+
+        return !info.AllocatedNodeCodes.Contains(fullCode);
     }
 
     public override void BuildDescription(StringBuilder builder, PlayerPolarisData data, EntityPlayer player, AllocatedNodesInfo info)

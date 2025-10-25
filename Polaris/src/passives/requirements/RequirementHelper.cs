@@ -13,4 +13,16 @@ public static class RequirementHelper
         node.AddRequirement(new PlayerLevelRequirement(level));
         return node;
     }
+
+    public static PassiveNode AddExclusiveRequirement(this PassiveNode node, string constellation, string code)
+    {
+        node.AddRequirement(new ExclusiveRequirement(constellation, code));
+        return node;
+    }
+
+    public static PassiveNode AddTagExclusiveRequirement(this PassiveNode node, string tag, int amount)
+    {
+        node.AddRequirement(new TagExclusiveRequirement(tag, amount));
+        return node;
+    }
 }

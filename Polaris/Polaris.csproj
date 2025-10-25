@@ -86,9 +86,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="src\patches\" />
-    <Folder Include="src\stats\constellations\" />
-  </ItemGroup>
-
 </Project>

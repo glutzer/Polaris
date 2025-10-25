@@ -20,7 +20,7 @@ public struct NodePosition
 /// A passive node that may appear in a constellation.
 /// Allocating it will contribute a value when calculating stats.
 /// </summary>
-public abstract class PassiveNode : IEquatable<PassiveNode>
+public class PassiveNode : IEquatable<PassiveNode>
 {
     public string Name { get; }
     public string Code { get; }
@@ -29,18 +29,19 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
 
     // Node tags which will be gathered.
     public HashSet<string> Tags { get; } = [];
+    public Vector4 Color { get; private set; } = new Vector4(1f, 1f, 1f, 1f);
 
-    public virtual Vector4 Color => new(1f, 1f, 1f, 1f);
+    public int NodeSize => (int)(Size * 10f);
+    public float Size { get; private set; } = 1f;
 
-    public virtual int NodeSize => 10;
-    public virtual int Cost => 1;
-
-    public virtual EnumCalculationPriority Priority => EnumCalculationPriority.Increases;
+    public int Cost { get; private set; } = 1;
 
     // For drawing.
     public List<PassiveNode> ChildConnections { get; } = [];
     public List<PassiveNode> Connections { get; } = [];
+
     public List<PassiveNodeRequirement> Requirements { get; } = [];
+    public List<PassiveNodeStat> Stats { get; } = [];
 
     public bool StartNode { get; private set; }
 
@@ -50,11 +51,11 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
     /// </summary>
     public int Id { get; }
 
-    public PassiveNode(string name, string code, NodePosition position, Constellation constellation)
+    public PassiveNode(string name, string code, int x, int y, Constellation constellation)
     {
         Name = name;
         Code = code;
-        Position = position;
+        Position = new NodePosition(x, y);
         Constellation = constellation;
 
         Id = constellation.GrabNextId();
@@ -75,6 +76,17 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
         return true;
     }
 
+    public static PassiveNode Create(string name, string code, int x, int y, Constellation constellation)
+    {
+        return new PassiveNode(name, code, x, y, constellation);
+    }
+
+    public PassiveNode WithTag(string tag)
+    {
+        Tags.Add(tag);
+        return this;
+    }
+
     /// <summary>
     /// Called when:
     /// Trying to unallocate node in passive tree on client on every other node.
@@ -90,9 +102,23 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
         return false;
     }
 
-    public virtual void BuildDescription(StringBuilder builder, PlayerPolarisData data)
+    public void BuildDescription(StringBuilder builder, PlayerPolarisData data, AllocatedNodesInfo info)
     {
+        // Rone code roadblock.
+        foreach (PassiveNodeStat stat in Stats)
+        {
+            stat.BuildDescription(builder, data, MainAPI.Capi.World.Player.Entity, info);
+        }
 
+        foreach (string tag in Tags)
+        {
+            builder.AppendLine($"<font color=\"#AAAAFF\">{char.ToUpper(tag[0]) + tag[1..]}</font>");
+        }
+
+        foreach (PassiveNodeRequirement requirement in Requirements)
+        {
+            requirement.BuildDescription(builder, data, MainAPI.Capi.World.Player.Entity, info);
+        }
     }
 
     public PassiveNode AddRequirement(PassiveNodeRequirement requirement)
@@ -101,17 +127,9 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
         return this;
     }
 
-    /// <summary>
-    /// Connect two nodes.
-    /// </summary>
-    public PassiveNode AddParent(PassiveNode node)
+    public PassiveNode AddStat(PassiveNodeStat stat)
     {
-        if (node.Connections.Contains(this)) return this; // Already connected, maybe log?
-
-        Connections.Add(node);
-        node.Connections.Add(this);
-        node.ChildConnections.Add(this);
-
+        Stats.Add(stat);
         return this;
     }
 
@@ -124,6 +142,20 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
     }
 
     /// <summary>
+    /// Connect two nodes.
+    /// </summary>
+    private PassiveNode AddParent(PassiveNode node)
+    {
+        if (node.Connections.Contains(this)) return this; // Already connected, maybe log?
+
+        Connections.Add(node);
+        node.Connections.Add(this);
+        node.ChildConnections.Add(this);
+
+        return this;
+    }
+
+    /// <summary>
     /// Make this node allocatable from any point.
     /// </summary>
     public PassiveNode MakeStartNode()
@@ -133,9 +165,32 @@ public abstract class PassiveNode : IEquatable<PassiveNode>
     }
 
     /// <summary>
+    /// Set knowledge point cost of this node.
+    /// Can it be negative? that would be funny.
+    /// </summary>
+    public PassiveNode SetCost(int cost)
+    {
+        Cost = cost;
+        return this;
+    }
+
+    public PassiveNode SetSize(float size)
+    {
+        Size = size;
+        return this;
+    }
+
+    /// <summary>
     /// Contribute anything to the context, usually a number.
     /// </summary>
-    public abstract void ContributeStats(PassiveContext context);
+    public void ContributeStats(PassiveContext context, EnumCalculationPriority calculationPriority)
+    {
+        foreach (PassiveNodeStat stat in Stats)
+        {
+            if (stat.Priority != calculationPriority) continue;
+            stat.ContributeStats(context);
+        }
+    }
 
     public bool Equals(PassiveNode? other)
     {

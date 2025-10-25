@@ -7,20 +7,16 @@
 public class StatAggregator : PassiveAggregator
 {
     private readonly string statName;
-    private readonly float multiplier;
 
-    public StatAggregator(string statName, float multiplier = 0.01f)
+    public StatAggregator(string statName)
     {
         this.statName = statName;
-        this.multiplier = multiplier;
     }
 
     public override void AddStats(PassiveContext statContext)
     {
-        float value = statContext.StatValues.TryGetValue(statName, out int val) ? val : 0f;
+        float value = statContext.FloatValues.TryGetValue(statName, out float val) ? val : 0f;
         if (value == 0f) return;
-
-        value *= multiplier;
 
         statContext.Player.Stats.Set(statName, "polaris", value, true);
     }

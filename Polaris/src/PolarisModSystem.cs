@@ -1,6 +1,7 @@
 ﻿global using NutsLib;
 global using OpenTK.Mathematics;
 global using Vintagestory.API.Common;
+using HarmonyLib;
 using System;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common.Entities;
@@ -12,6 +13,17 @@ namespace Polaris;
 
 public class PolarisModSystem : ModSystem
 {
+    private static Harmony? harmony;
+
+    public override void StartPre(ICoreAPI api)
+    {
+        if (harmony == null)
+        {
+            harmony = new Harmony("polaris");
+            harmony.PatchAll();
+        }
+    }
+
     public override void StartServerSide(ICoreServerAPI api)
     {
         api.Event.OnPlayerInteractEntity += Event_OnPlayerInteractEntity;
@@ -40,5 +52,14 @@ public class PolarisModSystem : ModSystem
         });
 
         NuttyShaderRegistry.AddShader("polaris:stars", "polaris:stars", "polarisstars");
+    }
+
+    public override void Dispose()
+    {
+        if (harmony != null)
+        {
+            harmony.UnpatchAll();
+            harmony = null;
+        }
     }
 }

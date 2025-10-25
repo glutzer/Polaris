@@ -45,16 +45,7 @@ public class WidgetNodeDescription : Widget
             builder.AppendLine();
         }
 
-        node.BuildDescription(builder, playerData);
-
-        // Rone code roadblock.
-        if (MainAPI.Capi.World.Player.Entity != null)
-        {
-            foreach (PassiveNodeRequirement requirement in node.Requirements)
-            {
-                requirement.BuildDescription(builder, playerData, MainAPI.Capi.World.Player.Entity, allocatedNodesInfo);
-            }
-        }
+        node.BuildDescription(builder, playerData, allocatedNodesInfo);
 
         richText.SetText(builder.ToString());
         SetFade = 0f;

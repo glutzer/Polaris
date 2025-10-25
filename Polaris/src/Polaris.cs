@@ -70,7 +70,7 @@ public class Polaris : NetworkedGameSystem
                 foreach (int nodeId in constData.AllocatedNodeIds)
                 {
                     PassiveNode? node = constellation.GetNodeById(nodeId);
-                    if (node?.Priority == priority) node.ContributeStats(context);
+                    node?.ContributeStats(context, priority);
                 }
             }
         }
@@ -82,13 +82,22 @@ public class Polaris : NetworkedGameSystem
         Constellation survival = new Constellation("Survival").SetColor(1f, 0.7f, 0.7f, 1f);
         AddConstellation(survival);
 
-        new FreeNode("", "start1", new NodePosition(), survival).MakeStartNode();
-        new AdditiveValueNode("Movement Speed", "walkspeed", 0.05f, "move1", new NodePosition(100, 100), survival).AddParent("start1").AddLevelRequirement("Survival", 3);
-        new AdditiveValueNode("Movement Speed", "walkspeed", 0.05f, "move2", new NodePosition(200, 150), survival).AddParent("move1").AddLevelRequirement("Survival", 5);
-        new AdditiveValueNode("Movement Speed", "walkspeed", 0.05f, "move3", new NodePosition(300, 175), survival).AddParent("move2").AddLevelRequirement("Survival", 7);
-        new MultiplicativeValueNode("Movement Speed", "walkspeed", 1.5f, "move4", new NodePosition(400, 190), survival).AddParent("move3").AddLevelRequirement("Survival", 9);
+        PassiveNode.Create("", "start1", 0, 0, survival).MakeStartNode().SetCost(0).SetSize(0.8f);
+        PassiveNode.Create("Movement Speed", "move1", 100, 100, survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("start1").AddLevelRequirement("Survival", 3);
+        PassiveNode.Create("Movement Speed", "move2", 200, 150, survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("move1").AddLevelRequirement("Survival", 5);
+        PassiveNode.Create("Movement Speed", "move3", 300, 175, survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("move2").AddLevelRequirement("Survival", 7);
+        PassiveNode.Create("Movement Speed", "move4", 400, 190, survival).AddMultiplicativeStat("walkspeed", 1.5f).AddParent("move3").AddLevelRequirement("Survival", 9);
 
-        new KeystoneNode("Primalist", "primalist", new NodePosition(-200, 100), survival, "You can eat raw meat\r\nGrain contributes no nutrition", "primalist").AddParent("start1");
+        //clothier
+
+        PassiveNode.Create("Primalist", "primalist", -200, -200, survival).SetSize(2f).AddParent("start1").AddSkillStat("primalist", 1, """
+            You can eat raw meat
+            Grain provides no nutrition
+            """);
+
+        PassiveNode.Create("Clothier", "clothier", -200, 200, survival).SetSize(2f).AddParent("start1").AddSkillStat("primalist", 1, """
+            You may sew certain kinds of clothing
+            """).AddTagExclusiveRequirement("class", 2).WithTag("class");
 
         // healingeffectivness
         // maxhealthExtraPoints - 2240 = 22.40 extra max health.
@@ -116,29 +125,6 @@ public class Polaris : NetworkedGameSystem
         // gliderLiftMax
         // gliderSpeedMax
         // jumpHeightMul
-
-        // Add 10 random nodes based on the listed stats.
-        // Example stats: healingeffectivness, maxhealthExtraPoints, hungerrate, rangedWeaponsAcc, rangedWeaponsSpeed, rangedWeaponsDamage, meleeWeaponsDamage, miningSpeedMul, jumpHeightMul, armorDurabilityLoss
-
-        new AdditiveValueNode("Healing Effectiveness", "healingeffectivness", 0.10f, "heal1", new NodePosition(120, 80), survival).AddParent("start1").AddLevelRequirement("Survival", 2);
-        new AdditiveValueNode("Max Health", "maxhealthExtraPoints", 100f, "health1", new NodePosition(180, 60), survival).AddParent("heal1").AddLevelRequirement("Survival", 4);
-        new MultiplicativeValueNode("Hunger Rate", "hungerrate", 0.85f, "hunger1", new NodePosition(250, 90), survival).AddParent("move2").AddLevelRequirement("Survival", 6);
-        new AdditiveValueNode("Ranged Weapons Accuracy", "rangedWeaponsAcc", 5f, "racc1", new NodePosition(320, 120), survival).AddParent("move3").AddLevelRequirement("Survival", 8);
-        new MultiplicativeValueNode("Ranged Weapons Speed", "rangedWeaponsSpeed", 1.2f, "rspeed1", new NodePosition(380, 160), survival).AddParent("racc1").AddLevelRequirement("Survival", 10);
-        new AdditiveValueNode("Ranged Weapons Damage", "rangedWeaponsDamage", 3f, "rdmg1", new NodePosition(440, 200), survival).AddParent("rspeed1").AddLevelRequirement("Survival", 2);
-        new AdditiveValueNode("Melee Weapons Damage", "meleeWeaponsDamage", 4f, "mdmg1", new NodePosition(500, 240), survival).AddParent("rdmg1").AddLevelRequirement("Survival", 4);
-        new MultiplicativeValueNode("Mining Speed", "miningSpeedMul", 1.3f, "minespeed1", new NodePosition(560, 280), survival).AddParent("mdmg1").AddLevelRequirement("Survival", 6);
-        new AdditiveValueNode("Jump Height", "jumpHeightMul", 0.2f, "jump1", new NodePosition(620, 320), survival).AddParent("minespeed1").AddLevelRequirement("Survival", 8);
-        new MultiplicativeValueNode("Armor Durability Loss", "armorDurabilityLoss", 0.8f, "armor1", new NodePosition(680, 360), survival).AddParent("jump1").AddLevelRequirement("Survival", 2);
-
-
-
-
-        // Time.
-        Constellation time = new Constellation("Time").SetColor(0.2f, 1f, 0.6f, 0.5f);
-        AddConstellation(time);
-
-        new FreeNode("", "start1", new NodePosition(), time).MakeStartNode();
     }
 
     protected override void RegisterMessages(INetworkChannel channel)
