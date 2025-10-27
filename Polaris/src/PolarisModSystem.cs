@@ -61,5 +61,7 @@ public class PolarisModSystem : ModSystem
             harmony.UnpatchAll();
             harmony = null;
         }
+
+        CraftingPatches.LastSlotActivator = null;
     }
 }

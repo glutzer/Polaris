@@ -8,6 +8,33 @@ using Vintagestory.API.Util;
 
 namespace Polaris;
 
+// healingeffectivness
+// maxhealthExtraPoints - 2240 = 22.40 extra max health.
+// walkspeed
+// hungerrate
+// rangedWeaponsAcc
+// rangedWeaponsSpeed
+// rangedWeaponsDamage
+// meleeWeaponsDamage
+// mechanicalsDamage
+// animalLootDropRate
+// forageDropRate
+// wildCropDropRate
+// vesselContentsDropRate
+// oreDropRate
+// rustyGearDropRate
+// miningSpeedMul
+// animalSeekingRange
+// armorDurabilityLoss
+// armorWalkSpeedAffectedness - Blackguard has -0.25, which means the affectedness will be 75%.
+// bowDrawingStrength
+// wholeVesselLootChance - Flat sum?
+// temporalGearTLRepairCost - Flat sum?
+// animalHarvestingTime
+// gliderLiftMax
+// gliderSpeedMax
+// jumpHeightMul
+
 /// <summary>
 /// Loads passive tree from mods, tells client to allocate nodes for him on success.
 /// </summary>
@@ -18,6 +45,8 @@ public class Polaris : NetworkedGameSystem
     public IEnumerable<Constellation> AllConstellations => constellations;
     private readonly Dictionary<string, Constellation> constellationByName = [];
 
+    private readonly List<PassiveAggregator> aggregators = [];
+
     private readonly Dictionary<string, PlayerPolarisData> playerDataByUid = [];
 
     public event Action<PlayerPolarisData>? OnClientDataUpdated;
@@ -25,6 +54,12 @@ public class Polaris : NetworkedGameSystem
 
     private static Polaris clientInst = null!;
     private static Polaris serverInst = null!;
+
+    /// <summary>
+    /// Invoked for each priority. So effects can register stats the same way passives do.
+    /// Only called on the server.
+    /// </summary>
+    public event Action<PassiveContext, EnumCalculationPriority>? OnGatherPassiveStats;
 
     public Polaris(bool isServer, ICoreAPI api) : base(isServer, api, "polaristree")
     {
@@ -50,14 +85,21 @@ public class Polaris : NetworkedGameSystem
         }
     }
 
-    private void RecalculatePlayerStats(EntityPlayer player)
+    private void CalculatePlayerStats(EntityPlayer player, bool onlyRemove = false)
     {
         if (api.Side != EnumAppSide.Server) throw new Exception("Recalculating on the client.");
-        MainAPI.GetGameSystem<SystemPolarisStats>(api.Side).CalculatePlayerStats(player);
-    }
+        PassiveContext context = new(player);
 
-    public void GatherPassiveInformation(PassiveContext context)
-    {
+        context.SkillBehavior.ResetForPassiveChange();
+
+        foreach (PassiveAggregator aggregator in aggregators)
+        {
+            aggregator.RemoveStats(context);
+        }
+
+        if (onlyRemove) return;
+
+        // Gather stats from player's passive information...
         PlayerPolarisData data = GetPlayerData(context.Player.PlayerUID);
 
         for (int i = 0; i < 3; i++)
@@ -73,58 +115,162 @@ public class Polaris : NetworkedGameSystem
                     node?.ContributeStats(context, priority);
                 }
             }
+            OnGatherPassiveStats?.Invoke(context, priority);
         }
+
+        foreach (PassiveAggregator aggregator in aggregators)
+        {
+            aggregator.AddStats(context);
+        }
+
+        context.SkillBehavior.SyncToPlayer();
+
+        // TODO: move these somewhere more modular.
+        player.GetHealth().MarkDirty();
     }
 
     public override void Initialize()
     {
-        // Survival.
-        Constellation survival = new Constellation("Survival").SetColor(1f, 0.7f, 0.7f, 1f);
+        // Main survival tree.
+        Constellation survival = new Constellation("Survival").SetColor(1f, 0.7f, 0.7f, 1f).AddStartNode();
         AddConstellation(survival);
 
-        PassiveNode.Create("", "start1", 0, 0, survival).MakeStartNode().SetCost(0).SetSize(0.8f);
-        PassiveNode.Create("Movement Speed", "move1", 100, 100, survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("start1").AddLevelRequirement("Survival", 3);
+        // Temporal tree.
+        Constellation time = new Constellation("Time").SetColor(0f, 1f, 0.6f, 0.5f).AddStartNode();
+        AddConstellation(time);
+
+        // Mining and digging combined.
+        Constellation excavation = new Constellation("Excavation").SetColor(0.6f, 0.4f, 0.4f, 1f).AddStartNode();
+        AddConstellation(excavation);
+
+        // Tree stuff.
+        Constellation forestry = new Constellation("Forestry").SetColor(0f, 0.6f, 0f, 1f).AddStartNode();
+        AddConstellation(forestry);
+
+        // Farming.
+        Constellation horticulture = new Constellation("Horticulture").SetColor(0.2f, 1f, 0.2f, 1f).AddStartNode();
+        AddConstellation(horticulture);
+
+        // Hunting.
+        Constellation hunting = new Constellation("Hunting").SetColor(0.6f, 0.2f, 0.2f, 0.75f).AddStartNode();
+        AddConstellation(hunting);
+
+        // Smithing.
+        Constellation smithing = new Constellation("Smithing").SetColor(0.7f, 0.4f, 0.2f, 1f).AddStartNode();
+        AddConstellation(smithing);
+
+        // Clay/knapping.
+        Constellation forming = new Constellation("Forming").SetColor(0.1f, 0.1f, 0.3f, 1f).AddStartNode();
+        AddConstellation(forming);
+
+        // Cooking.
+        Constellation cooking = new Constellation("Cooking").SetColor(0.7f, 0.7f, 0f, 1f).AddStartNode();
+        AddConstellation(cooking);
+
+        // Crafting - leatherworking and sewing.
+        Constellation crafting = new Constellation("Crafting").SetColor(0.7f, 0.3f, 0.5f, 1f).AddStartNode();
+        AddConstellation(crafting);
+
+        // Trade.
+        Constellation trade = new Constellation("Trade").SetColor(1f, 0f, 1f, 1f).AddStartNode();
+        AddConstellation(trade);
+
+        // Survival passives.
+        PassiveNode.Create("Movement Speed", "move1", 100, 100, survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("start").AddLevelRequirement("Survival", 3);
         PassiveNode.Create("Movement Speed", "move2", 200, 150, survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("move1").AddLevelRequirement("Survival", 5);
         PassiveNode.Create("Movement Speed", "move3", 300, 175, survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("move2").AddLevelRequirement("Survival", 7);
-        PassiveNode.Create("Movement Speed", "move4", 400, 190, survival).AddMultiplicativeStat("walkspeed", 1.5f).AddParent("move3").AddLevelRequirement("Survival", 9);
+        PassiveNode.Create("Movement Speed", "move4", 400, 190, survival).AddMultiplicativeStat("walkspeed", 1.5f).AddParent("move3").AddLevelRequirement("Survival", 9).NotableStyle();
 
-        //clothier
+        PassiveNode.Create("Health", "health1", -100, 100, survival).AddAdditiveExtraStat("healthMultiplier", 0.05f).AddParent("start");
+        PassiveNode.Create("Health", "health2", -200, 150, survival).AddAdditiveExtraStat("healthMultiplier", 0.05f).AddParent("health1").AddLevelRequirement("Survival", 3);
+        PassiveNode.Create("Health", "health3", -300, 175, survival).AddAdditiveExtraStat("healthMultiplier", 0.05f).AddParent("health2").AddLevelRequirement("Survival", 5);
+        PassiveNode.Create("Health", "health4", -400, 190, survival).AddMultiplicativeExtraStat("healthMultiplier", 1.2f).AddParent("health3").AddLevelRequirement("Survival", 7).NotableStyle();
 
-        PassiveNode.Create("Primalist", "primalist", -200, -200, survival).SetSize(2f).AddParent("start1").AddSkillStat("primalist", 1, """
+        PassiveNode.Create("Saturation", "sat1", 0, 100, survival).AddAdditiveExtraStat("satMultiplier", 0.2f).AddParent("start");
+        PassiveNode.Create("Saturation", "sat2", 0, 200, survival).AddAdditiveExtraStat("satMultiplier", 0.2f).AddParent("sat1").AddLevelRequirement("Survival", 3);
+        PassiveNode.Create("Saturation", "sat3", 0, 300, survival).AddAdditiveExtraStat("satMultiplier", 0.2f).AddParent("sat2").AddLevelRequirement("Survival", 5);
+        PassiveNode.Create("Saturation", "sat4", 0, 400, survival).AddAdditiveExtraStat("satMultiplier", 0.2f).AddParent("sat3").AddLevelRequirement("Survival", 7);
+        PassiveNode.Create("Saturation", "sat5", 0, 500, survival).AddAdditiveExtraStat("satMultiplier", 0.2f).AddParent("sat4").AddLevelRequirement("Survival", 9);
+        PassiveNode.Create("Saturation", "sat6", 0, 600, survival).AddMultiplicativeExtraStat("satMultiplier", 1.5f).AddParent("sat5").AddLevelRequirement("Survival", 20).NotableStyle();
+
+        PassiveNode.Create("Primalist", "primalist", -200, -200, survival).AddParent("start").AddSkillStat("primalist", 1, """
             You can eat raw meat
             Grain provides no nutrition
-            """);
+            """).KeystoneStyle();
 
-        PassiveNode.Create("Clothier", "clothier", -200, 200, survival).SetSize(2f).AddParent("start1").AddSkillStat("clothier", 1, """
+        // Crafting passives.
+        PassiveNode.Create("Sewing Effectiveness", "sewing1", -100, -100, crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 2).AddParent("start");
+        PassiveNode.Create("Sewing Effectiveness", "sewing2", -200, -200, crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 3).AddParent("sewing1");
+        PassiveNode.Create("Sewing Effectiveness", "sewing3", -300, -300, crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 4).AddParent("sewing2");
+
+        PassiveNode.Create("Clothier", "clothier", -300, 0, crafting).AddParent("sewing3").AddSkillStat("clothier", 1, """
             You may sew certain kinds of clothing
-            """).AddTagExclusiveRequirement("class", 2).WithTag("class");
+            """).AddTagExclusiveRequirement("class", 2).WithTag("class").KeystoneStyle().AddLevelRequirement("Crafting", 5);
 
-        // healingeffectivness
-        // maxhealthExtraPoints - 2240 = 22.40 extra max health.
-        // walkspeed
-        // hungerrate
-        // rangedWeaponsAcc
-        // rangedWeaponsSpeed
-        // rangedWeaponsDamage
-        // meleeWeaponsDamage
-        // mechanicalsDamage
-        // animalLootDropRate
-        // forageDropRate
-        // wildCropDropRate
-        // vesselContentsDropRate
-        // oreDropRate
-        // rustyGearDropRate
-        // miningSpeedMul
-        // animalSeekingRange
-        // armorDurabilityLoss
-        // armorWalkSpeedAffectedness - Blackguard has -0.25, which means the affectedness will be 75%.
-        // bowDrawingStrength
-        // wholeVesselLootChance - Flat sum?
-        // temporalGearTLRepairCost - Flat sum?
-        // animalHarvestingTime
-        // gliderLiftMax
-        // gliderSpeedMax
-        // jumpHeightMul
+        // Smithing passives.
+        PassiveNode.Create("Master Smith", "masterSmith1", -300, -100, smithing).AddSkillStat("masterSmith", 1, """
+            Your heavy hit also moves 1 voxel of material to the correct position
+            """).KeystoneStyle().AddParent("start").AddLevelRequirement("Smithing", 5).AddTagExclusiveRequirement("class", 2).WithTag("class");
+
+        PassiveNode.Create("Master Smith", "masterSmith2", -500, 0, smithing).AddSkillStat("masterSmith", 1, """
+            Your heavy hit also moves 1 voxel of material to the correct position
+            """).NotableStyle().AddParent("masterSmith1").AddLevelRequirement("Smithing", 10);
+
+
+
+
+
+        // Register one for each vanilla stat.
+        RegisterAggregator(new StatAggregator("healingeffectivness"));
+        RegisterAggregator(new StatAggregator("maxhealthExtraPoints"));
+        RegisterAggregator(new StatAggregator("walkspeed"));
+        RegisterAggregator(new StatAggregator("hungerrate"));
+        RegisterAggregator(new StatAggregator("rangedWeaponsAcc"));
+        RegisterAggregator(new StatAggregator("rangedWeaponsSpeed"));
+        RegisterAggregator(new StatAggregator("rangedWeaponsDamage"));
+        RegisterAggregator(new StatAggregator("meleeWeaponsDamage"));
+        RegisterAggregator(new StatAggregator("mechanicalsDamage"));
+        RegisterAggregator(new StatAggregator("animalLootDropRate"));
+        RegisterAggregator(new StatAggregator("forageDropRate"));
+        RegisterAggregator(new StatAggregator("wildCropDropRate"));
+        RegisterAggregator(new StatAggregator("vesselContentsDropRate"));
+        RegisterAggregator(new StatAggregator("oreDropRate"));
+        RegisterAggregator(new StatAggregator("rustyGearDropRate"));
+        RegisterAggregator(new StatAggregator("miningSpeedMul"));
+        RegisterAggregator(new StatAggregator("animalSeekingRange"));
+        RegisterAggregator(new StatAggregator("armorDurabilityLoss"));
+        RegisterAggregator(new StatAggregator("armorWalkSpeedAffectedness"));
+        RegisterAggregator(new StatAggregator("bowDrawingStrength"));
+        RegisterAggregator(new StatAggregator("wholeVesselLootChance"));
+        RegisterAggregator(new StatAggregator("temporalGearTLRepairCost"));
+        RegisterAggregator(new StatAggregator("animalHarvestingTime"));
+        RegisterAggregator(new StatAggregator("gliderLiftMax"));
+        RegisterAggregator(new StatAggregator("gliderSpeedMax"));
+        RegisterAggregator(new StatAggregator("jumpHeightMul"));
+
+        RegisterAggregator(new HungerAggregator());
+
+        if (api is ICoreServerAPI sapi)
+        {
+            sapi.Event.PlayerJoin += p =>
+            {
+                // Players passive data should already be loaded here.
+                CalculatePlayerStats(p.Entity);
+            };
+
+            sapi.Event.PlayerLeave += p =>
+            {
+                CalculatePlayerStats(p.Entity, true);
+            };
+
+            // Load passive data from world...
+            LoadDataFromWorld();
+        }
+    }
+
+    public void RegisterAggregator(PassiveAggregator aggregator)
+    {
+        aggregators.Add(aggregator);
     }
 
     protected override void RegisterMessages(INetworkChannel channel)
@@ -232,7 +378,7 @@ public class Polaris : NetworkedGameSystem
             SendPacket(packet, player);
 
             // Do stat re-calculation here, now that something is changed. Passive bonuses are server only. Effects or watched attribute booleans will determine client behavior.
-            RecalculatePlayerStats(player.Entity);
+            CalculatePlayerStats(player.Entity);
         });
     }
 
@@ -263,6 +409,27 @@ public class Polaris : NetworkedGameSystem
     public void AddExperience(string constellationName, string uid, float amount)
     {
         if (!constellationByName.TryGetValue(constellationName, out Constellation? constellation)) return; // Invalid.
+
+        // Apply exp multipliers from extra stats.
+        if (api is ICoreServerAPI sapi
+            && sapi.World.PlayerByUid(uid) is IPlayer sPlayer
+            && sPlayer.Entity != null)
+        {
+            float multi = 1f;
+
+            // Both separate modifiers.
+            if (sPlayer.Entity.TryGetExtraStat($"{constellationName}ExpMul", out float mul))
+            {
+                multi *= mul;
+            }
+
+            if (sPlayer.Entity.TryGetExtraStat("allExpMul", out float allMul))
+            {
+                multi *= allMul;
+            }
+
+            amount *= multi;
+        }
 
         PlayerPolarisData playerData = GetPlayerData(uid);
         PlayerConstellationData data = playerData.GetConstellation(constellationName);
@@ -304,7 +471,7 @@ public class Polaris : NetworkedGameSystem
             // Recalculate when leveling up.
             if (shouldServerRecalculate)
             {
-                MainAPI.GetServerSystem<SystemPolarisStats>().CalculatePlayerStats(player.Entity);
+                CalculatePlayerStats(player.Entity);
             }
         }
         else
@@ -426,6 +593,19 @@ public class Polaris : NetworkedGameSystem
                 playerDataByUid[uid] = data;
             }
         }
+    }
+
+    public override void OnClose()
+    {
+        if (api is not ICoreServerAPI sapi) return;
+
+        foreach (IPlayer? player in sapi.World.AllPlayers)
+        {
+            CalculatePlayerStats(player.Entity, true);
+        }
+
+        // Save and unload passive data...
+        MainAPI.GetServerSystem<Polaris>().SaveDataToWorld();
     }
 }
 
@@ -653,7 +833,7 @@ public class PlayerConstellationData
     public bool IsNodeUnallocatable(PassiveNode node)
     {
         PassiveNode? firstConnection = node.Connections.Where(x => AllocatedNodeIds.Contains(x.Id)).FirstOrDefault();
-        if (firstConnection == null) return node.StartNode;
+        if (firstConnection == null) return true;
 
         int oldNodeCount = 0;
         HashSet<int> foundIds = [];
@@ -713,7 +893,7 @@ public class PlayerConstellationData
         PassiveNode? firstConnection = !exceptNodes
             ? node.Connections.FirstOrDefault(x => AllocatedNodeIds.Contains(x.Id) || pendingNodes.Contains(x))
             : node.Connections.FirstOrDefault(x => AllocatedNodeIds.Contains(x.Id) && !pendingNodes.Contains(x));
-        if (firstConnection == null) return node.StartNode;
+        if (firstConnection == null) return true;
 
         int oldNodeCount = 0;
         HashSet<int> foundIds = [];

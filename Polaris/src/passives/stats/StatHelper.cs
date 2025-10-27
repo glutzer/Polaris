@@ -19,4 +19,16 @@ public static class StatHelper
         node.AddStat(new SkillStat(skill, levels, description));
         return node;
     }
+
+    public static PassiveNode AddAdditiveExtraStat(this PassiveNode node, string stat, float amount, bool flatAmount = false, float statBase = 1f)
+    {
+        node.AddStat(new ExtraStatAdditive(stat, amount, flatAmount, statBase));
+        return node;
+    }
+
+    public static PassiveNode AddMultiplicativeExtraStat(this PassiveNode node, string stat, float multi, bool flatAmount = false, float statBase = 1f)
+    {
+        node.AddStat(new ExtraStatMultiplicative(stat, multi, flatAmount, statBase));
+        return node;
+    }
 }

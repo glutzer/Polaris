@@ -106,4 +106,13 @@ public class Constellation
         StartBounds = min;
         EndBounds = max;
     }
+
+    /// <summary>
+    /// Adds a start node at 0, 0 called "start".
+    /// </summary>
+    public Constellation AddStartNode()
+    {
+        PassiveNode.Create("", "start", 0, 0, this).MakeStartNode().SetCost(0).SetSize(0.8f).SetColor(0.5f, 0.5f, 0.5f, 1f);
+        return this;
+    }
 }

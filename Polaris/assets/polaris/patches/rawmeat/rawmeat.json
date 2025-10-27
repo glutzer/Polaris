@@ -1,0 +1,47 @@
+[
+  {
+    "file": "game:itemtypes/food/redmeat.json",
+    "op": "add",
+    "path": "/behaviors/-",
+    "value": {
+      "name": "RawFoodBehavior",
+      "properties": {
+        "props": {
+          "satiety": 300,
+          "health": 0,
+          "foodcategory": "Protein"
+        }
+      }
+    }
+  },
+  {
+    "file": "game:itemtypes/food/bushmeat.json",
+    "op": "add",
+    "path": "/behaviors/-",
+    "value": {
+      "name": "RawFoodBehavior",
+      "properties": {
+        "props": {
+          "satiety": 200,
+          "health": 0,
+          "foodcategory": "Protein"
+        }
+      }
+    }
+  },
+  {
+    "file": "game:itemtypes/food/poultry.json",
+    "op": "add",
+    "path": "/behaviors/-",
+    "value": {
+      "name": "RawFoodBehavior",
+      "properties": {
+        "props": {
+          "satiety": 250,
+          "health": 0,
+          "foodcategory": "Protein"
+        }
+      }
+    }
+  }
+]

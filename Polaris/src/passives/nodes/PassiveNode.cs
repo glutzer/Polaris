@@ -180,6 +180,12 @@ public class PassiveNode : IEquatable<PassiveNode>
         return this;
     }
 
+    public PassiveNode SetColor(float x, float y, float z, float a)
+    {
+        Color = new Vector4(x, y, z, a);
+        return this;
+    }
+
     /// <summary>
     /// Contribute anything to the context, usually a number.
     /// </summary>
@@ -205,5 +211,17 @@ public class PassiveNode : IEquatable<PassiveNode>
     public string GetFullCode()
     {
         return $"{Constellation.Name}:{Code}";
+    }
+
+    public PassiveNode KeystoneStyle()
+    {
+        Size = 2f;
+        return this;
+    }
+
+    public PassiveNode NotableStyle()
+    {
+        Size = 1.5f;
+        return this;
     }
 }

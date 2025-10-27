@@ -24,5 +24,13 @@
   "statanimalHarvestingTime": "Animal Harvesting Time",
   "statgliderLiftMax": "Glider Lift Max",
   "statgliderSpeedMax": "Glider Speed Max",
-  "statjumpHeightMul": "Jump Height Multiplier"
+  "statjumpHeightMul": "Jump Height Multiplier",
+
+  "extrastatincsewingeffectiveness": "{0}% increased amount of clothing durability restored",
+
+  "extrastatinchealthMultiplier": "{0}% increased Maximum Health",
+  "extrastatmulhealthMultiplier": "{0}% more Maximum Health",
+
+  "extrastatincsatMultiplier": "{0}% increased Maximum Saturation",
+  "extrastatmulsatMultiplier": "{0}% more Maximum Saturation"
 }

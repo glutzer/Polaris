@@ -2,7 +2,6 @@
 
 /// <summary>
 /// Takes values for a stat which a player would have, applies them.
-/// A 0.01 multiplier would take a 0-100 int value and make it 0-1 float.
 /// </summary>
 public class StatAggregator : PassiveAggregator
 {

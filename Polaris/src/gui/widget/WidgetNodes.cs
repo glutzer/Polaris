@@ -625,7 +625,7 @@ public class WidgetNodes : Widget
 
     private class PositionedConstellation
     {
-        private const float Padding = 300f;
+        private const float Padding = 500f;
 
         public Vector2i Offset;
         public Constellation Constellation;

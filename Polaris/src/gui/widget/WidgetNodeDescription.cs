@@ -47,6 +47,12 @@ public class WidgetNodeDescription : Widget
 
         node.BuildDescription(builder, playerData, allocatedNodesInfo);
 
+        if (builder.Length == 0)
+        {
+            SetFade = 1f;
+            return;
+        }
+
         richText.SetText(builder.ToString());
         SetFade = 0f;
     }

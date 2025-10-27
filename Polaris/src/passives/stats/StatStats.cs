@@ -26,18 +26,18 @@ public class AdditiveStat : PassiveNodeStat
         if (flatDisplay)
         {
             string prefix = addition > 0f ? "+" : "";
-            builder.AppendLine($"{prefix}<strong>{addition}</strong> to <strong>{Lang.Get($"polaris:stat{stat}")}</strong>");
+            builder.AppendLine($"{prefix}{addition} to {Lang.Get($"polaris:stat{stat}")}");
             return;
         }
 
         float percentage = addition * 100f;
         if (percentage > 0f)
         {
-            builder.AppendLine($"<strong>{percentage:F0}</strong>% increased <strong>{Lang.Get($"polaris:stat{stat}")}</strong>");
+            builder.AppendLine($"{percentage:F0}% increased {Lang.Get($"polaris:stat{stat}")}");
         }
         else if (percentage < 0f)
         {
-            builder.AppendLine($"<strong>{-percentage:F0}</strong>% decreased <strong>{Lang.Get($"polaris:stat{stat}")}</strong>");
+            builder.AppendLine($"{-percentage:F0}% decreased {Lang.Get($"polaris:stat{stat}")}");
         }
     }
 }
@@ -65,12 +65,12 @@ public class MultiplicativeStat : PassiveNodeStat
         if (multi < 1f)
         {
             float reduction = (1f - multi) * 100f;
-            builder.AppendLine($"<strong>{reduction:F0}</strong>% less <strong>{Lang.Get($"polaris:stat{stat}")}</strong> gained from passives");
+            builder.AppendLine($"{reduction:F0}% less {Lang.Get($"polaris:stat{stat}")} gained from passives");
         }
         else if (multi > 1f)
         {
             float increase = (multi - 1f) * 100f;
-            builder.AppendLine($"<strong>{increase:F0}</strong>% more <strong>{Lang.Get($"polaris:stat{stat}")}</strong> gained from passives");
+            builder.AppendLine($"{increase:F0}% more {Lang.Get($"polaris:stat{stat}")} gained from passives");
         }
     }
 }
