@@ -4,7 +4,7 @@ namespace Polaris;
 
 public class WidgetNodeDescription : Widget
 {
-    private readonly NineSliceTexture bg = PolarisGuiThemes.Background;
+    private readonly NineSliceTexture bg = VanillaThemes.OutsetTexture;
     private readonly WidgetRichText richText;
 
     public override int SortPriority => 1;
@@ -12,7 +12,7 @@ public class WidgetNodeDescription : Widget
     public WidgetNodeDescription(Widget? parent, Gui gui) : base(parent, gui)
     {
         richText = new WidgetRichText(this, gui, "", 16f, PolarisGuiThemes.Font);
-        SetChildSizing(ChildSizing.Width | ChildSizing.Height);
+        SetChildSizing(ChildSizing.Width | ChildSizing.Height | ChildSizing.LegacyCalc);
     }
 
     public override void RegisterEvents(GuiEvents guiEvents)
@@ -36,8 +36,8 @@ public class WidgetNodeDescription : Widget
 
         StringBuilder builder = new();
 
-        PlayerPolarisData playerData = Polaris.Instance(MainAPI.Capi).GetClientData();
-        AllocatedNodesInfo allocatedNodesInfo = playerData.GetAllocatedNodesInfo(Polaris.Instance(MainAPI.Capi));
+        PlayerPolarisData playerData = SystemPolaris.Instance(MainAPI.Capi).GetClientData();
+        AllocatedNodesInfo allocatedNodesInfo = playerData.GetAllocatedNodesInfo(SystemPolaris.Instance(MainAPI.Capi));
 
         if (node.Name.Length > 0)
         {
@@ -57,10 +57,8 @@ public class WidgetNodeDescription : Widget
         SetFade = 0f;
     }
 
-    public override void OnRender(float dt, NuttyShader shader)
+    public override void OnRender(float dt, ShaderGui shader)
     {
-        shader.Uniform("color", PolarisGuiThemes.VintageBrown);
         RenderTools.RenderNineSlice(bg, shader, X, Y, Width, Height);
-        shader.Uniform("color", Vector4.One);
     }
 }

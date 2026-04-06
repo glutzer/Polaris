@@ -32,12 +32,14 @@ public class CraftingPatches
     }
 
     // Sewing patches.
-    [HarmonyPatch(typeof(ItemWearable), "ChangeCondition")]
+    [HarmonyPatch(typeof(CollectibleBehaviorWearable), "ChangeCondition")]
     public class CharPatch1
     {
         [HarmonyPrefix]
         public static bool Prefix(ItemSlot slot, ref float changeVal)
         {
+            if (slot.Itemstack == null) return true;
+
             if (slot.Inventory.Api is ICoreServerAPI)
             {
                 // I think it actually uses this when taking damage.
@@ -51,7 +53,7 @@ public class CraftingPatches
 
                 float condition = slot.Itemstack.Attributes.GetFloat("condition", 1f);
                 float toRepair = Math.Min(1f - condition, changeVal);
-                Polaris.AddExperience("Crafting", LastSlotActivator, toRepair * 50f);
+                SystemPolaris.AddExperience("Crafting", LastSlotActivator, toRepair * 50f);
             }
 
             return true;

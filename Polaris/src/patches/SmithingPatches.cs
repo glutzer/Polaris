@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using Vintagestory.API.MathTools;
-using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 
 namespace Polaris;
@@ -69,11 +68,6 @@ public class SmithingPatches
         [HarmonyPrefix]
         public static bool HarmonyPrefix(BlockEntityAnvil __instance, IPlayer byPlayer, Vec3i voxelPos, BlockSelection blockSel)
         {
-            if (byPlayer.Entity.Api is ICoreServerAPI)
-            {
-                Polaris.AddExperience("Smithing", byPlayer, 10000);
-            }
-
             ItemSlot activeHotbarSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
             if (activeHotbarSlot.Itemstack == null || !__instance.CanWorkCurrent)
             {
@@ -90,6 +84,23 @@ public class SmithingPatches
                     MoveVoxelToCorrectPosition(__instance, voxelPos, blockSel);
                     masterSmithLevel--;
                 }
+            }
+
+            return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(BlockBloomery), "GetDrops")]
+    public class BloomeryPatch
+    {
+        [HarmonyPrefix]
+        public static bool HarmonyPrefix(IPlayer? byPlayer, ref float dropQuantityMultiplier)
+        {
+            if (byPlayer == null) return true;
+
+            if (byPlayer.Entity.TryGetExtraStat("bloomeryDrops", out float dropMulti))
+            {
+                dropQuantityMultiplier *= dropMulti;
             }
 
             return true;

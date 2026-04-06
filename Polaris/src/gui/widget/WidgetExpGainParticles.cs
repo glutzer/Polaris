@@ -8,7 +8,7 @@ namespace Polaris;
 /// </summary>
 public class WidgetExpGainParticles : Widget
 {
-    private const float TEXT_SIZE = 64f;
+    private const float TEXT_SIZE = 32f;
     private readonly Queue<ExpGainParticle> particles = [];
 
     private class ExpGainParticle
@@ -45,7 +45,7 @@ public class WidgetExpGainParticles : Widget
 
     public WidgetExpGainParticles(Widget? parent, Gui gui) : base(parent, gui)
     {
-        Polaris.Instance(MainAPI.Capi).OnClientExperienceGain += OnExpGain;
+        SystemPolaris.Instance(MainAPI.Capi).OnClientExperienceGain += OnExpGain;
     }
 
     private void OnExpGain(Constellation constellation, float amount, int currentLevel)
@@ -60,11 +60,7 @@ public class WidgetExpGainParticles : Widget
         float yVelocity = -20f + (Random.Shared.NextSingle() * -20f);
         Vector2 velocity = new(xVelocity, yVelocity);
 
-        float expToNextLevel = constellation.GetExpToReachLevel(currentLevel + 1);
-        float ratio = Math.Clamp(amount / expToNextLevel, 0.05f, 1f);
-        float size = TEXT_SIZE * ratio * MainAPI.GuiScale;
-
-        ExpGainParticle particle = new(text, constellation.Color.Xyz, 2f, position, velocity, size);
+        ExpGainParticle particle = new(text, constellation.Color.Xyz, 2f, position, velocity, TEXT_SIZE);
 
         particles.Enqueue(particle);
     }
@@ -83,7 +79,7 @@ public class WidgetExpGainParticles : Widget
         }
     }
 
-    public override void OnRender(float dt, NuttyShader shader)
+    public override void OnRender(float dt, ShaderGui shader)
     {
         TickParticles(dt);
         foreach (ExpGainParticle particle in particles)
@@ -95,6 +91,6 @@ public class WidgetExpGainParticles : Widget
     public override void Dispose()
     {
         if (MainAPI.Capi == null) return;
-        Polaris.Instance(MainAPI.Capi).OnClientExperienceGain -= OnExpGain;
+        SystemPolaris.Instance(MainAPI.Capi).OnClientExperienceGain -= OnExpGain;
     }
 }

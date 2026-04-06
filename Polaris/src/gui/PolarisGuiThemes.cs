@@ -22,17 +22,8 @@ public static class PolarisGuiThemes
     private static readonly Dictionary<string, object> cache = [];
 
     public static Texture Blank => GetOrCreate("blank", () => Texture.Create("polaris:textures/gui/blank.png"));
-    public static NineSliceTexture Background => GetOrCreate("background", () => Texture.Create("polaris:textures/gui/background.png").AsNineSlice(14, 14));
-    public static NineSliceTexture Button => GetOrCreate("button", () => Texture.Create("polaris:textures/gui/button.png").AsNineSlice(14, 14));
-    public static NineSliceTexture ScrollBar => GetOrCreate("scrollbar", () => Texture.Create("polaris:textures/gui/title.png").AsNineSlice(14, 14));
-    public static NineSliceTexture Title => GetOrCreate("title", () => Texture.Create("polaris:textures/gui/title.png").AsNineSlice(14, 14));
-    public static NineSliceTexture TitleBorder => GetOrCreate("titleborder", () => Texture.Create("polaris:textures/gui/titleborder.png").AsNineSlice(14, 14));
-
     public static NineSliceTexture ExpSides => GetOrCreate("expsides", () => Texture.Create("polaris:textures/gui/expsides.png").AsNineSlice(12, 12));
     public static NineSliceTexture ExpInner => GetOrCreate("expinner", () => Texture.Create("polaris:textures/gui/expinner.png").AsNineSlice(12, 12));
-
-    // Nine slice is over y coordinate to display entire thing, so sizing is important here.
-    public static Texture Tab => GetOrCreate("tab", () => Texture.Create("polaris:textures/gui/tab40.png"));
 
     private static T GetOrCreate<T>(string path, Func<T> makeTex)
     {

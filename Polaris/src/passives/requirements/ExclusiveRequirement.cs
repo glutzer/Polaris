@@ -34,7 +34,7 @@ public class ExclusiveRequirement : PassiveNodeRequirement
         PlayerConstellationData? constellationData = data.GetConstellation(constellationName);
         if (constellationData == null) return;
 
-        PassiveNode? node = Polaris.Instance(player.Api).GetNode(constellationName, code);
+        PassiveNode? node = SystemPolaris.Instance(player.Api).GetNode(constellationName, code);
         if (node == null) return;
 
         builder.AppendLine($"<font color=\"{color}\">Exclusive with {node.Name}</font>");

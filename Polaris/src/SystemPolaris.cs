@@ -39,7 +39,7 @@ namespace Polaris;
 /// Loads passive tree from mods, tells client to allocate nodes for him on success.
 /// </summary>
 [GameSystem]
-public class Polaris : NetworkedGameSystem
+public class SystemPolaris : NetworkedGameSystem
 {
     private readonly List<Constellation> constellations = [];
     public IEnumerable<Constellation> AllConstellations => constellations;
@@ -52,8 +52,8 @@ public class Polaris : NetworkedGameSystem
     public event Action<PlayerPolarisData>? OnClientDataUpdated;
     public event Action<Constellation, float, int>? OnClientExperienceGain;
 
-    private static Polaris clientInst = null!;
-    private static Polaris serverInst = null!;
+    private static SystemPolaris clientInst = null!;
+    private static SystemPolaris serverInst = null!;
 
     /// <summary>
     /// Invoked for each priority. So effects can register stats the same way passives do.
@@ -61,11 +61,11 @@ public class Polaris : NetworkedGameSystem
     /// </summary>
     public event Action<PassiveContext, EnumCalculationPriority>? OnGatherPassiveStats;
 
-    public Polaris(bool isServer, ICoreAPI api) : base(isServer, api, "polaristree")
+    public SystemPolaris(bool isServer, ICoreAPI api) : base(isServer, api, "polaristree")
     {
     }
 
-    public static Polaris Instance(ICoreAPI api)
+    public static SystemPolaris Instance(ICoreAPI api)
     {
         return api.Side == EnumAppSide.Client ? clientInst : serverInst;
     }
@@ -216,9 +216,18 @@ public class Polaris : NetworkedGameSystem
             Your heavy hit also moves 1 voxel of material to the correct position
             """).NotableStyle().AddParent("masterSmith1").AddLevelRequirement("Smithing", 10);
 
+        PassiveNode.Create("Cracker", "cracker1", 0, 200, smithing).AddAdditiveExtraStat("bloomeryDrops", 0.1f).AddParent("start").AddLevelRequirement("Smithing", 4);
+        PassiveNode.Create("Cracker", "cracker2", 0, 400, smithing).AddAdditiveExtraStat("bloomeryDrops", 0.1f).AddParent("cracker1").AddLevelRequirement("Smithing", 8);
 
+        // Excavation passives.
+        PassiveNode.Create("Eroder", "eroder", 100, 200, excavation).AddSkillStat("eroder", 1, """
+            Rock does not drop stones
+            """).AddParent("start").AddLevelRequirement("Excavation", 5).KeystoneStyle();
 
-
+        // Time passives.
+        PassiveNode.Create("Stable Settler", "stableSettler", 200, 200, time).AddSkillStat("stableSettler", 1, """
+            Temporally unstable areas do not affect you near the surface
+            """).AddParent("start").AddLevelRequirement("Time", 5).KeystoneStyle();
 
         // Register one for each vanilla stat.
         RegisterAggregator(new StatAggregator("healingeffectivness"));
@@ -525,23 +534,6 @@ public class Polaris : NetworkedGameSystem
 
     // Two save methods called from SystemPolarisStats.
 
-    public void SaveDataToWorld()
-    {
-        if (api.Side != EnumAppSide.Server) throw new Exception("Saving on the client.");
-
-        Dictionary<string, byte[]> dataToSave = [];
-
-        foreach (KeyValuePair<string, PlayerPolarisData> kv in playerDataByUid)
-        {
-            string uid = kv.Key;
-            PlayerPolarisData data = kv.Value;
-            dataToSave[uid] = SerializerUtil.Serialize(data);
-        }
-
-        // Save dataToSave to world storage...
-        MainAPI.Sapi.WorldManager.SaveGame.StoreData("polarisplayerdata", dataToSave);
-    }
-
     /// <summary>
     /// Fixes data when loading.
     /// </summary>
@@ -575,6 +567,24 @@ public class Polaris : NetworkedGameSystem
         data.SetLevelAndKnowledgeFromTotalExp(this);
     }
 
+    public void SaveDataToWorld()
+    {
+        if (api.Side != EnumAppSide.Server) throw new Exception("Saving on the client.");
+
+        Dictionary<string, byte[]> dataToSave = [];
+
+        foreach (KeyValuePair<string, PlayerPolarisData> kv in playerDataByUid)
+        {
+            string uid = kv.Key;
+            PlayerPolarisData data = kv.Value;
+            data.ConvertToSaveableData(this);
+            dataToSave[uid] = SerializerUtil.Serialize(data);
+        }
+
+        // Save dataToSave to world storage...
+        MainAPI.Sapi.WorldManager.SaveGame.StoreData("polarisplayerdata", dataToSave);
+    }
+
     public void LoadDataFromWorld()
     {
         if (api.Side != EnumAppSide.Server) throw new Exception("Loading on the client.");
@@ -589,6 +599,7 @@ public class Polaris : NetworkedGameSystem
             PlayerPolarisData? data = SerializerUtil.Deserialize<PlayerPolarisData>(bytes);
             if (data != null)
             {
+                data.ConvertToLoadedData(this);
                 VerifyPlayerData(data);
                 playerDataByUid[uid] = data;
             }
@@ -605,7 +616,7 @@ public class Polaris : NetworkedGameSystem
         }
 
         // Save and unload passive data...
-        MainAPI.GetServerSystem<Polaris>().SaveDataToWorld();
+        MainAPI.GetServerSystem<SystemPolaris>().SaveDataToWorld();
     }
 }
 
@@ -654,7 +665,27 @@ public class PlayerPolarisData
     [ProtoMember(4)]
     public int KnowledgePoints { get; private set; }
 
-    public void SetLevelAndKnowledgeFromTotalExp(Polaris tree)
+    public void ConvertToSaveableData(SystemPolaris tree)
+    {
+        foreach (KeyValuePair<string, PlayerConstellationData> constKvp in ConstellationData)
+        {
+            Constellation? constellation = tree.GetConstellation(constKvp.Key);
+            if (constellation == null) continue;
+            constKvp.Value.ConvertToSaveableData(constellation);
+        }
+    }
+
+    public void ConvertToLoadedData(SystemPolaris tree)
+    {
+        foreach (KeyValuePair<string, PlayerConstellationData> constKvp in ConstellationData)
+        {
+            Constellation? constellation = tree.GetConstellation(constKvp.Key);
+            if (constellation == null) continue;
+            constKvp.Value.ConvertToLoadedData(constellation);
+        }
+    }
+
+    public void SetLevelAndKnowledgeFromTotalExp(SystemPolaris tree)
     {
         float exp = 0f;
         int pointsSpent = 0;
@@ -692,7 +723,7 @@ public class PlayerPolarisData
     /// If anything relies on it, it can't be unallocated.
     /// Also check pending nodes, it's not done here.
     /// </summary>
-    public bool DoesAnythingRelyOnNode(PassiveNode node, Polaris treeSystem, HashSet<PassiveNode> pendingUnallocations)
+    public bool DoesAnythingRelyOnNode(PassiveNode node, SystemPolaris treeSystem, HashSet<PassiveNode> pendingUnallocations)
     {
         List<PassiveNode> list = GetAllAllocatedNodes(treeSystem);
         string code = node.GetFullCode();
@@ -707,7 +738,7 @@ public class PlayerPolarisData
     /// <summary>
     /// Returns a list of allocated nodes.
     /// </summary>
-    public List<PassiveNode> GetAllAllocatedNodes(Polaris treeSystem)
+    public List<PassiveNode> GetAllAllocatedNodes(SystemPolaris treeSystem)
     {
         List<PassiveNode> nodes = [];
 
@@ -731,7 +762,7 @@ public class PlayerPolarisData
     /// <summary>
     /// Returns all allocated nodes in the format constellation:code.
     /// </summary>
-    public AllocatedNodesInfo GetAllocatedNodesInfo(Polaris treeSystem)
+    public AllocatedNodesInfo GetAllocatedNodesInfo(SystemPolaris treeSystem)
     {
         AllocatedNodesInfo info = new();
 
@@ -786,6 +817,37 @@ public class PlayerConstellationData
 
     [ProtoMember(3)]
     public float Experience;
+
+    [ProtoMember(4)]
+    public HashSet<string> AllocatedNodeCodes = [];
+
+    public void ConvertToSaveableData(Constellation constellation)
+    {
+        AllocatedNodeCodes.Clear();
+
+        foreach (int nodeId in AllocatedNodeIds)
+        {
+            PassiveNode? node = constellation.GetNodeById(nodeId);
+            if (node == null) continue;
+            AllocatedNodeCodes.Add(node.Code);
+        }
+
+        AllocatedNodeIds.Clear();
+    }
+
+    public void ConvertToLoadedData(Constellation constellation)
+    {
+        AllocatedNodeIds.Clear();
+
+        foreach (string nodeCode in AllocatedNodeCodes)
+        {
+            PassiveNode? node = constellation.GetNodeByCode(nodeCode);
+            if (node == null) continue;
+            AllocatedNodeIds.Add(node.Id);
+        }
+
+        AllocatedNodeCodes.Clear();
+    }
 
     /// <summary>
     /// Check if a node is a start node or connected to an allocated node.

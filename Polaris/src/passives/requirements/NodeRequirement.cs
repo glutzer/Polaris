@@ -23,7 +23,7 @@ public class NodeRequirement : PassiveNodeRequirement
 
         string[] parts = requiredCode.Split(':');
 
-        PassiveNode? node = Polaris.Instance(player.Api).GetNode(parts[0], parts[1]);
+        PassiveNode? node = SystemPolaris.Instance(player.Api).GetNode(parts[0], parts[1]);
         if (node == null) return;
 
         builder.AppendLine($"<font color=\"{color}\">Requires Passive {node.Name}</font>");

@@ -12,6 +12,8 @@ public class GoatisPatches
         [HarmonyPrefix]
         public static bool Prefix(CollectibleObject __instance, ref FoodNutritionProperties __result, Entity forEntity)
         {
+            if (forEntity == null) return true;
+
             if (forEntity.GetSkillLevel("primalist") > 0)
             {
                 if (__instance.NutritionProps == null && __instance.GetBehavior<RawFoodBehavior>() is RawFoodBehavior rawFoodBehavior)

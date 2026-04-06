@@ -26,6 +26,6 @@ public class BlockBehaviorExp : BlockBehavior
     public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, ref EnumHandling handling)
     {
         if (byPlayer == null || world.Side.IsClient() || exp == 0f) return;
-        Polaris.AddExperience(skill, byPlayer, exp);
+        SystemPolaris.AddExperience(skill, byPlayer, exp);
     }
 }

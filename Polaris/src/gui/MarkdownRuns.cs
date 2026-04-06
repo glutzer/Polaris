@@ -6,7 +6,7 @@ public abstract class MarkdownRun
     /// Used for calculating bounds.
     /// </summary>
     public abstract void GetPositionAtRunEnd(float x, float y, ref int xAdvance, ref int yAdvance);
-    public abstract void Render(float x, float y, ref int xAdvance, ref int yAdvance, NuttyShader shader);
+    public abstract void Render(float x, float y, ref int xAdvance, ref int yAdvance, ShaderGui shader);
 }
 
 public class TextRun : MarkdownRun
@@ -23,7 +23,7 @@ public class TextRun : MarkdownRun
         xAdvance += textObject.PixelLength;
     }
 
-    public override void Render(float x, float y, ref int xAdvance, ref int yAdvance, NuttyShader shader)
+    public override void Render(float x, float y, ref int xAdvance, ref int yAdvance, ShaderGui shader)
     {
         xAdvance = textObject.RenderLine(x, y + yAdvance, shader, xAdvance);
     }
@@ -44,7 +44,7 @@ public class BreakRun : MarkdownRun
         yAdvance += lineHeight;
     }
 
-    public override void Render(float x, float y, ref int xAdvance, ref int yAdvance, NuttyShader shader)
+    public override void Render(float x, float y, ref int xAdvance, ref int yAdvance, ShaderGui shader)
     {
         xAdvance = 0;
         yAdvance += lineHeight;

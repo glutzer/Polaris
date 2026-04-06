@@ -45,7 +45,7 @@ public class WidgetRichText : Widget
         FixedSize(maxX + (padding * 2), maxY + (padding * 2)).NoScaling();
     }
 
-    public override void OnRender(float dt, NuttyShader shader)
+    public override void OnRender(float dt, ShaderGui shader)
     {
         int xAdv = 0;
         int yAdv = (int)(font.LineHeight * fontScale * 0.5f);

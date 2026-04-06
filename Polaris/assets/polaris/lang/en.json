@@ -26,11 +26,13 @@
   "statgliderSpeedMax": "Glider Speed Max",
   "statjumpHeightMul": "Jump Height Multiplier",
 
-  "extrastatincsewingeffectiveness": "{0}% increased amount of clothing durability restored",
+  "extrastatincsewingeffectiveness": "{0}% increased amount of Clothing Durability restored",
 
-  "extrastatinchealthMultiplier": "{0}% increased Maximum Health",
-  "extrastatmulhealthMultiplier": "{0}% more Maximum Health",
+  "extrastatinchealthMultiplier": "{0}% increased maximum Health",
+  "extrastatmulhealthMultiplier": "{0}% more maximum Health",
 
-  "extrastatincsatMultiplier": "{0}% increased Maximum Saturation",
-  "extrastatmulsatMultiplier": "{0}% more Maximum Saturation"
+  "extrastatincsatMultiplier": "{0}% increased maximum Saturation",
+  "extrastatmulsatMultiplier": "{0}% more maximum Saturation",
+
+  "extrastatincbloomeryDrops": "{0}% increased Bricks recovered from Bloomeries"
 }

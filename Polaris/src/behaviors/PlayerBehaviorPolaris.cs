@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Datastructures;
+using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
+using Vintagestory.ServerMods;
 
 namespace Polaris;
 
@@ -52,8 +54,75 @@ public class PlayerBehaviorPolaris : EntityBehavior
     private Dictionary<string, int> skillLevels = [];
     private Dictionary<string, float> extraStats = [];
 
+    private double previousStability = double.NaN;
+    private long stabilityLastChecked = 0;
+
     public PlayerBehaviorPolaris(Entity entity) : base(entity)
     {
+    }
+
+    /// <summary>
+    /// Do temporal stability stuff here since it's really messy in the stability behavior.
+    /// </summary>
+    public override void OnGameTick(float dt)
+    {
+        if (entity.Api.Side != EnumAppSide.Server) return; // Only do stability effects server-side.
+
+        EntityBehaviorTemporalStabilityAffected? behavior = entity.GetBehavior<EntityBehaviorTemporalStabilityAffected>();
+        if (behavior == null) return;
+
+        if (entity is not EntityPlayer ePlayer) return;
+
+        // Only do this once every second.
+        float delta = (entity.World.ElapsedMilliseconds - stabilityLastChecked) / 1000f;
+        if (delta < 1f)
+        {
+            return;
+        }
+
+        SystemTemporalStability systemTemporalStability = MainAPI.Sapi.ModLoader.GetModSystem<SystemTemporalStability>();
+        IPlayer player = ePlayer.Player;
+
+        if (double.IsNaN(previousStability))
+        {
+            previousStability = behavior.OwnStability;
+            stabilityLastChecked = entity.World.ElapsedMilliseconds;
+        }
+
+        double loss = previousStability - behavior.OwnStability;
+
+        previousStability = behavior.OwnStability;
+        stabilityLastChecked = entity.World.ElapsedMilliseconds;
+
+        if (loss > 0.0)
+        {
+            float lossMultiplier = 1f;
+
+            // Experience is gained from losing stability.
+            if (loss > 0.001)
+            {
+                SystemPolaris.AddExperience("Time", player, (float)(loss * 10.0));
+            }
+
+            if (ePlayer.TryGetExtraStat("stabilityLossMul", out float stabilityLossMul))
+            {
+                lossMultiplier *= stabilityLossMul;
+            }
+
+            if (!systemTemporalStability.StormData.nowStormActive && ePlayer.GetSkillLevel("stableSettler") > 0)
+            {
+                int yPos = (int)ePlayer.Pos.Y;
+                int seaLevel = TerraGenConfig.seaLevel;
+
+                // At 20 below sea level have 1x loss multiplier, at sea level and above have 0x loss.
+                float depthMul = 1f - GameMath.Clamp((yPos - (seaLevel - 20)) / 20f, 0f, 1f);
+                lossMultiplier *= depthMul;
+            }
+
+            // Add back stability that shouldn't have been lost.
+            double newLoss = loss * lossMultiplier;
+            behavior.OwnStability -= newLoss - loss;
+        }
     }
 
     public float AddToExtraStat(string statCode, float amount, float statBase = 1f)

@@ -24,6 +24,32 @@ public class PolarisModSystem : ModSystem
         }
     }
 
+    public override void Start(ICoreAPI api)
+    {
+        CommandArgumentParsers parsers = api.ChatCommands.Parsers;
+
+        // Commands.
+        api.ChatCommands
+            .Create("constellationxp")
+            .RequiresPrivilege("ban")
+            .WithArgs(parsers.Word("constellation"), parsers.Float("experience"), parsers.OnlinePlayer("player"))
+            .HandleWith(HandleExperience);
+    }
+
+    public static TextCommandResult HandleExperience(TextCommandCallingArgs args)
+    {
+        if (args.Parsers[0].GetValue() is not string constellation) return TextCommandResult.Error("Invalid constellation.");
+
+        if (args.Parsers[1].GetValue() is not float exp || args.Parsers[2].GetValue() is not IServerPlayer player)
+        {
+            return TextCommandResult.Error("Invalid args.");
+        }
+
+        SystemPolaris.AddExperience(constellation, player, exp);
+
+        return TextCommandResult.Success($"Added {exp:F1} experience to {constellation}.");
+    }
+
     public override void StartServerSide(ICoreServerAPI api)
     {
         api.Event.OnPlayerInteractEntity += Event_OnPlayerInteractEntity;
@@ -31,7 +57,7 @@ public class PolarisModSystem : ModSystem
 
     private void Event_OnPlayerInteractEntity(Entity entity, IPlayer byPlayer, ItemSlot slot, Vec3d hitPosition, int mode, ref EnumHandling handling)
     {
-        Polaris.Instance(byPlayer.Entity.Api).AddExperience("Survival", byPlayer.PlayerUID, Random.Shared.NextSingle() * 500f);
+        SystemPolaris.Instance(byPlayer.Entity.Api).AddExperience("Survival", byPlayer.PlayerUID, Random.Shared.NextSingle() * 500f);
     }
 
     public override void StartClientSide(ICoreClientAPI api)
@@ -56,11 +82,8 @@ public class PolarisModSystem : ModSystem
 
     public override void Dispose()
     {
-        if (harmony != null)
-        {
-            harmony.UnpatchAll();
-            harmony = null;
-        }
+        harmony?.UnpatchAll();
+        harmony = null;
 
         CraftingPatches.LastSlotActivator = null;
     }

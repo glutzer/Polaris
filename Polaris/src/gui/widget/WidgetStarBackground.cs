@@ -57,11 +57,11 @@ public class WidgetStarBackground : Widget
             e.SetHandled();
 
             offset.Zoom += e.delta * -0.1f;
-            offset.Zoom = Math.Clamp(offset.Zoom, 0.2f, 2f);
+            offset.Zoom = Math.Clamp(offset.Zoom, 0.2f, 3f);
         };
     }
 
-    public override void OnRender(float dt, NuttyShader shader)
+    public override void OnRender(float dt, ShaderGui shader)
     {
         NuttyShader starShader = NuttyShaderRegistry.Get("polarisstars");
         starShader.Use();
