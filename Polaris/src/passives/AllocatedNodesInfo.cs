@@ -11,10 +11,7 @@ public class AllocatedNodesInfo
     {
         foreach (string tag in tags)
         {
-            if (!TagCounts.TryGetValue(tag, out int value))
-            {
-                TagCounts[tag] = 1;
-            }
+            TagCounts.TryGetValue(tag, out int value);
             TagCounts[tag] = ++value;
         }
     }

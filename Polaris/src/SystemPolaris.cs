@@ -320,6 +320,7 @@ public class SystemPolaris : NetworkedGameSystem
                 float newExp = MathF.Round(currentExpRatio * node.Constellation.GetExpToReachLevel(constData.Level), 2);
 
                 float totalExpLoss = constData.Experience + node.Constellation.GetExpToReachLevel(constData.Level) + newExp;
+                //float totalExpLoss = constData.Experience + node.Constellation.GetExpToReachLevel(constData.Level) - newExp; Claude said this was correct didn't test.
 
                 constData.AllocatedNodeIds.Remove(p.NodeId);
                 constData.Level--;

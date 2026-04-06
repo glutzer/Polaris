@@ -46,7 +46,7 @@ public class CraftingPatches
                 // If something else repairs the clothes this could be bad.
                 if (LastSlotActivator == null || changeVal <= 0f || SecondsSinceLastActivation > 1f) return true;
 
-                if (LastSlotActivator.Entity.TryGetExtraStat("sewingEffectiveness", out float value))
+                if (LastSlotActivator.Entity.TryGetExtraStat("sewingeffectiveness", out float value))
                 {
                     changeVal *= value;
                 }
