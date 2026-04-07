@@ -142,7 +142,7 @@ public class PlayerBehaviorPolaris : EntityBehavior
                 // Experience is gained from losing stability.
                 if (loss > 0.001)
                 {
-                    SystemPolaris.AddExperience("Time", player, (float)(loss * 10.0));
+                    SystemPolaris.AddExperience("Time", player, (float)(loss * 10.0), false);
                 }
 
                 if (ePlayer.TryGetExtraStat("stabilityLossMul", out float stabilityLossMul))
