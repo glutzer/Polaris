@@ -15,6 +15,13 @@ public class WidgetNodes : Widget
     private PassiveNode? hoveredNode;
     private readonly List<PositionedConstellation> positionedConstellations = [];
 
+    // Node-moving mode.
+    private bool nodeMoveMode;
+    private PassiveNode? dragNode;
+    private PositionedConstellation? dragConst;
+    private Vector2 dragStartWorldMouse;
+    private NodePosition dragStartNodePos;
+
     private readonly NineSliceTexture expSides = PolarisGuiThemes.ExpSides;
     private readonly NineSliceTexture expInner = PolarisGuiThemes.ExpInner;
 
@@ -42,6 +49,11 @@ public class WidgetNodes : Widget
         Shadow = true
     };
 
+    private readonly TextObject moveText = new("", PolarisGuiThemes.Font, 24f, new Vector4(1f, 1f, 0f, 1f))
+    {
+        Shadow = true
+    };
+
     public WidgetNodes(Widget? parent, Gui gui, Offset offset) : base(parent, gui)
     {
         this.offset = offset;
@@ -52,6 +64,7 @@ public class WidgetNodes : Widget
         nodeDescription = new WidgetNodeDescription(this, gui);
 
         new PolarisToggleButton(this, gui, OnRefundToggle, true, false, "Refund Passives").Alignment(Align.LeftTop).Percent(0f, 0.25f, 0.1f, 0.05f);
+        new PolarisToggleButton(this, gui, OnNodeMoveToggle, true, false, "Node Moving").Alignment(Align.LeftTop).Percent(0f, 0.31f, 0.1f, 0.05f);
     }
 
     private void OnClientDataUpdated(PlayerPolarisData data)
@@ -81,6 +94,13 @@ public class WidgetNodes : Widget
         DeleteChildren<WidgetVanillaButton>();
 
         refunding = on;
+    }
+
+    private void OnNodeMoveToggle(bool on)
+    {
+        nodeMoveMode = on;
+        dragNode = null;
+        dragConst = null;
     }
 
     /// <summary>
@@ -193,6 +213,28 @@ public class WidgetNodes : Widget
         starScreen.UpdateUbo(lights);
     }
 
+    private void RefreshStarLights()
+    {
+        List<StarLight> lights = [];
+
+        foreach (PositionedConstellation posConst in positionedConstellations)
+        {
+            foreach (PassiveNode node in posConst.Constellation.AllNodes)
+            {
+                float x = node.Position.X + posConst.Offset.X;
+                float y = node.Position.Y + posConst.Offset.Y;
+
+                lights.Add(new StarLight()
+                {
+                    PosRange = new Vector4(x, -y, 20f * node.NodeSize, 0f),
+                    Color = posConst.Constellation.Color
+                });
+            }
+        }
+
+        starScreen.UpdateUbo(lights);
+    }
+
     public override void RegisterEvents(GuiEvents guiEvents)
     {
         guiEvents.MouseDown += GuiEvents_MouseDown;
@@ -202,6 +244,17 @@ public class WidgetNodes : Widget
 
     private void GuiEvents_MouseMove(MouseEvent obj)
     {
+        if (nodeMoveMode && dragNode != null && dragConst != null)
+        {
+            Vector2 worldMouse = ScreenToWorld(obj.X, obj.Y);
+            Vector2 delta = worldMouse - dragStartWorldMouse;
+            int snappedX = SnapToGrid(dragStartNodePos.X + delta.X);
+            int snappedY = SnapToGrid(dragStartNodePos.Y + delta.Y);
+            dragNode.SetPosition(snappedX, snappedY);
+            RefreshStarLights();
+            return;
+        }
+
         foreach (PositionedConstellation posConst in positionedConstellations)
         {
             if (!IsConstellationInFrame(posConst)) continue;
@@ -223,11 +276,30 @@ public class WidgetNodes : Widget
 
     private void GuiEvents_MouseUp(MouseEvent obj)
     {
+        if (nodeMoveMode && dragNode != null)
+        {
+            Console.WriteLine($"[Polaris] Node '{dragNode.Code}' ({dragNode.Constellation.Name}): ({dragNode.Position.X}, {dragNode.Position.Y})");
+            dragNode = null;
+            dragConst = null;
+        }
     }
 
     private void GuiEvents_MouseDown(MouseEvent obj)
     {
         if (obj.Handled) return;
+
+        if (nodeMoveMode)
+        {
+            if (hoveredNode != null)
+            {
+                dragNode = hoveredNode;
+                dragConst = positionedConstellations.Find(pc => pc.Constellation == hoveredNode.Constellation);
+                dragStartWorldMouse = ScreenToWorld(obj.X, obj.Y);
+                dragStartNodePos = hoveredNode.Position;
+                obj.Handled = true;
+            }
+            return;
+        }
 
         if (hoveredNode != null)
         {
@@ -521,6 +593,11 @@ public class WidgetNodes : Widget
                     color = Vector4.Lerp(color, new Vector4(1f, 1f, 0f, 1f), 0.25f);
                 }
 
+                if (node == dragNode)
+                {
+                    color = Vector4.Lerp(color, new Vector4(1f, 0.5f, 0f, 1f), 0.5f);
+                }
+
                 shader.Color = color;
 
                 Vector2 pos = GetNodePosition(node, posConst);
@@ -613,7 +690,22 @@ public class WidgetNodes : Widget
         expText.RenderLine(310f, 20f, shader, 0, true);
 
         shader.ResetColor();
+
+        if (nodeMoveMode && dragNode != null)
+        {
+            moveText.Text = $"{dragNode.Code}: ({dragNode.Position.X}, {dragNode.Position.Y})";
+            moveText.RenderCenteredLine(MainAPI.RenderWidth / 2f, 60f, shader, true);
+        }
     }
+
+    private Vector2 ScreenToWorld(float screenX, float screenY)
+    {
+        float cx = MainAPI.RenderWidth / 2f;
+        float cy = MainAPI.RenderHeight / 2f;
+        return new Vector2(cx + (screenX - cx) * offset.Zoom, cy + (screenY - cy) * offset.Zoom);
+    }
+
+    private static int SnapToGrid(float value) => (int)(MathF.Round(value / 10f) * 10);
 
     public override void Dispose()
     {

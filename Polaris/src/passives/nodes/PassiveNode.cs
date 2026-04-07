@@ -25,7 +25,7 @@ public class PassiveNode : IEquatable<PassiveNode>
 {
     public string Name { get; }
     public string Code { get; }
-    public NodePosition Position { get; }
+    public NodePosition Position { get; private set; }
     public Constellation Constellation { get; }
 
     // Node tags which will be gathered.
@@ -75,6 +75,12 @@ public class PassiveNode : IEquatable<PassiveNode>
             if (!requirement.CanAllocate(player, data, info)) return false;
         }
         return true;
+    }
+
+    internal void SetPosition(int x, int y)
+    {
+        Position = new NodePosition(x, y);
+        Constellation.RecalculateBounds();
     }
 
     public static PassiveNode Create(string name, string code, int x, int y, Constellation constellation)

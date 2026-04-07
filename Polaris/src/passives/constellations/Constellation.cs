@@ -90,7 +90,7 @@ public class Constellation
     /// <summary>
     /// Recalculate bounds every time a node is changed.
     /// </summary>
-    private void RecalculateBounds()
+    internal void RecalculateBounds()
     {
         Vector2i min = new();
         Vector2i max = new();
