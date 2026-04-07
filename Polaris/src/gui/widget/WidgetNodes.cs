@@ -86,7 +86,7 @@ public class WidgetNodes : Widget
     /// <summary>
     /// Spaghetti from refunding.
     /// </summary>
-    private void UpdateConstellationExperience(Constellation constellation, float amount, int currentLevel)
+    private void UpdateConstellationExperience(Constellation constellation, float amount, int currentLevel, bool alert)
     {
         PlayerPolarisData playerData = SystemPolaris.Instance(MainAPI.Capi).GetClientData();
         foreach (PositionedConstellation posConst in positionedConstellations)

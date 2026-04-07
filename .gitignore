@@ -21,6 +21,7 @@
 mono_crash.*
 
 srcforstealing/
+.github/
 
 # Build results
 [Dd]ebug/

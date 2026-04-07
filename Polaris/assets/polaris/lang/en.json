@@ -29,10 +29,30 @@
   "extrastatincsewingeffectiveness": "{0}% increased amount of Clothing Durability restored",
 
   "extrastatinchealthMultiplier": "{0}% increased maximum Health",
+  "extrastatdechealthMultiplier": "{0}% decreased maximum Health",
   "extrastatmulhealthMultiplier": "{0}% more maximum Health",
 
   "extrastatincsatMultiplier": "{0}% increased maximum Saturation",
   "extrastatmulsatMultiplier": "{0}% more maximum Saturation",
 
-  "extrastatincbloomeryDrops": "{0}% increased Bricks recovered from Bloomeries"
+  "extrastatincbloomeryDrops": "{0}% increased Bricks recovered from Bloomeries",
+
+  "extrastatincorchardistBonus": "{0}% increased Fruit Tree Drop Rate",
+
+  "extrastatincstoneDropBonus": "{0}% increased Stone Drop Rate",
+  "extrastatmulstoneDropBonus": "{0}% more Stone Drop Rate",
+
+  "extrastatincstoneCutterChance": "{0}% chance to find an intact Stone Block",
+  "extrastatmulstoneCutterChance": "{0}% more chance to find an intact Stone Block",
+
+  "extrastatincgemDropBonus": "{0}% increased Gemstone Drop Rate",
+  "extrastatmulgemDropBonus": "{0}% more Gemstone Drop Rate",
+
+  "extrastatincfeatherFall": "{0}% reduced Fall Damage",
+  "extrastatincsporeCloud": "{0}% chance to find an extra Mushroom",
+  "extrastatincsporeCloudperlevel": "{0}% chance per {1} level to find an extra Mushroom",
+  "extrastatincfungalFortitude": "{0}% increased Saturation from Mushrooms",
+
+  "nodetag-class": "Class",
+  "nodetag-miningmastery": "Mining Mastery"
 }

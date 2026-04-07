@@ -35,11 +35,43 @@ public class ExtraStatAdditive : PassiveNodeStat
 
         if (amount > 0f)
         {
-            builder.AppendLine(Lang.Get($"polaris:extrastatinc{stat}", amount));
+            builder.AppendLine(Lang.Get($"polaris:extrastatinc{stat}", Math.Abs(amount)));
             return;
         }
 
-        builder.AppendLine(Lang.Get($"polaris:extrastatdec{stat}", amount));
+        builder.AppendLine(Lang.Get($"polaris:extrastatdec{stat}", Math.Abs(amount)));
+    }
+}
+
+/// <summary>
+/// Contributes <c>amount * constellationLevel</c> to an additive extra stat each time stats are recalculated.
+/// Used for nodes whose bonus scales with the player's level in a given constellation.
+/// </summary>
+public class ExtraStatAdditivePerLevel : PassiveNodeStat
+{
+    private readonly string stat;
+    private readonly float amountPerLevel;
+    private readonly string constellationName;
+    private readonly float statBase;
+
+    public ExtraStatAdditivePerLevel(string stat, float amountPerLevel, string constellationName, float statBase = 0f)
+    {
+        this.stat = stat;
+        this.amountPerLevel = amountPerLevel;
+        this.constellationName = constellationName;
+        this.statBase = statBase;
+    }
+
+    public override void ContributeStats(PassiveContext passiveContext)
+    {
+        int level = passiveContext.PolarisData.GetConstellation(constellationName).Level;
+        passiveContext.SkillBehavior.AddToExtraStat(stat, amountPerLevel * level, statBase);
+    }
+
+    public override void BuildDescription(StringBuilder builder, PlayerPolarisData data, EntityPlayer player, AllocatedNodesInfo info)
+    {
+        float displayAmount = MathF.Round(amountPerLevel * 100f, 2);
+        builder.AppendLine(Lang.Get($"polaris:extrastatinc{stat}perlevel", displayAmount, constellationName));
     }
 }
 
@@ -74,10 +106,10 @@ public class ExtraStatMultiplicative : PassiveNodeStat
 
         if (this.multi > 1f)
         {
-            builder.AppendLine(Lang.Get($"polaris:extrastatmul{stat}", multi));
+            builder.AppendLine(Lang.Get($"polaris:extrastatmul{stat}", Math.Abs(multi)));
             return;
         }
 
-        builder.AppendLine(Lang.Get($"polaris:extrastatdiv{stat}", multi));
+        builder.AppendLine(Lang.Get($"polaris:extrastatdiv{stat}", Math.Abs(multi)));
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Vintagestory.API.Config;
 
 namespace Polaris;
 
@@ -112,7 +113,7 @@ public class PassiveNode : IEquatable<PassiveNode>
 
         foreach (string tag in Tags)
         {
-            builder.AppendLine($"<font color=\"#AAAAFF\">{char.ToUpper(tag[0]) + tag[1..]}</font>");
+            builder.AppendLine($"<font color=\"#AAAAFF\">{Lang.Get($"polaris:nodetag-{tag}")}</font>");
         }
 
         foreach (PassiveNodeRequirement requirement in Requirements)

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Vintagestory.API.Config;
 
 namespace Polaris;
 
@@ -26,15 +27,15 @@ public class TagExclusiveRequirement : PassiveNodeRequirement
 
         int tagCount = info.GetTagCount(tag);
 
-        string tagWithUpper = char.ToUpper(tag[0]) + tag[1..];
+        string langTag = Lang.Get($"polaris:nodetag-{tag}");
 
         if (tagAmount > 1)
         {
-            builder.AppendLine($"<font color=\"{color}\">Only {tagAmount} {tagWithUpper} passives may be allocated ({tagCount}/{tagAmount})</font>");
+            builder.AppendLine($"<font color=\"{color}\">Only {tagAmount} {langTag} passives may be allocated ({tagCount}/{tagAmount})</font>");
         }
         else
         {
-            builder.AppendLine($"<font color=\"{color}\">Only 1 {tagWithUpper} passive may be allocated</font>");
+            builder.AppendLine($"<font color=\"{color}\">Only 1 {langTag} passive may be allocated</font>");
         }
     }
 }

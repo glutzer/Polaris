@@ -1,0 +1,30 @@
+[
+  {
+    "file": "game:blocktypes/plant/mushroom.json",
+    "op": "addmerge",
+    "path": "/behaviors",
+    "value": []
+  },
+  {
+    "file": "game:blocktypes/plant/mushroom-side.json",
+    "op": "addmerge",
+    "path": "/behaviors",
+    "value": []
+  },
+  {
+    "file": "game:blocktypes/plant/mushroom.json",
+    "op": "add",
+    "path": "/behaviors/-",
+    "value": {
+      "name": "PolarisMushroomBehavior"
+    }
+  },
+  {
+    "file": "game:blocktypes/plant/mushroom-side.json",
+    "op": "add",
+    "path": "/behaviors/-",
+    "value": {
+      "name": "PolarisMushroomBehavior"
+    }
+  }
+]
