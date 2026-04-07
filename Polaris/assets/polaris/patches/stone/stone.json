@@ -4,7 +4,35 @@
     "op": "add",
     "path": "/behaviors/-",
     "value": {
-      "name": "PolarisStoneBehavior"
+      "name": "PolarisStoneBehavior",
+      "properties": { "stoneType": "rock" }
+    }
+  },
+  {
+    "file": "game:blocktypes/stone/ore-gem.json",
+    "op": "add",
+    "path": "/behaviors/-",
+    "value": {
+      "name": "PolarisStoneBehavior",
+      "properties": { "stoneType": "gem" }
+    }
+  },
+  {
+    "file": "game:blocktypes/stone/ore-graded.json",
+    "op": "add",
+    "path": "/behaviors/-",
+    "value": {
+      "name": "PolarisStoneBehavior",
+      "properties": { "stoneType": "ore" }
+    }
+  },
+  {
+    "file": "game:blocktypes/stone/ore-ungraded.json",
+    "op": "add",
+    "path": "/behaviors/-",
+    "value": {
+      "name": "PolarisStoneBehavior",
+      "properties": { "stoneType": "ore" }
     }
   }
 ]

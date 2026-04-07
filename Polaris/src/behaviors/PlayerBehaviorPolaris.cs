@@ -55,10 +55,26 @@ public class PlayerBehaviorPolaris : EntityBehavior
     private Dictionary<string, float> extraStats = [];
 
     private double previousStability = double.NaN;
-    private long stabilityLastChecked = 0;
+    private long stabilityLastChecked;
+    private float survivalAccum;
 
     public PlayerBehaviorPolaris(Entity entity) : base(entity)
     {
+    }
+
+    public override void OnEntityDeath(DamageSource damageSourceForDeath)
+    {
+        base.OnEntityDeath(damageSourceForDeath);
+
+        if (entity.Api.Side.IsServer())
+        {
+            if (entity is not EntityPlayer ePlayer) return;
+
+            // Remove half of survival experience when dying.
+            PlayerConstellationData playerData = SystemPolaris.Instance(entity.Api).GetConstellationData("Survival", ePlayer.PlayerUID);
+            int currentSurvivalExp = (int)playerData.Experience;
+            SystemPolaris.AddExperience("Survival", ePlayer.Player, -currentSurvivalExp / 2);
+        }
     }
 
     /// <summary>
@@ -69,9 +85,31 @@ public class PlayerBehaviorPolaris : EntityBehavior
         if (entity.Api.Side != EnumAppSide.Server) return; // Only do stability effects server-side.
 
         EntityBehaviorTemporalStabilityAffected? behavior = entity.GetBehavior<EntityBehaviorTemporalStabilityAffected>();
-        if (behavior == null) return;
 
         if (entity is not EntityPlayer ePlayer) return;
+
+        survivalAccum += dt;
+        if (survivalAccum >= 10f)
+        {
+            survivalAccum %= 10f;
+            SystemPolaris.AddExperience("Survival", ePlayer.Player, 1f, false);
+        }
+
+        // Shroud Walker — apply/remove chameleon effect when the player starts/stops sneaking.
+        if (ePlayer.GetSkillLevel("shroudWalker") > 0)
+        {
+            bool isSneaking = ePlayer.Controls.Sneak;
+            if (isSneaking)
+            {
+                if (!ePlayer.HasEffect<EffectPolarisChameleon>()) ePlayer.AddEffect(new EffectPolarisChameleon());
+            }
+            else
+                ePlayer.RemoveEffect<EffectPolarisChameleon>();
+        }
+        else
+        {
+            ePlayer.RemoveEffect<EffectPolarisChameleon>();
+        }
 
         // Only do this once every second.
         float delta = (entity.World.ElapsedMilliseconds - stabilityLastChecked) / 1000f;
@@ -80,48 +118,61 @@ public class PlayerBehaviorPolaris : EntityBehavior
             return;
         }
 
-        SystemTemporalStability systemTemporalStability = MainAPI.Sapi.ModLoader.GetModSystem<SystemTemporalStability>();
         IPlayer player = ePlayer.Player;
 
-        if (double.IsNaN(previousStability))
+        if (behavior != null)
         {
+            SystemTemporalStability systemTemporalStability = MainAPI.Sapi.ModLoader.GetModSystem<SystemTemporalStability>();
+
+            if (double.IsNaN(previousStability))
+            {
+                previousStability = behavior.OwnStability;
+                stabilityLastChecked = entity.World.ElapsedMilliseconds;
+            }
+
+            double loss = previousStability - behavior.OwnStability;
+
             previousStability = behavior.OwnStability;
             stabilityLastChecked = entity.World.ElapsedMilliseconds;
+
+            if (loss > 0.0)
+            {
+                float lossMultiplier = 1f;
+
+                // Experience is gained from losing stability.
+                if (loss > 0.001)
+                {
+                    SystemPolaris.AddExperience("Time", player, (float)(loss * 10.0));
+                }
+
+                if (ePlayer.TryGetExtraStat("stabilityLossMul", out float stabilityLossMul))
+                {
+                    lossMultiplier *= stabilityLossMul;
+                }
+
+                if (!systemTemporalStability.StormData.nowStormActive && ePlayer.GetSkillLevel("stableSettler") > 0)
+                {
+                    int yPos = (int)ePlayer.Pos.Y;
+                    int seaLevel = TerraGenConfig.seaLevel;
+
+                    // At 20 below sea level have 1x loss multiplier, at sea level and above have 0x loss.
+                    float depthMul = 1f - GameMath.Clamp((yPos - (seaLevel - 20)) / 20f, 0f, 1f);
+                    lossMultiplier *= depthMul;
+                }
+
+                // Add back stability that shouldn't have been lost.
+                double newLoss = loss * lossMultiplier;
+                behavior.OwnStability -= newLoss - loss;
+            }
         }
+    }
 
-        double loss = previousStability - behavior.OwnStability;
-
-        previousStability = behavior.OwnStability;
-        stabilityLastChecked = entity.World.ElapsedMilliseconds;
-
-        if (loss > 0.0)
+    public override void OnEntityReceiveDamage(DamageSource damageSource, ref float damage)
+    {
+        if (damageSource.Source == EnumDamageSource.Fall && damageSource.Type == EnumDamageType.Gravity)
         {
-            float lossMultiplier = 1f;
-
-            // Experience is gained from losing stability.
-            if (loss > 0.001)
-            {
-                SystemPolaris.AddExperience("Time", player, (float)(loss * 10.0));
-            }
-
-            if (ePlayer.TryGetExtraStat("stabilityLossMul", out float stabilityLossMul))
-            {
-                lossMultiplier *= stabilityLossMul;
-            }
-
-            if (!systemTemporalStability.StormData.nowStormActive && ePlayer.GetSkillLevel("stableSettler") > 0)
-            {
-                int yPos = (int)ePlayer.Pos.Y;
-                int seaLevel = TerraGenConfig.seaLevel;
-
-                // At 20 below sea level have 1x loss multiplier, at sea level and above have 0x loss.
-                float depthMul = 1f - GameMath.Clamp((yPos - (seaLevel - 20)) / 20f, 0f, 1f);
-                lossMultiplier *= depthMul;
-            }
-
-            // Add back stability that shouldn't have been lost.
-            double newLoss = loss * lossMultiplier;
-            behavior.OwnStability -= newLoss - loss;
+            if (TryGetExtraStat("featherFall", out float reduction) && reduction > 0f)
+                damage *= 1f - reduction;
         }
     }
 

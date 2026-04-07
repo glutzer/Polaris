@@ -79,6 +79,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="srcforstealing\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="assets\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -8,6 +8,7 @@ public class PassiveContext
     public Dictionary<string, float> FloatValues { get; } = [];
     public EntityPlayer Player { get; }
     public PlayerBehaviorPolaris SkillBehavior { get; }
+    public PlayerPolarisData PolarisData { get; }
 
     public void MultiplyFloatStat(string name, float multiplier)
     {
@@ -59,9 +60,10 @@ public class PassiveContext
         return IntValues.TryGetValue(name, out int val) ? val : 0;
     }
 
-    public PassiveContext(EntityPlayer player)
+    public PassiveContext(EntityPlayer player, PlayerPolarisData polarisData)
     {
         Player = player;
         SkillBehavior = player.GetBehavior<PlayerBehaviorPolaris>()!; // This better be here.
+        PolarisData = polarisData;
     }
 }

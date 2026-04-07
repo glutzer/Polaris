@@ -48,8 +48,10 @@ public class WidgetExpGainParticles : Widget
         SystemPolaris.Instance(MainAPI.Capi).OnClientExperienceGain += OnExpGain;
     }
 
-    private void OnExpGain(Constellation constellation, float amount, int currentLevel)
+    private void OnExpGain(Constellation constellation, float amount, int currentLevel, bool alert)
     {
+        if (!alert) return;
+
         // Round amount to 2 digits.
         string text = $"+{MathF.Round(amount, 2)} {constellation.Name}";
 
