@@ -25,4 +25,10 @@ public static class RequirementHelper
         node.AddRequirement(new TagExclusiveRequirement(tag, amount));
         return node;
     }
+
+    public static PassiveNode AddTagExclusiveRequirementAndTag(this PassiveNode node, string tag, int amount)
+    {
+        node.AddRequirement(new TagExclusiveRequirement(tag, amount));
+        return node.WithTag(tag);
+    }
 }

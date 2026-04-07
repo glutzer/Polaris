@@ -86,8 +86,43 @@ public class SmithingPatches
                 }
             }
 
+            __instance.WorkItemStack?.Attributes.SetInt("polarisHits", __instance.WorkItemStack.Attributes.GetInt("polarisHits") + 1);
+
             return true;
         }
+    }
+
+    [HarmonyPatch(typeof(BlockEntityAnvil), "CheckIfFinished")]
+    public class AnvilCheckIfFinishedPatch
+    {
+        [HarmonyPrefix]
+        public static void Prefix(BlockEntityAnvil __instance, out AnvilSmithState __state, IPlayer byPlayer)
+        {
+            __state = new AnvilSmithState
+            {
+                Player = byPlayer,
+                HitCount = __instance.WorkItemStack?.Attributes.GetInt("polarisHits") ?? 0,
+                HadWorkItem = __instance.WorkItemStack != null
+            };
+        }
+
+        [HarmonyPostfix]
+        public static void Postfix(BlockEntityAnvil __instance, AnvilSmithState __state)
+        {
+            // Recipe completes when WorkItemStack transitions from non-null to null.
+            if (!__state.HadWorkItem || __instance.WorkItemStack != null) return;
+            if (__state.Player == null || __instance.Api.Side != EnumAppSide.Server) return;
+
+            float exp = 1f + 0.02f * __state.HitCount;
+            SystemPolaris.AddExperience("Smithing", __state.Player, exp);
+        }
+    }
+
+    public class AnvilSmithState
+    {
+        public IPlayer? Player;
+        public int HitCount;
+        public bool HadWorkItem;
     }
 
     [HarmonyPatch(typeof(BlockBloomery), "GetDrops")]

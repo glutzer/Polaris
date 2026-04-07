@@ -152,9 +152,13 @@ public class SystemPolaris : NetworkedGameSystem
         Constellation horticulture = new Constellation("Horticulture").SetColor(0.2f, 1f, 0.2f, 1f).AddStartNode();
         AddConstellation(horticulture);
 
-        // Hunting.
+        // Hunting — ranged combat and animal loot.
         Constellation hunting = new Constellation("Hunting").SetColor(0.6f, 0.2f, 0.2f, 0.75f).AddStartNode();
         AddConstellation(hunting);
+
+        // Combat — melee combat.
+        Constellation combat = new Constellation("Combat").SetColor(0.8f, 0.15f, 0.15f, 1f).AddStartNode();
+        AddConstellation(combat);
 
         // Smithing.
         Constellation smithing = new Constellation("Smithing").SetColor(0.7f, 0.4f, 0.2f, 1f).AddStartNode();
@@ -288,24 +292,25 @@ public class SystemPolaris : NetworkedGameSystem
         PassiveNode.Create("Orchardist", "orchardist3", 300, -175, horticulture).AddAdditiveExtraStat("orchardistBonus", 0.2f).AddParent("orchardist2").AddLevelRequirement("Horticulture", 7).NotableStyle();
 
         // Hunting passives.
-        // Swordsman chain — increased melee weapon damage.
-        PassiveNode.Create("Swordsman", "meleedmg1", -100, 100, hunting).AddAdditiveStat("meleeWeaponsDamage", 0.05f).AddParent("start").AddLevelRequirement("Hunting", 2);
-        PassiveNode.Create("Swordsman", "meleedmg2", -200, 150, hunting).AddAdditiveStat("meleeWeaponsDamage", 0.05f).AddParent("meleedmg1").AddLevelRequirement("Hunting", 4);
-        PassiveNode.Create("Swordsman", "meleedmg3", -300, 175, hunting).AddMultiplicativeStat("meleeWeaponsDamage", 1.3f).AddParent("meleedmg2").AddLevelRequirement("Hunting", 7).NotableStyle();
-
         // Archer chain — increased ranged weapon damage.
         PassiveNode.Create("Archer", "rangeddmg1", 100, 100, hunting).AddAdditiveStat("rangedWeaponsDamage", 0.05f).AddParent("start").AddLevelRequirement("Hunting", 2);
         PassiveNode.Create("Archer", "rangeddmg2", 200, 150, hunting).AddAdditiveStat("rangedWeaponsDamage", 0.05f).AddParent("rangeddmg1").AddLevelRequirement("Hunting", 4);
         PassiveNode.Create("Archer", "rangeddmg3", 300, 175, hunting).AddMultiplicativeStat("rangedWeaponsDamage", 1.3f).AddParent("rangeddmg2").AddLevelRequirement("Hunting", 7).NotableStyle();
 
         // Looter chain — more drops from animals.
-        PassiveNode.Create("Looter", "lootdrop1", 0, 100, hunting).AddAdditiveStat("animalLootDropRate", 0.1f).AddParent("start").AddLevelRequirement("Hunting", 3);
-        PassiveNode.Create("Looter", "lootdrop2", 0, 200, hunting).AddMultiplicativeStat("animalLootDropRate", 1.5f).AddParent("lootdrop1").AddLevelRequirement("Hunting", 6).NotableStyle();
+        PassiveNode.Create("Looter", "lootdrop1", -100, 100, hunting).AddAdditiveStat("animalLootDropRate", 0.1f).AddParent("start").AddLevelRequirement("Hunting", 3);
+        PassiveNode.Create("Looter", "lootdrop2", -200, 200, hunting).AddMultiplicativeStat("animalLootDropRate", 1.5f).AddParent("lootdrop1").AddLevelRequirement("Hunting", 6).NotableStyle();
+
+        // Combat passives.
+        // Swordsman chain — increased melee weapon damage.
+        PassiveNode.Create("Swordsman", "meleedmg1", -100, 100, combat).AddAdditiveStat("meleeWeaponsDamage", 0.05f).AddParent("start").AddLevelRequirement("Combat", 2);
+        PassiveNode.Create("Swordsman", "meleedmg2", -200, 150, combat).AddAdditiveStat("meleeWeaponsDamage", 0.05f).AddParent("meleedmg1").AddLevelRequirement("Combat", 4);
+        PassiveNode.Create("Swordsman", "meleedmg3", -300, 175, combat).AddMultiplicativeStat("meleeWeaponsDamage", 1.3f).AddParent("meleedmg2").AddLevelRequirement("Combat", 7).NotableStyle();
 
         // Berserker keystone — killing an entity restores a small amount of health.
-        PassiveNode.Create("Berserker", "berserker", -200, -200, hunting).AddParent("meleedmg1").AddSkillStat("berserker", 1, """
+        PassiveNode.Create("Berserker", "berserker", -200, -200, combat).AddParent("meleedmg1").AddSkillStat("berserker", 1, """
             Killing an entity restores 2 health
-            """).AddTagExclusiveRequirement("class", 2).KeystoneStyle().AddLevelRequirement("Hunting", 8);
+            """).AddTagExclusiveRequirementAndTag("class", 2).KeystoneStyle().AddLevelRequirement("Combat", 8);
 
         // Spore Cloud chain — chance to find a second mushroom when harvesting.
         PassiveNode.Create("Spore Cloud", "sporeCloud1", -100, 100, mycology).AddAdditiveExtraStat("sporeCloud", 0.3f, statBase: 0f).AddParent("start").AddLevelRequirement("Mycology", 3);
