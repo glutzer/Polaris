@@ -44,6 +44,8 @@ public class BeemasterPatches
                 tree.SetDouble("harvestableAtTotalHours", nextHarvestHours);
                 beh.FromTreeAttributes(tree, world);
                 beh.MarkDirty();
+
+                SystemPolaris.AddExperience("Horticulture", byPlayer, 10f);
             }
 
             world.PlaySoundAt(new AssetLocation("sounds/block/plant"), blockSel.Position, -0.5, byPlayer);

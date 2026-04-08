@@ -36,6 +36,18 @@
       -400,
       190
     ],
+    "Survival:luminiferous1": [
+      -500,
+      220
+    ],
+    "Survival:luminiferous2": [
+      -600,
+      250
+    ],
+    "Survival:luminiferous3": [
+      -700,
+      280
+    ],
     "Survival:sat1": [
       0,
       -150

@@ -1,0 +1,10 @@
+[
+  {
+    "file": "game:blocktypes/reed/skep.json",
+    "op": "add",
+    "path": "/behaviors/-",
+    "value": {
+      "name": "BlockBehaviorBeemaster"
+    }
+  }
+]

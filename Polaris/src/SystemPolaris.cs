@@ -216,6 +216,16 @@ public class SystemPolaris : NetworkedGameSystem
             Gain Chameleon while sneaking
             """).AddAdditiveExtraStat("healthMultiplier", -0.5f).AddLevelRequirement("Survival", 8).KeystoneStyle();
 
+        PassiveNode.Create("Luminiferous", "luminiferous1", survival).AddParent("start").AddSkillStat("luminiferous", 1, """
+            +15 ambient light emission
+            """).NotableStyle().AddLevelRequirement("Survival", 8);
+        PassiveNode.Create("Luminiferous", "luminiferous2", survival).AddParent("luminiferous1").AddSkillStat("luminiferous", 1, """
+            +5 ambient light emission
+            """).NotableStyle().AddLevelRequirement("Survival", 10);
+        PassiveNode.Create("Luminiferous", "luminiferous3", survival).AddParent("luminiferous2").AddSkillStat("luminiferous", 1, """
+            +5 ambient light emission
+            """).NotableStyle().AddLevelRequirement("Survival", 20);
+
         // Crafting passives.
         PassiveNode.Create("Sewing Effectiveness", "sewing1", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 2).AddParent("start");
         PassiveNode.Create("Sewing Effectiveness", "sewing2", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 3).AddParent("sewing1");
