@@ -14,7 +14,7 @@
     ],
     "Survival:move3": [
       300,
-      175
+      170
     ],
     "Survival:move4": [
       400,
@@ -30,23 +30,11 @@
     ],
     "Survival:health3": [
       -300,
-      175
+      170
     ],
     "Survival:health4": [
       -400,
       190
-    ],
-    "Survival:luminiferous1": [
-      -500,
-      220
-    ],
-    "Survival:luminiferous2": [
-      -600,
-      250
-    ],
-    "Survival:luminiferous3": [
-      -700,
-      280
     ],
     "Survival:sat1": [
       0,
@@ -91,6 +79,38 @@
     "Survival:shroudWalker": [
       -60,
       260
+    ],
+    "Survival:luminiferous1": [
+      -200,
+      -130
+    ],
+    "Survival:luminiferous2": [
+      -260,
+      -200
+    ],
+    "Survival:luminiferous3": [
+      -200,
+      -270
+    ],
+    "Survival:strongBack1": [
+      100,
+      0
+    ],
+    "Survival:strongBack2": [
+      200,
+      0
+    ],
+    "Survival:strongBack3": [
+      300,
+      0
+    ],
+    "Survival:strongBack4": [
+      300,
+      -100
+    ],
+    "Survival:strongBack5": [
+      200,
+      -100
     ],
     "Time:start": [
       0,

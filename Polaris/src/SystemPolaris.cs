@@ -5,6 +5,7 @@ using System.Linq;
 using Vintagestory.API.Client;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
+using Vintagestory.Common;
 
 namespace Polaris;
 
@@ -126,8 +127,30 @@ public class SystemPolaris : NetworkedGameSystem
 
         context.SkillBehavior.SyncToPlayer();
 
+        DropBackpacksFromLockedSlots(player);
+
         // TODO: move these somewhere more modular.
         player.GetHealth().MarkDirty();
+    }
+
+    private static void DropBackpacksFromLockedSlots(EntityPlayer player)
+    {
+        IPlayer? iPlayer = player.World.PlayerByUid(player.PlayerUID);
+        if (iPlayer == null) return;
+
+        if (iPlayer.InventoryManager.GetOwnInventory("backpack") is not InventoryPlayerBackpacks inv) return;
+
+        player.TryGetExtraStat("strongBack", out float strongBack);
+        int allowedSlots = StrongBackInventoryPatches.VanillaBagSlots + (int)strongBack;
+
+        for (int i = allowedSlots; i < StrongBackInventoryPatches.TotalBagSlots; i++)
+        {
+            ItemSlot slot = inv[i];
+            if (slot.Empty) continue;
+
+            ItemStack stack = slot.TakeOutWhole();
+            player.World.SpawnItemEntity(stack, player.Pos.XYZ);
+        }
     }
 
     public override void Initialize()
@@ -225,6 +248,13 @@ public class SystemPolaris : NetworkedGameSystem
         PassiveNode.Create("Luminiferous", "luminiferous3", survival).AddParent("luminiferous2").AddSkillStat("luminiferous", 1, """
             +5 ambient light emission
             """).NotableStyle().AddLevelRequirement("Survival", 20);
+
+        // Strong Back chain — extra backpack slots.
+        PassiveNode.Create("Strong Back", "strongBack1", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddParent("start").AddLevelRequirement("Survival", 3);
+        PassiveNode.Create("Strong Back", "strongBack2", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddParent("strongBack1").AddLevelRequirement("Survival", 5);
+        PassiveNode.Create("Strong Back", "strongBack3", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddParent("strongBack2").AddLevelRequirement("Survival", 7);
+        PassiveNode.Create("Strong Back", "strongBack4", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddParent("strongBack3").AddLevelRequirement("Survival", 10);
+        PassiveNode.Create("Strong Back", "strongBack5", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddParent("strongBack4").AddLevelRequirement("Survival", 15).NotableStyle();
 
         // Crafting passives.
         PassiveNode.Create("Sewing Effectiveness", "sewing1", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 2).AddParent("start");

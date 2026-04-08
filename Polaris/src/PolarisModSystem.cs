@@ -2,9 +2,12 @@
 global using OpenTK.Mathematics;
 global using Vintagestory.API.Common;
 using HarmonyLib;
+using System;
+using System.Linq;
 using Vintagestory.API.Client;
 using Vintagestory.API.Server;
 using Vintagestory.Client;
+using Vintagestory.Client.NoObf;
 
 namespace Polaris;
 
@@ -69,6 +72,30 @@ public class PolarisModSystem : ModSystem
         });
 
         NuttyShaderRegistry.AddShader("polaris:stars", "polaris:stars", "polarisstars");
+
+        MainAPI.GetGameSystem<SystemPolaris>(api.Side).OnClientDataUpdated += data => RecomposeHotbarBackpackSlots(api, data);
+    }
+
+    private static void RecomposeHotbarBackpackSlots(ICoreClientAPI api, PlayerPolarisData data)
+    {
+        SystemPolaris system = MainAPI.GetGameSystem<SystemPolaris>(api.Side);
+        int strongBack = data.GetAllAllocatedNodes(system).Count(n => n.Code.StartsWith("strongBack"));
+        int newCount = Math.Clamp(StrongBackInventoryPatches.VanillaBagSlots + strongBack,
+            StrongBackInventoryPatches.VanillaBagSlots,
+            StrongBackInventoryPatches.TotalBagSlots);
+
+        if (StrongBackInventoryPatches.CurrentBackpackSlotCount == newCount) return;
+
+        StrongBackInventoryPatches.CurrentBackpackSlotCount = newCount;
+
+        foreach (GuiDialog dialog in api.Gui.LoadedGuis)
+        {
+            if (dialog is HudHotbar hud)
+            {
+                hud.ComposeGuis();
+                break;
+            }
+        }
     }
 
     public override void Dispose()

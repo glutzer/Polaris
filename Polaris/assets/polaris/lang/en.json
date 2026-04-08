@@ -55,6 +55,8 @@
   "extrastatincfungalFortitude": "{0}% increased Saturation from Mushrooms",
   "extrastatincfungalFortitudeperlevel": "{0}% increased Saturation {1} level from Mushrooms",
 
+  "extrastatincstrongBack": "+{0} Backpack Slot(s)",
+
   "nodetag-class": "Class",
   "nodetag-miningmastery": "Mining Mastery"
 }
