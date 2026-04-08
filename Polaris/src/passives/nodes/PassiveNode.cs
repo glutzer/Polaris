@@ -52,11 +52,11 @@ public class PassiveNode : IEquatable<PassiveNode>
     /// </summary>
     public int Id { get; }
 
-    public PassiveNode(string name, string code, int x, int y, Constellation constellation)
+    public PassiveNode(string name, string code, Constellation constellation)
     {
         Name = name;
         Code = code;
-        Position = new NodePosition(x, y);
+        Position = new NodePosition(0, 0);
         Constellation = constellation;
 
         Id = constellation.GrabNextId();
@@ -83,9 +83,9 @@ public class PassiveNode : IEquatable<PassiveNode>
         Constellation.RecalculateBounds();
     }
 
-    public static PassiveNode Create(string name, string code, int x, int y, Constellation constellation)
+    public static PassiveNode Create(string name, string code, Constellation constellation)
     {
-        return new PassiveNode(name, code, x, y, constellation);
+        return new PassiveNode(name, code, constellation);
     }
 
     public PassiveNode WithTag(string tag)

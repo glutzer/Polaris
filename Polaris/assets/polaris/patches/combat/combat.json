@@ -1,0 +1,93 @@
+[
+  {
+    "file": "game:entities/lore/drifter",
+    "op": "add",
+    "path": "/server/behaviors/-",
+    "value": {
+      "code": "EntityBehaviorPolarisExp",
+      "xpByType": {
+        "*-normal": 1.0,
+        "*-deep": 2.0,
+        "*-tainted": 3.0,
+        "*-corrupt": 4.0,
+        "*-nightmare": 5.0,
+        "*-double-headed": 10.0
+      },
+      "harvestXp": 0.25
+    }
+  },
+  {
+    "file": "game:entities/lore/bowtorn",
+    "op": "add",
+    "path": "/server/behaviors/-",
+    "value": {
+      "code": "EntityBehaviorPolarisExp",
+      "xpByType": {
+        "*-surface": 1.0,
+        "*-deep": 2.0,
+        "*-tainted": 3.0,
+        "*-corrupt": 4.0,
+        "*-nightmare": 5.0,
+        "*-gearfoot": 10.0
+      }
+    }
+  },
+  {
+    "file": "game:entities/lore/shiver",
+    "op": "add",
+    "path": "/server/behaviors/-",
+    "value": {
+      "code": "EntityBehaviorPolarisExp",
+      "xpByType": {
+        "*-surface": 1.0,
+        "*-deep": 2.0,
+        "*-tainted": 3.0,
+        "*-corrupt": 4.0,
+        "*-nightmare": 5.0,
+        "*-stilt": 6.0,
+        "*-bellhead": 7.0,
+        "*-deepsplit": 10.0
+      }
+    }
+  },
+  {
+    "file": "game:entities/lore/locust",
+    "op": "add",
+    "path": "/server/behaviors/-",
+    "value": {
+      "code": "EntityBehaviorPolarisExp",
+      "xpByType": {
+        "*-bronze": 1.0,
+        "*-corrupt": 2.0,
+        "locust-corrupt-sawblade": 10.0
+      }
+    }
+  },
+  {
+    "file": "game:entities/lore/bell",
+    "op": "add",
+    "path": "/server/behaviors/-",
+    "value": {
+      "code": "EntityBehaviorPolarisExp",
+      "xp": 30.0
+    }
+  },
+  {
+    "file": "game:entities/lore/boss/eidolon-immobilized",
+    "op": "add",
+    "path": "/server/behaviors/-",
+    "value": {
+      "code": "EntityBehaviorPolarisExp",
+      "xp": 100.0
+    }
+  },
+  {
+    "file": "game:entities/lore/boss/erel",
+    "op": "add",
+    "path": "/server/behaviors/-",
+    "value": {
+      "code": "EntityBehaviorPolarisExp",
+      "xp": 100.0
+    }
+  }
+]

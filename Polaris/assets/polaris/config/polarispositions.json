@@ -1,0 +1,368 @@
+{
+  "Positions": {
+    "Survival:start": [
+      0,
+      0
+    ],
+    "Survival:move1": [
+      100,
+      100
+    ],
+    "Survival:move2": [
+      200,
+      150
+    ],
+    "Survival:move3": [
+      300,
+      175
+    ],
+    "Survival:move4": [
+      400,
+      190
+    ],
+    "Survival:health1": [
+      -100,
+      100
+    ],
+    "Survival:health2": [
+      -200,
+      150
+    ],
+    "Survival:health3": [
+      -300,
+      175
+    ],
+    "Survival:health4": [
+      -400,
+      190
+    ],
+    "Survival:sat1": [
+      0,
+      100
+    ],
+    "Survival:sat2": [
+      0,
+      200
+    ],
+    "Survival:sat3": [
+      0,
+      300
+    ],
+    "Survival:sat4": [
+      0,
+      400
+    ],
+    "Survival:sat5": [
+      0,
+      500
+    ],
+    "Survival:sat6": [
+      0,
+      600
+    ],
+    "Survival:featherfall1": [
+      100,
+      -100
+    ],
+    "Survival:featherfall2": [
+      200,
+      -150
+    ],
+    "Survival:featherfall3": [
+      300,
+      -175
+    ],
+    "Survival:primalist": [
+      -200,
+      -200
+    ],
+    "Survival:shroudWalker": [
+      200,
+      -400
+    ],
+    "Time:start": [
+      0,
+      0
+    ],
+    "Time:stableSettler": [
+      200,
+      200
+    ],
+    "Excavation:start": [
+      0,
+      0
+    ],
+    "Excavation:eroder": [
+      100,
+      200
+    ],
+    "Excavation:oremine1": [
+      -100,
+      100
+    ],
+    "Excavation:oremine2": [
+      -200,
+      150
+    ],
+    "Excavation:oremine3": [
+      -300,
+      175
+    ],
+    "Excavation:oremine4": [
+      -400,
+      190
+    ],
+    "Excavation:minespeed1": [
+      100,
+      -100
+    ],
+    "Excavation:minespeed2": [
+      200,
+      -150
+    ],
+    "Excavation:minespeed3": [
+      300,
+      -175
+    ],
+    "Excavation:veinminer": [
+      -200,
+      -200
+    ],
+    "Excavation:stonebreak1": [
+      100,
+      350
+    ],
+    "Excavation:stonebreak2": [
+      100,
+      450
+    ],
+    "Excavation:stonebreak3": [
+      100,
+      550
+    ],
+    "Excavation:stonecutter1": [
+      200,
+      300
+    ],
+    "Excavation:stonecutter2": [
+      300,
+      350
+    ],
+    "Excavation:stonecutter3": [
+      400,
+      375
+    ],
+    "Excavation:gemmine1": [
+      -100,
+      250
+    ],
+    "Excavation:gemmine2": [
+      -200,
+      300
+    ],
+    "Excavation:gemmine3": [
+      -300,
+      325
+    ],
+    "Forestry:start": [
+      0,
+      0
+    ],
+    "Horticulture:start": [
+      0,
+      0
+    ],
+    "Horticulture:cropgain1": [
+      100,
+      100
+    ],
+    "Horticulture:cropgain2": [
+      200,
+      150
+    ],
+    "Horticulture:cropgain3": [
+      300,
+      175
+    ],
+    "Horticulture:cropgain4": [
+      400,
+      190
+    ],
+    "Horticulture:forage1": [
+      -100,
+      100
+    ],
+    "Horticulture:forage2": [
+      -200,
+      150
+    ],
+    "Horticulture:forage3": [
+      -300,
+      175
+    ],
+    "Horticulture:orchardist1": [
+      100,
+      -100
+    ],
+    "Horticulture:orchardist2": [
+      200,
+      -150
+    ],
+    "Horticulture:orchardist3": [
+      300,
+      -175
+    ],
+    "Hunting:start": [
+      0,
+      0
+    ],
+    "Hunting:rangeddmg1": [
+      70,
+      0
+    ],
+    "Hunting:rangeddmg2": [
+      160,
+      20
+    ],
+    "Hunting:rangeddmg3": [
+      280,
+      60
+    ],
+    "Hunting:rangeddmg4": [
+      400,
+      80
+    ],
+    "Hunting:rangedacc1": [
+      0,
+      -70
+    ],
+    "Hunting:rangedacc2": [
+      0,
+      -140
+    ],
+    "Hunting:rangedacc3": [
+      0,
+      -210
+    ],
+    "Hunting:lootdrop1": [
+      -70,
+      0
+    ],
+    "Hunting:lootdrop2": [
+      -160,
+      20
+    ],
+    "Hunting:lootdrop3": [
+      -280,
+      60
+    ],
+    "Hunting:lootdrop4": [
+      -400,
+      80
+    ],
+    "Hunting:hunter": [
+      0,
+      120
+    ],
+    "Combat:start": [
+      0,
+      0
+    ],
+    "Combat:meleedmg1": [
+      -100,
+      100
+    ],
+    "Combat:meleedmg2": [
+      -200,
+      150
+    ],
+    "Combat:meleedmg3": [
+      -300,
+      175
+    ],
+    "Combat:berserker": [
+      -200,
+      -200
+    ],
+    "Smithing:start": [
+      0,
+      0
+    ],
+    "Smithing:masterSmith1": [
+      -300,
+      -100
+    ],
+    "Smithing:masterSmith2": [
+      -500,
+      0
+    ],
+    "Smithing:cracker1": [
+      0,
+      200
+    ],
+    "Smithing:cracker2": [
+      0,
+      400
+    ],
+    "Forming:start": [
+      0,
+      0
+    ],
+    "Cooking:start": [
+      0,
+      0
+    ],
+    "Crafting:start": [
+      0,
+      0
+    ],
+    "Crafting:sewing1": [
+      -100,
+      -100
+    ],
+    "Crafting:sewing2": [
+      -200,
+      -200
+    ],
+    "Crafting:sewing3": [
+      -300,
+      -300
+    ],
+    "Crafting:clothier": [
+      -300,
+      0
+    ],
+    "Trade:start": [
+      0,
+      0
+    ],
+    "Mycology:start": [
+      0,
+      0
+    ],
+    "Mycology:sporeCloud1": [
+      -100,
+      100
+    ],
+    "Mycology:sporeCloud2": [
+      -200,
+      150
+    ],
+    "Mycology:sporeStorm": [
+      -300,
+      175
+    ],
+    "Mycology:fungalFortitude1": [
+      100,
+      -100
+    ],
+    "Mycology:fungalFortitude2": [
+      200,
+      -150
+    ],
+    "Mycology:fungalFortitude3": [
+      300,
+      -175
+    ]
+  }
+}

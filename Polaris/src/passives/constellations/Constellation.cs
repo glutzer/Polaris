@@ -112,7 +112,7 @@ public class Constellation
     /// </summary>
     public Constellation AddStartNode()
     {
-        PassiveNode.Create("", "start", 0, 0, this).MakeStartNode().SetCost(0).SetSize(0.8f).SetColor(0.5f, 0.5f, 0.5f, 1f);
+        PassiveNode.Create("", "start", this).MakeStartNode().SetCost(0).SetSize(0.8f).SetColor(0.5f, 0.5f, 0.5f, 1f);
         return this;
     }
 }

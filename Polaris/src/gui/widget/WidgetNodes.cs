@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Client;
@@ -64,7 +65,9 @@ public class WidgetNodes : Widget
         nodeDescription = new WidgetNodeDescription(this, gui);
 
         new PolarisToggleButton(this, gui, OnRefundToggle, true, false, "Refund Passives").Alignment(Align.LeftTop).Percent(0f, 0.25f, 0.1f, 0.05f);
-        new PolarisToggleButton(this, gui, OnNodeMoveToggle, true, false, "Node Moving").Alignment(Align.LeftTop).Percent(0f, 0.31f, 0.1f, 0.05f);
+
+        new PolarisToggleButton(this, gui, OnNodeMoveToggle, true, false, "Node Moving").Alignment(Align.RightBottom).Percent(0f, 0f, 0.1f, 0.05f);
+        new WidgetVanillaButton(this, gui, OnCopyPositions, "Copy Positions").Alignment(Align.RightBottom).Percent(0f, -0.06f, 0.1f, 0.05f);
     }
 
     private void OnClientDataUpdated(PlayerPolarisData data)
@@ -92,7 +95,7 @@ public class WidgetNodes : Widget
     {
         pendingNodes.Clear();
         DeleteChildren<WidgetVanillaButton>();
-
+        new WidgetVanillaButton(this, Gui, OnCopyPositions, "Copy Positions").Alignment(Align.RightBottom).Percent(0f, -0.06f, 0.1f, 0.05f);
         refunding = on;
     }
 
@@ -101,6 +104,21 @@ public class WidgetNodes : Widget
         nodeMoveMode = on;
         dragNode = null;
         dragConst = null;
+    }
+
+    private void OnCopyPositions()
+    {
+        NodePositionsConfig config = new();
+        foreach (PositionedConstellation posConst in positionedConstellations)
+        {
+            foreach (PassiveNode node in posConst.Constellation.AllNodes)
+            {
+                config.Positions[$"{posConst.Constellation.Name}:{node.Code}"] = [node.Position.X, node.Position.Y];
+            }
+        }
+
+        string json = JsonConvert.SerializeObject(config, Formatting.Indented);
+        MainAPI.Capi.Input.ClipboardText = json;
     }
 
     /// <summary>

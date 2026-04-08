@@ -31,6 +31,7 @@
   "extrastatinchealthMultiplier": "{0}% increased maximum Health",
   "extrastatdechealthMultiplier": "{0}% decreased maximum Health",
   "extrastatmulhealthMultiplier": "{0}% more maximum Health",
+  "extrastatdivhealthMultiplier": "{0}% less maximum Health",
 
   "extrastatincsatMultiplier": "{0}% increased maximum Saturation",
   "extrastatmulsatMultiplier": "{0}% more maximum Saturation",
