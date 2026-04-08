@@ -113,7 +113,7 @@ public class SmithingPatches
             if (!__state.HadWorkItem || __instance.WorkItemStack != null) return;
             if (__state.Player == null || __instance.Api.Side != EnumAppSide.Server) return;
 
-            float exp = 1f + 0.02f * __state.HitCount;
+            float exp = 1f + (0.02f * __state.HitCount);
             SystemPolaris.AddExperience("Smithing", __state.Player, exp);
         }
     }

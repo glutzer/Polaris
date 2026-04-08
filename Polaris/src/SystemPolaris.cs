@@ -286,6 +286,12 @@ public class SystemPolaris : NetworkedGameSystem
         PassiveNode.Create("Gatherer", "forage2", horticulture).AddAdditiveStat("forageDropRate", 0.1f).AddParent("forage1").AddLevelRequirement("Horticulture", 4);
         PassiveNode.Create("Gatherer", "forage3", horticulture).AddAdditiveStat("forageDropRate", 0.1f).AddParent("forage2").AddLevelRequirement("Horticulture", 6);
 
+        // Beemaster — harvest skeps without breaking them.
+        PassiveNode.Create("Beemaster", "beemaster", horticulture).NotableStyle()
+            .AddParent("forage1")
+            .AddSkillStat("beemaster", 1, "May harvest skeps without breaking them")
+            .AddLevelRequirement("Horticulture", 10);
+
         // Extensive Farming — till in a larger area with hoe tool modes; shears cut in a wider radius.
         PassiveNode.Create("Extensive Farming", "extfarming1", horticulture)
             .AddParent("start")
