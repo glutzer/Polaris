@@ -53,6 +53,7 @@
   "extrastatincsporeCloud": "{0}% chance to find an extra Mushroom",
   "extrastatincsporeCloudperlevel": "{0}% chance per {1} level to find an extra Mushroom",
   "extrastatincfungalFortitude": "{0}% increased Saturation from Mushrooms",
+  "extrastatincfungalFortitudeperlevel": "{0}% increased Saturation {1} level from Mushrooms",
 
   "nodetag-class": "Class",
   "nodetag-miningmastery": "Mining Mastery"

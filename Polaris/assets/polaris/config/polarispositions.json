@@ -38,47 +38,47 @@
     ],
     "Survival:sat1": [
       0,
-      100
+      -150
     ],
     "Survival:sat2": [
       0,
-      200
+      -250
     ],
     "Survival:sat3": [
       0,
-      300
+      -350
     ],
     "Survival:sat4": [
       0,
-      400
+      -450
     ],
     "Survival:sat5": [
       0,
-      500
+      -550
     ],
     "Survival:sat6": [
       0,
-      600
+      -650
     ],
     "Survival:featherfall1": [
-      100,
-      -100
+      -30,
+      200
     ],
     "Survival:featherfall2": [
-      200,
-      -150
+      30,
+      230
     ],
     "Survival:featherfall3": [
-      300,
-      -175
+      0,
+      300
     ],
     "Survival:primalist": [
       -200,
       -200
     ],
     "Survival:shroudWalker": [
-      200,
-      -400
+      -60,
+      260
     ],
     "Time:start": [
       0,
@@ -94,75 +94,75 @@
     ],
     "Excavation:eroder": [
       100,
-      200
+      0
     ],
     "Excavation:oremine1": [
-      -100,
+      0,
       100
     ],
     "Excavation:oremine2": [
-      -200,
-      150
+      0,
+      200
     ],
     "Excavation:oremine3": [
-      -300,
-      175
+      0,
+      300
     ],
     "Excavation:oremine4": [
-      -400,
-      190
+      0,
+      400
     ],
     "Excavation:minespeed1": [
-      100,
+      0,
       -100
     ],
     "Excavation:minespeed2": [
-      200,
-      -150
+      0,
+      -200
     ],
     "Excavation:minespeed3": [
-      300,
-      -175
+      0,
+      -300
     ],
     "Excavation:veinminer": [
-      -200,
-      -200
+      -100,
+      300
     ],
     "Excavation:stonebreak1": [
       100,
-      350
+      -100
     ],
     "Excavation:stonebreak2": [
-      100,
-      450
+      200,
+      -100
     ],
     "Excavation:stonebreak3": [
-      100,
-      550
+      300,
+      -100
     ],
     "Excavation:stonecutter1": [
-      200,
-      300
+      100,
+      100
     ],
     "Excavation:stonecutter2": [
-      300,
-      350
+      200,
+      100
     ],
     "Excavation:stonecutter3": [
-      400,
-      375
+      300,
+      100
     ],
     "Excavation:gemmine1": [
       -100,
-      250
+      100
     ],
     "Excavation:gemmine2": [
       -200,
-      300
+      100
     ],
     "Excavation:gemmine3": [
       -300,
-      325
+      100
     ],
     "Forestry:start": [
       0,
@@ -173,44 +173,52 @@
       0
     ],
     "Horticulture:cropgain1": [
-      100,
-      100
+      40,
+      40
     ],
     "Horticulture:cropgain2": [
-      200,
-      150
+      100,
+      80
     ],
     "Horticulture:cropgain3": [
-      300,
-      175
+      180,
+      120
     ],
     "Horticulture:cropgain4": [
-      400,
-      190
+      280,
+      160
     ],
     "Horticulture:forage1": [
-      -100,
-      100
+      -50,
+      0
     ],
     "Horticulture:forage2": [
-      -200,
-      150
+      -100,
+      0
     ],
     "Horticulture:forage3": [
-      -300,
-      175
+      -150,
+      0
+    ],
+    "Horticulture:extfarming1": [
+      380,
+      200
+    ],
+    "Horticulture:extfarming2": [
+      480,
+      240
     ],
     "Horticulture:orchardist1": [
-      100,
+      0,
       -100
     ],
     "Horticulture:orchardist2": [
-      200,
-      -150
+      0,
+      -200
     ],
     "Horticulture:orchardist3": [
-      300,
-      -175
+      0,
+      -300
     ],
     "Hunting:start": [
       0,
@@ -260,6 +268,10 @@
       -400,
       80
     ],
+    "Hunting:biogenesis": [
+      -480,
+      0
+    ],
     "Hunting:hunter": [
       0,
       120
@@ -269,20 +281,20 @@
       0
     ],
     "Combat:meleedmg1": [
-      -100,
-      100
+      0,
+      -100
     ],
     "Combat:meleedmg2": [
-      -200,
-      150
+      0,
+      -200
     ],
     "Combat:meleedmg3": [
-      -300,
-      175
+      0,
+      -300
     ],
     "Combat:berserker": [
-      -200,
-      -200
+      -100,
+      -100
     ],
     "Smithing:start": [
       0,
@@ -293,16 +305,16 @@
       -100
     ],
     "Smithing:masterSmith2": [
-      -500,
-      0
+      -400,
+      -100
     ],
     "Smithing:cracker1": [
       0,
-      200
+      100
     ],
     "Smithing:cracker2": [
       0,
-      400
+      200
     ],
     "Forming:start": [
       0,
@@ -341,28 +353,28 @@
       0
     ],
     "Mycology:sporeCloud1": [
-      -100,
-      100
+      0,
+      -100
     ],
     "Mycology:sporeCloud2": [
-      -200,
-      150
+      0,
+      -200
     ],
     "Mycology:sporeStorm": [
-      -300,
-      175
+      0,
+      -300
     ],
     "Mycology:fungalFortitude1": [
       100,
-      -100
+      100
     ],
     "Mycology:fungalFortitude2": [
-      200,
-      -150
+      160,
+      100
     ],
     "Mycology:fungalFortitude3": [
-      300,
-      -175
+      130,
+      50
     ]
   }
 }

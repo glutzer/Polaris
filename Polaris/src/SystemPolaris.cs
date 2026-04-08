@@ -212,7 +212,7 @@ public class SystemPolaris : NetworkedGameSystem
             Grain provides no nutrition
             """).KeystoneStyle();
 
-        PassiveNode.Create("Shroud Walker", "shroudWalker", survival).AddParent("start").AddSkillStat("shroudWalker", 1, """
+        PassiveNode.Create("Shroud Walker", "shroudWalker", survival).AddParent("featherfall2").AddSkillStat("shroudWalker", 1, """
             Gain Chameleon while sneaking
             """).AddAdditiveExtraStat("healthMultiplier", -0.5f).AddLevelRequirement("Survival", 8).KeystoneStyle();
 
@@ -254,7 +254,7 @@ public class SystemPolaris : NetworkedGameSystem
         PassiveNode.Create("Pickaxe Expert", "minespeed3", excavation).AddMultiplicativeStat("miningSpeedMul", 1.3f).AddParent("minespeed2").AddLevelRequirement("Excavation", 8).NotableStyle().AddTagExclusiveRequirement("miningmastery", 2).WithTag("miningmastery");
 
         // Vein Miner keystone — mining an ore block breaks connected ore of the same type.
-        PassiveNode.Create("Vein Miner", "veinminer", excavation).AddParent("oremine2").AddSkillStat("veinminer", 1, """
+        PassiveNode.Create("Vein Miner", "veinminer", excavation).AddParent("oremine3").AddSkillStat("veinminer", 1, """
             Mining an ore block breaks some connected ore blocks of the same type
             Costs extra tool durability per block broken
             """).AddTagExclusiveRequirement("class", 2).WithTag("class").KeystoneStyle().AddLevelRequirement("Excavation", 10);
@@ -279,17 +279,27 @@ public class SystemPolaris : NetworkedGameSystem
         PassiveNode.Create("Green Thumb", "cropgain1", horticulture).AddAdditiveStat("wildCropDropRate", 0.1f).AddParent("start").AddLevelRequirement("Horticulture", 2);
         PassiveNode.Create("Green Thumb", "cropgain2", horticulture).AddAdditiveStat("wildCropDropRate", 0.1f).AddParent("cropgain1").AddLevelRequirement("Horticulture", 4);
         PassiveNode.Create("Green Thumb", "cropgain3", horticulture).AddAdditiveStat("wildCropDropRate", 0.1f).AddParent("cropgain2").AddLevelRequirement("Horticulture", 6);
-        PassiveNode.Create("Green Thumb", "cropgain4", horticulture).AddMultiplicativeStat("wildCropDropRate", 1.5f).AddParent("cropgain3").AddLevelRequirement("Horticulture", 8).NotableStyle();
+        PassiveNode.Create("Green Thumb", "cropgain4", horticulture).AddAdditiveStat("wildCropDropRate", 0.1f).AddParent("cropgain3").AddLevelRequirement("Horticulture", 8);
 
         // Gatherer chain — more forage drops (berries, mushrooms, etc.).
         PassiveNode.Create("Gatherer", "forage1", horticulture).AddAdditiveStat("forageDropRate", 0.1f).AddParent("start").AddLevelRequirement("Horticulture", 2);
         PassiveNode.Create("Gatherer", "forage2", horticulture).AddAdditiveStat("forageDropRate", 0.1f).AddParent("forage1").AddLevelRequirement("Horticulture", 4);
-        PassiveNode.Create("Gatherer", "forage3", horticulture).AddMultiplicativeStat("forageDropRate", 1.5f).AddParent("forage2").AddLevelRequirement("Horticulture", 7).NotableStyle();
+        PassiveNode.Create("Gatherer", "forage3", horticulture).AddAdditiveStat("forageDropRate", 0.1f).AddParent("forage2").AddLevelRequirement("Horticulture", 6);
+
+        // Extensive Farming — till in a larger area with hoe tool modes; shears cut in a wider radius.
+        PassiveNode.Create("Extensive Farming", "extfarming1", horticulture)
+            .AddParent("start")
+            .AddSkillStat("extensivefarming", 1, "+1 to hoe and shear radius tool modes")
+            .AddLevelRequirement("Horticulture", 6);
+        PassiveNode.Create("Extensive Farming", "extfarming2", horticulture)
+            .AddParent("extfarming1")
+            .AddSkillStat("extensivefarming", 1, "+1 to hoe and shear radius tool modes")
+            .AddLevelRequirement("Horticulture", 10);
 
         // Orchardist chain — more fruit tree drops.
         PassiveNode.Create("Orchardist", "orchardist1", horticulture).AddAdditiveExtraStat("orchardistBonus", 0.2f).AddParent("start").AddLevelRequirement("Horticulture", 3);
         PassiveNode.Create("Orchardist", "orchardist2", horticulture).AddAdditiveExtraStat("orchardistBonus", 0.2f).AddParent("orchardist1").AddLevelRequirement("Horticulture", 5);
-        PassiveNode.Create("Orchardist", "orchardist3", horticulture).AddAdditiveExtraStat("orchardistBonus", 0.2f).AddParent("orchardist2").AddLevelRequirement("Horticulture", 7).NotableStyle();
+        PassiveNode.Create("Orchardist", "orchardist3", horticulture).AddAdditiveExtraStat("orchardistBonus", 0.2f).AddParent("orchardist2").AddLevelRequirement("Horticulture", 7);
 
         // Hunting passives.
         // Archer chain — increased ranged weapon damage.
@@ -308,7 +318,12 @@ public class SystemPolaris : NetworkedGameSystem
         PassiveNode.Create("Looter", "lootdrop3", hunting).AddAdditiveStat("animalLootDropRate", 0.1f).AddParent("lootdrop2").AddLevelRequirement("Hunting", 6);
         PassiveNode.Create("Looter", "lootdrop4", hunting).AddAdditiveStat("animalLootDropRate", 0.1f).AddParent("lootdrop3").AddLevelRequirement("Hunting", 8);
 
-        // 20% ranged damage, 30% ranged accuracy, 20% ranged distance, 25% animal harvesting speed, boy
+        PassiveNode.Create("Biogenesis", "biogenesis", hunting).NotableStyle()
+            .AddParent("lootdrop4")
+            .AddSkillStat("biogenesis", 1, "1% chance to receive an itemized version of the entity when harvesting")
+            .AddLevelRequirement("Hunting", 10);
+
+        // 20% ranged damage
         PassiveNode.Create("Hunter", "hunter", hunting).KeystoneStyle().AddTagExclusiveRequirementAndTag("class", 1)
             .AddParent("lootdrop3").AddParent("rangeddmg3")
             .AddLevelRequirement("Hunting", 6)
@@ -337,7 +352,7 @@ public class SystemPolaris : NetworkedGameSystem
         // Fungal Fortitude chain — mushrooms restore more saturation.
         PassiveNode.Create("Fungal Fortitude", "fungalFortitude1", mycology).AddAdditiveExtraStat("fungalFortitude", 0.5f, statBase: 0f).AddParent("start").AddLevelRequirement("Mycology", 3);
         PassiveNode.Create("Fungal Fortitude", "fungalFortitude2", mycology).AddAdditiveExtraStat("fungalFortitude", 0.5f, statBase: 0f).AddParent("fungalFortitude1").AddLevelRequirement("Mycology", 6);
-        PassiveNode.Create("Fungal Fortitude", "fungalFortitude3", mycology).AddAdditiveExtraStat("fungalFortitude", 0.5f, statBase: 0f).AddParent("fungalFortitude2").AddLevelRequirement("Mycology", 9).NotableStyle();
+        PassiveNode.Create("Fungal Fortitude", "fungalFortitude3", mycology).AddAdditiveExtraStatPerLevel("fungalFortitude", 0.1f, "Mycology", statBase: 0f).AddParent("fungalFortitude2").AddLevelRequirement("Mycology", 9).NotableStyle();
         // Time passives.
         PassiveNode.Create("Stable Settler", "stableSettler", time).AddSkillStat("stableSettler", 1, """
             Temporally unstable areas do not affect you near the surface

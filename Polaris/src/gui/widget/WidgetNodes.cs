@@ -720,7 +720,7 @@ public class WidgetNodes : Widget
     {
         float cx = MainAPI.RenderWidth / 2f;
         float cy = MainAPI.RenderHeight / 2f;
-        return new Vector2(cx + (screenX - cx) * offset.Zoom, cy + (screenY - cy) * offset.Zoom);
+        return new Vector2(cx + ((screenX - cx) * offset.Zoom), cy + ((screenY - cy) * offset.Zoom));
     }
 
     private static int SnapToGrid(float value) => (int)(MathF.Round(value / 10f) * 10);
