@@ -997,7 +997,7 @@ public class PlayerPolarisData
 
     public static float GetExpToReachLevel(int level)
     {
-        return 100f * MathF.Pow(level - 1, 2f);
+        return 100f * MathF.Pow(level - 1, 1.5f);
     }
 
     public PlayerConstellationData GetConstellation(string name)

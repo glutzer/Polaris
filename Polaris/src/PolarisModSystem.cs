@@ -24,26 +24,36 @@ public class PolarisModSystem : ModSystem
         }
     }
 
+    private ICoreAPI? _api;
+
     public override void Start(ICoreAPI api)
     {
+        _api = api;
         CommandArgumentParsers parsers = api.ChatCommands.Parsers;
 
         // Commands.
         api.ChatCommands
-            .Create("constellationxp")
+            .Create("constxp")
             .RequiresPrivilege("ban")
-            .WithArgs(parsers.Word("constellation"), parsers.Float("experience"), parsers.OnlinePlayer("player"))
+            .WithArgs(parsers.Word("constellation"), parsers.Float("experience"), parsers.OptionalWord("player"))
             .HandleWith(HandleExperience);
     }
 
-    public static TextCommandResult HandleExperience(TextCommandCallingArgs args)
+    private TextCommandResult HandleExperience(TextCommandCallingArgs args)
     {
         if (args.Parsers[0].GetValue() is not string constellation) return TextCommandResult.Error("Invalid constellation.");
+        if (args.Parsers[1].GetValue() is not float exp) return TextCommandResult.Error("Invalid args.");
 
-        if (args.Parsers[1].GetValue() is not float exp || args.Parsers[2].GetValue() is not IServerPlayer player)
+        IServerPlayer? player = null;
+        if (args.Parsers[2].GetValue() is string playerName && _api != null)
         {
-            return TextCommandResult.Error("Invalid args.");
+            player = _api.World.AllOnlinePlayers
+                .OfType<IServerPlayer>()
+                .FirstOrDefault(p => p.PlayerName == playerName);
         }
+
+        player ??= args.Caller.Player as IServerPlayer;
+        if (player == null) return TextCommandResult.Error("No player specified and no caller player found.");
 
         SystemPolaris.AddExperience(constellation, player, exp);
 
