@@ -66,8 +66,10 @@ public class WidgetNodes : Widget
 
         new PolarisToggleButton(this, gui, OnRefundToggle, true, false, "Refund Passives").Alignment(Align.LeftTop).Percent(0f, 0.25f, 0.1f, 0.05f);
 
+#if DEBUG
         new PolarisToggleButton(this, gui, OnNodeMoveToggle, true, false, "Node Moving").Alignment(Align.RightBottom).Percent(0f, 0f, 0.1f, 0.05f);
         new WidgetVanillaButton(this, gui, OnCopyPositions, "Copy Positions").Alignment(Align.RightBottom).Percent(0f, -0.06f, 0.1f, 0.05f);
+#endif
     }
 
     private void OnClientDataUpdated(PlayerPolarisData data)
@@ -95,7 +97,6 @@ public class WidgetNodes : Widget
     {
         pendingNodes.Clear();
         DeleteChildren<WidgetVanillaButton>();
-        new WidgetVanillaButton(this, Gui, OnCopyPositions, "Copy Positions").Alignment(Align.RightBottom).Percent(0f, -0.06f, 0.1f, 0.05f);
         refunding = on;
     }
 

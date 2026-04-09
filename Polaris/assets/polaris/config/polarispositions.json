@@ -108,10 +108,6 @@
       300,
       -100
     ],
-    "Survival:strongBack5": [
-      200,
-      -100
-    ],
     "Time:start": [
       0,
       0
@@ -205,20 +201,20 @@
       0
     ],
     "Horticulture:cropgain1": [
-      40,
-      40
+      50,
+      0
     ],
     "Horticulture:cropgain2": [
       100,
-      80
+      50
     ],
     "Horticulture:cropgain3": [
-      180,
-      120
+      150,
+      0
     ],
     "Horticulture:cropgain4": [
-      280,
-      160
+      200,
+      50
     ],
     "Horticulture:forage1": [
       -50,
@@ -226,23 +222,23 @@
     ],
     "Horticulture:forage2": [
       -100,
-      0
+      50
     ],
     "Horticulture:forage3": [
       -150,
       0
     ],
     "Horticulture:beemaster": [
-      -230,
-      -80
+      -250,
+      0
     ],
     "Horticulture:extfarming1": [
-      380,
-      200
+      200,
+      -200
     ],
     "Horticulture:extfarming2": [
-      480,
-      240
+      300,
+      -300
     ],
     "Horticulture:orchardist1": [
       0,
@@ -376,9 +372,17 @@
       -300,
       -300
     ],
-    "Crafting:clothier": [
+    "Crafting:pts1": [
       -300,
-      0
+      -150
+    ],
+    "Crafting:pts2": [
+      -350,
+      -100
+    ],
+    "Crafting:clothier": [
+      -450,
+      -150
     ],
     "Trade:start": [
       0,

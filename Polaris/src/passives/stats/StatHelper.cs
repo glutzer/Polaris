@@ -7,6 +7,11 @@ public static class StatHelper
         node.AddStat(new AdditiveStat(stat, addition, flatDisplay));
         return node;
     }
+    public static PassiveNode AddAdditiveStatPerLevel(this PassiveNode node, string stat, float additionPerLevel, string constellationName, bool flatDisplay = false)
+    {
+        node.AddStat(new AdditiveStatPerLevel(stat, additionPerLevel, constellationName, flatDisplay));
+        return node;
+    }
 
     public static PassiveNode AddMultiplicativeStat(this PassiveNode node, string stat, float multi)
     {

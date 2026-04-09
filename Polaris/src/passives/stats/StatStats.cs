@@ -42,6 +42,52 @@ public class AdditiveStat : PassiveNodeStat
     }
 }
 
+public class AdditiveStatPerLevel : PassiveNodeStat
+{
+    private readonly string stat;
+    private readonly float additionPerLevel;
+    private readonly string constellationName;
+    private readonly bool flatDisplay;
+
+    public AdditiveStatPerLevel(string stat, float additionPerLevel, string constellationName, bool flatDisplay = false)
+    {
+        this.stat = stat;
+        this.additionPerLevel = additionPerLevel;
+        this.constellationName = constellationName;
+        this.flatDisplay = flatDisplay;
+    }
+
+    public override void ContributeStats(PassiveContext context)
+    {
+        int level = context.PolarisData.GetConstellation(constellationName).Level;
+        context.AddToFloatStat(stat, additionPerLevel * level);
+    }
+
+    public override void BuildDescription(StringBuilder builder, PlayerPolarisData data, EntityPlayer player, AllocatedNodesInfo info)
+    {
+        int level = data.GetConstellation(constellationName).Level;
+        float total = additionPerLevel * level;
+
+        if (flatDisplay)
+        {
+            string prefix = additionPerLevel > 0f ? "+" : "";
+            builder.AppendLine($"{prefix}{additionPerLevel} per {constellationName} level to {Lang.Get($"polaris:stat{stat}")}");
+            return;
+        }
+
+        float pctPerLevel = additionPerLevel * 100f;
+        float pctTotal = total * 100f;
+        if (pctPerLevel > 0f)
+        {
+            builder.AppendLine($"{pctPerLevel:F0}% increased {Lang.Get($"polaris:stat{stat}")} per {constellationName} level");
+        }
+        else if (pctPerLevel < 0f)
+        {
+            builder.AppendLine($"{-pctPerLevel:F0}% decreased {Lang.Get($"polaris:stat{stat}")} per {constellationName} level");
+        }
+    }
+}
+
 public class MultiplicativeStat : PassiveNodeStat
 {
     private readonly string stat;

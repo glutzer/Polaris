@@ -6,27 +6,28 @@ namespace Polaris;
 
 public class ExtraStatAdditive : PassiveNodeStat
 {
-    private readonly string stat;
-    private readonly float amount;
     private readonly bool flatAmount;
     private readonly float statBase;
 
+    public string StatName { get; }
+    public float Amount { get; }
+
     public ExtraStatAdditive(string stat, float amount, bool flatAmount = false, float statBase = 1f)
     {
-        this.stat = stat;
-        this.amount = amount;
+        StatName = stat;
+        Amount = amount;
         this.flatAmount = flatAmount;
         this.statBase = statBase;
     }
 
     public override void ContributeStats(PassiveContext passiveContext)
     {
-        passiveContext.SkillBehavior.AddToExtraStat(stat, amount, statBase);
+        passiveContext.SkillBehavior.AddToExtraStat(StatName, Amount, statBase);
     }
 
     public override void BuildDescription(StringBuilder builder, PlayerPolarisData data, EntityPlayer player, AllocatedNodesInfo info)
     {
-        float amount = this.amount;
+        float amount = Amount;
 
         if (!flatAmount)
         {
@@ -35,11 +36,11 @@ public class ExtraStatAdditive : PassiveNodeStat
 
         if (amount > 0f)
         {
-            builder.AppendLine(Lang.Get($"polaris:extrastatinc{stat}", Math.Abs(amount)));
+            builder.AppendLine(Lang.Get($"polaris:extrastatinc{StatName}", Math.Abs(amount)));
             return;
         }
 
-        builder.AppendLine(Lang.Get($"polaris:extrastatdec{stat}", Math.Abs(amount)));
+        builder.AppendLine(Lang.Get($"polaris:extrastatdec{StatName}", Math.Abs(amount)));
     }
 }
 

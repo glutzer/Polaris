@@ -211,7 +211,7 @@ public class SystemPolaris : NetworkedGameSystem
         PassiveNode.Create("Movement Speed", "move1", survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("start").AddLevelRequirement("Survival", 3);
         PassiveNode.Create("Movement Speed", "move2", survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("move1").AddLevelRequirement("Survival", 5);
         PassiveNode.Create("Movement Speed", "move3", survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("move2").AddLevelRequirement("Survival", 7);
-        PassiveNode.Create("Movement Speed", "move4", survival).AddMultiplicativeStat("walkspeed", 1.5f).AddParent("move3").AddLevelRequirement("Survival", 9).NotableStyle();
+        PassiveNode.Create("Movement Speed", "move4", survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("move3").AddLevelRequirement("Survival", 9);
 
         PassiveNode.Create("Health", "health1", survival).AddAdditiveExtraStat("healthMultiplier", 0.05f).AddParent("start");
         PassiveNode.Create("Health", "health2", survival).AddAdditiveExtraStat("healthMultiplier", 0.05f).AddParent("health1").AddLevelRequirement("Survival", 3);
@@ -250,25 +250,27 @@ public class SystemPolaris : NetworkedGameSystem
             """).NotableStyle().AddLevelRequirement("Survival", 20);
 
         // Strong Back chain — extra backpack slots.
-        PassiveNode.Create("Strong Back", "strongBack1", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddParent("start").AddLevelRequirement("Survival", 3);
-        PassiveNode.Create("Strong Back", "strongBack2", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddParent("strongBack1").AddLevelRequirement("Survival", 5);
-        PassiveNode.Create("Strong Back", "strongBack3", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddParent("strongBack2").AddLevelRequirement("Survival", 7);
-        PassiveNode.Create("Strong Back", "strongBack4", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddParent("strongBack3").AddLevelRequirement("Survival", 10);
-        PassiveNode.Create("Strong Back", "strongBack5", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddParent("strongBack4").AddLevelRequirement("Survival", 15).NotableStyle();
+        PassiveNode.Create("Strong Back", "strongBack1", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddAdditiveStat("walkspeed", -0.04f).AddParent("start").AddLevelRequirement("Survival", 3);
+        PassiveNode.Create("Strong Back", "strongBack2", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddAdditiveStat("walkspeed", -0.04f).AddParent("strongBack1").AddLevelRequirement("Survival", 5);
+        PassiveNode.Create("Strong Back", "strongBack3", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddAdditiveStat("walkspeed", -0.04f).AddParent("strongBack2").AddLevelRequirement("Survival", 7);
+        PassiveNode.Create("Pack Mule", "strongBack4", survival).AddAdditiveExtraStat("strongBack", 3f, true, statBase: 0f).AddAdditiveStat("walkspeed", -0.2f).AddParent("strongBack3").AddLevelRequirement("Survival", 10).NotableStyle();
 
         // Crafting passives.
         PassiveNode.Create("Sewing Effectiveness", "sewing1", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 2).AddParent("start");
-        PassiveNode.Create("Sewing Effectiveness", "sewing2", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 3).AddParent("sewing1");
-        PassiveNode.Create("Sewing Effectiveness", "sewing3", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 4).AddParent("sewing2");
+        PassiveNode.Create("Sewing Effectiveness", "sewing2", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 4).AddParent("sewing1");
+        PassiveNode.Create("Sewing Effectiveness", "sewing3", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 6).AddParent("sewing2");
 
-        PassiveNode.Create("Clothier", "clothier", crafting).AddParent("sewing3").AddSkillStat("clothier", 1, """
+        PassiveNode.Create("Path of the Seamster", "pts1", crafting).AddMultiplicativeExtraStat("healthMultiplier", 0.9f).AddParent("sewing3");
+        PassiveNode.Create("Path of the Seamster", "pts2", crafting).AddMultiplicativeExtraStat("healthMultiplier", 0.9f).AddParent("pts1");
+
+        PassiveNode.Create("Clothier", "clothier", crafting).AddParent("pts2").AddSkillStat("clothier", 1, """
             You may sew certain kinds of clothing
-            """).AddTagExclusiveRequirement("class", 2).WithTag("class").KeystoneStyle().AddLevelRequirement("Crafting", 5);
+            """).KeystoneStyle().AddLevelRequirement("Crafting", 8);
 
         // Smithing passives.
         PassiveNode.Create("Master Smith", "masterSmith1", smithing).AddSkillStat("masterSmith", 1, """
             Your heavy hit also moves 1 voxel of material to the correct position
-            """).KeystoneStyle().AddParent("start").AddLevelRequirement("Smithing", 5).AddTagExclusiveRequirement("class", 2).WithTag("class");
+            """).KeystoneStyle().AddParent("start").AddLevelRequirement("Smithing", 5);
 
         PassiveNode.Create("Master Smith", "masterSmith2", smithing).AddSkillStat("masterSmith", 1, """
             Your heavy hit also moves 1 voxel of material to the correct position
@@ -279,40 +281,40 @@ public class SystemPolaris : NetworkedGameSystem
 
         // Excavation passives.
         PassiveNode.Create("Eroder", "eroder", excavation).AddSkillStat("eroder", 1, """
-            Rock does not drop stones
+            Rock does not drop small stones
             """).AddParent("start").AddLevelRequirement("Excavation", 5).KeystoneStyle();
 
         // Ore Miner chain — more ore drop rate.
-        PassiveNode.Create("Ore Miner", "oremine1", excavation).AddAdditiveStat("oreDropRate", 0.05f).AddParent("start").AddLevelRequirement("Excavation", 2);
-        PassiveNode.Create("Ore Miner", "oremine2", excavation).AddAdditiveStat("oreDropRate", 0.05f).AddParent("oremine1").AddLevelRequirement("Excavation", 4);
-        PassiveNode.Create("Ore Miner", "oremine3", excavation).AddAdditiveStat("oreDropRate", 0.05f).AddParent("oremine2").AddLevelRequirement("Excavation", 6);
-        PassiveNode.Create("Ore Miner", "oremine4", excavation).AddMultiplicativeStat("oreDropRate", 1.5f).AddParent("oremine3").AddLevelRequirement("Excavation", 8).NotableStyle().AddTagExclusiveRequirement("miningmastery", 2).WithTag("miningmastery");
+        PassiveNode.Create("Ore Miner", "oremine1", excavation).AddAdditiveStat("oreDropRate", 0.1f).AddParent("start").AddLevelRequirement("Excavation", 2);
+        PassiveNode.Create("Ore Miner", "oremine2", excavation).AddAdditiveStat("oreDropRate", 0.1f).AddParent("oremine1").AddLevelRequirement("Excavation", 4);
+        PassiveNode.Create("Ore Miner", "oremine3", excavation).AddAdditiveStat("oreDropRate", 0.1f).AddParent("oremine2").AddLevelRequirement("Excavation", 6);
+        PassiveNode.Create("Ore Miner", "oremine4", excavation).AddAdditiveStatPerLevel("oreDropRate", 0.02f, "Excavation").AddParent("oremine3").AddLevelRequirement("Excavation", 8).NotableStyle().AddTagExclusiveRequirement("miningmastery", 1).WithTag("miningmastery");
 
         // Pickaxe Expert chain — faster mining speed.
-        PassiveNode.Create("Pickaxe Expert", "minespeed1", excavation).AddAdditiveStat("miningSpeedMul", 0.05f).AddParent("start").AddLevelRequirement("Excavation", 3);
-        PassiveNode.Create("Pickaxe Expert", "minespeed2", excavation).AddAdditiveStat("miningSpeedMul", 0.05f).AddParent("minespeed1").AddLevelRequirement("Excavation", 5);
-        PassiveNode.Create("Pickaxe Expert", "minespeed3", excavation).AddMultiplicativeStat("miningSpeedMul", 1.3f).AddParent("minespeed2").AddLevelRequirement("Excavation", 8).NotableStyle().AddTagExclusiveRequirement("miningmastery", 2).WithTag("miningmastery");
+        PassiveNode.Create("Pickaxe Expert", "minespeed1", excavation).AddAdditiveStat("miningSpeedMul", 0.1f).AddParent("start").AddLevelRequirement("Excavation", 3);
+        PassiveNode.Create("Pickaxe Expert", "minespeed2", excavation).AddAdditiveStat("miningSpeedMul", 0.1f).AddParent("minespeed1").AddLevelRequirement("Excavation", 5);
+        PassiveNode.Create("Pickaxe Expert", "minespeed3", excavation).AddAdditiveStatPerLevel("miningSpeedMul", 0.02f, "Excavation").AddParent("minespeed2").AddLevelRequirement("Excavation", 7).NotableStyle().AddTagExclusiveRequirement("miningmastery", 1).WithTag("miningmastery");
 
         // Vein Miner keystone — mining an ore block breaks connected ore of the same type.
         PassiveNode.Create("Vein Miner", "veinminer", excavation).AddParent("oremine3").AddSkillStat("veinminer", 1, """
             Mining an ore block breaks some connected ore blocks of the same type
             Costs extra tool durability per block broken
-            """).AddTagExclusiveRequirement("class", 2).WithTag("class").KeystoneStyle().AddLevelRequirement("Excavation", 10);
+            """).KeystoneStyle().AddLevelRequirement("Excavation", 10);
 
         // Stone Breaker chain — more drops when breaking rock.
-        PassiveNode.Create("Stone Breaker", "stonebreak1", excavation).AddAdditiveExtraStat("stoneDropBonus", 0.1f, statBase: 0f).AddParent("start").AddLevelRequirement("Excavation", 6);
-        PassiveNode.Create("Stone Breaker", "stonebreak2", excavation).AddAdditiveExtraStat("stoneDropBonus", 0.1f, statBase: 0f).AddParent("stonebreak1").AddLevelRequirement("Excavation", 8);
-        PassiveNode.Create("Stone Breaker", "stonebreak3", excavation).AddMultiplicativeExtraStat("stoneDropBonus", 1.5f, statBase: 0f).AddParent("stonebreak2").AddLevelRequirement("Excavation", 11).NotableStyle().AddTagExclusiveRequirement("miningmastery", 2).WithTag("miningmastery");
+        PassiveNode.Create("Stone Breaker", "stonebreak1", excavation).AddAdditiveExtraStat("stoneDropBonus", 0.1f, statBase: 0f).AddParent("start").AddLevelRequirement("Excavation", 2);
+        PassiveNode.Create("Stone Breaker", "stonebreak2", excavation).AddAdditiveExtraStat("stoneDropBonus", 0.1f, statBase: 0f).AddParent("stonebreak1").AddLevelRequirement("Excavation", 4);
+        PassiveNode.Create("Stone Breaker", "stonebreak3", excavation).AddAdditiveExtraStatPerLevel("stoneDropBonus", 0.02f, "Excavation", statBase: 0f).AddParent("stonebreak2").AddLevelRequirement("Excavation", 9).NotableStyle().AddTagExclusiveRequirement("miningmastery", 1).WithTag("miningmastery");
 
         // Stone Cutter chain — chance to drop an intact stone block when mining rock.
-        PassiveNode.Create("Stone Cutter", "stonecutter1", excavation).AddAdditiveExtraStat("stoneCutterChance", 0.05f, statBase: 0f).AddParent("start").AddLevelRequirement("Excavation", 6);
-        PassiveNode.Create("Stone Cutter", "stonecutter2", excavation).AddAdditiveExtraStat("stoneCutterChance", 0.05f, statBase: 0f).AddParent("stonecutter1").AddLevelRequirement("Excavation", 8);
-        PassiveNode.Create("Stone Cutter", "stonecutter3", excavation).AddMultiplicativeExtraStat("stoneCutterChance", 1.5f, statBase: 0f).AddParent("stonecutter2").AddLevelRequirement("Excavation", 11).NotableStyle().AddTagExclusiveRequirement("miningmastery", 2).WithTag("miningmastery");
+        PassiveNode.Create("Stone Cutter", "stonecutter1", excavation).AddAdditiveExtraStat("stoneCutterChance", 0.1f, statBase: 0f).AddParent("start").AddLevelRequirement("Excavation", 2);
+        PassiveNode.Create("Stone Cutter", "stonecutter2", excavation).AddAdditiveExtraStat("stoneCutterChance", 0.1f, statBase: 0f).AddParent("stonecutter1").AddLevelRequirement("Excavation", 4);
+        PassiveNode.Create("Stone Cutter", "stonecutter3", excavation).AddAdditiveExtraStatPerLevel("stoneCutterChance", 0.02f, "Excavation", statBase: 0f).AddParent("stonecutter2").AddLevelRequirement("Excavation", 9).NotableStyle().AddTagExclusiveRequirement("miningmastery", 1).WithTag("miningmastery");
 
         // Gemstone Miner chain — more gemstone drops from gem ore blocks.
-        PassiveNode.Create("Gemstone Miner", "gemmine1", excavation).AddAdditiveExtraStat("gemDropBonus", 0.05f, statBase: 0f).AddParent("oremine1").AddLevelRequirement("Excavation", 5);
-        PassiveNode.Create("Gemstone Miner", "gemmine2", excavation).AddAdditiveExtraStat("gemDropBonus", 0.05f, statBase: 0f).AddParent("gemmine1").AddLevelRequirement("Excavation", 8);
-        PassiveNode.Create("Gemstone Miner", "gemmine3", excavation).AddMultiplicativeExtraStat("gemDropBonus", 1.5f, statBase: 0f).AddParent("gemmine2").AddLevelRequirement("Excavation", 11).NotableStyle().AddTagExclusiveRequirement("miningmastery", 2).WithTag("miningmastery");
+        PassiveNode.Create("Gemstone Miner", "gemmine1", excavation).AddAdditiveExtraStat("gemDropBonus", 0.1f, statBase: 0f).AddParent("oremine1").AddLevelRequirement("Excavation", 2);
+        PassiveNode.Create("Gemstone Miner", "gemmine2", excavation).AddAdditiveExtraStat("gemDropBonus", 0.1f, statBase: 0f).AddParent("gemmine1").AddLevelRequirement("Excavation", 4);
+        PassiveNode.Create("Gemstone Miner", "gemmine3", excavation).AddAdditiveExtraStatPerLevel("gemDropBonus", 0.02f, "Excavation", statBase: 0f).AddParent("gemmine2").AddLevelRequirement("Excavation", 9).NotableStyle().AddTagExclusiveRequirement("miningmastery", 1).WithTag("miningmastery");
 
         // Horticulture passives.
         // Green Thumb chain — more wild crop drops.
@@ -328,7 +330,7 @@ public class SystemPolaris : NetworkedGameSystem
 
         // Beemaster — harvest skeps without breaking them.
         PassiveNode.Create("Beemaster", "beemaster", horticulture).NotableStyle()
-            .AddParent("forage1")
+            .AddParent("forage3")
             .AddSkillStat("beemaster", 1, "May harvest skeps without breaking them")
             .AddLevelRequirement("Horticulture", 10);
 
@@ -336,11 +338,11 @@ public class SystemPolaris : NetworkedGameSystem
         PassiveNode.Create("Extensive Farming", "extfarming1", horticulture)
             .AddParent("start")
             .AddSkillStat("extensivefarming", 1, "+1 to hoe and shear radius tool modes")
-            .AddLevelRequirement("Horticulture", 6);
+            .AddLevelRequirement("Horticulture", 6).NotableStyle();
         PassiveNode.Create("Extensive Farming", "extfarming2", horticulture)
             .AddParent("extfarming1")
             .AddSkillStat("extensivefarming", 1, "+1 to hoe and shear radius tool modes")
-            .AddLevelRequirement("Horticulture", 10);
+            .AddLevelRequirement("Horticulture", 10).KeystoneStyle();
 
         // Orchardist chain — more fruit tree drops.
         PassiveNode.Create("Orchardist", "orchardist1", horticulture).AddAdditiveExtraStat("orchardistBonus", 0.2f).AddParent("start").AddLevelRequirement("Horticulture", 3);
@@ -354,9 +356,9 @@ public class SystemPolaris : NetworkedGameSystem
         PassiveNode.Create("Archer", "rangeddmg3", hunting).AddAdditiveStat("rangedWeaponsDamage", 0.1f).AddParent("rangeddmg2").AddLevelRequirement("Hunting", 6);
         PassiveNode.Create("Archer", "rangeddmg4", hunting).AddAdditiveStat("rangedWeaponsDamage", 0.1f).AddParent("rangeddmg3").AddLevelRequirement("Hunting", 8);
 
-        PassiveNode.Create("Sharpshooter", "rangedacc1", hunting).AddAdditiveStat("rangedWeaponsAcc", 0.1f).AddParent("start").AddLevelRequirement("Hunting", 2);
-        PassiveNode.Create("Sharpshooter", "rangedacc2", hunting).AddAdditiveStat("rangedWeaponsAcc", 0.1f).AddParent("rangedacc1").AddLevelRequirement("Hunting", 4);
-        PassiveNode.Create("Sharpshooter", "rangedacc3", hunting).AddAdditiveStat("rangedWeaponsAcc", 0.1f).AddParent("rangedacc2").AddLevelRequirement("Hunting", 6);
+        PassiveNode.Create("Sharpshooter", "rangedacc1", hunting).AddAdditiveStat("rangedWeaponsAcc", 0.15f).AddParent("start").AddLevelRequirement("Hunting", 2);
+        PassiveNode.Create("Sharpshooter", "rangedacc2", hunting).AddAdditiveStat("rangedWeaponsAcc", 0.15f).AddParent("rangedacc1").AddLevelRequirement("Hunting", 4);
+        PassiveNode.Create("Sharpshooter", "rangedacc3", hunting).AddAdditiveStat("rangedWeaponsAcc", 0.15f).AddParent("rangedacc2").AddLevelRequirement("Hunting", 6);
 
         // Looter chain — more drops from animals.
         PassiveNode.Create("Looter", "lootdrop1", hunting).AddAdditiveStat("animalLootDropRate", 0.1f).AddParent("start").AddLevelRequirement("Hunting", 2);
@@ -370,25 +372,23 @@ public class SystemPolaris : NetworkedGameSystem
             .AddLevelRequirement("Hunting", 10);
 
         // 20% ranged damage
-        PassiveNode.Create("Hunter", "hunter", hunting).KeystoneStyle().AddTagExclusiveRequirementAndTag("class", 1)
+        PassiveNode.Create("Hunter", "hunter", hunting).KeystoneStyle()
             .AddParent("lootdrop3").AddParent("rangeddmg3")
             .AddLevelRequirement("Hunting", 6)
-            .AddAdditiveStat("walkspeed", 0.1f)
             .AddAdditiveStat("animalHarvestingTime", 0.25f)
             .AddAdditiveStat("bowDrawingStrength", 0.25f)
-            .AddMultiplicativeExtraStat("healthMultiplier", 0.8f)
             .AddSkillStat("bowyer", 1, "May craft powerful bows");
 
         // Combat passives.
         // Swordsman chain — increased melee weapon damage.
-        PassiveNode.Create("Swordsman", "meleedmg1", combat).AddAdditiveStat("meleeWeaponsDamage", 0.05f).AddParent("start").AddLevelRequirement("Combat", 2);
-        PassiveNode.Create("Swordsman", "meleedmg2", combat).AddAdditiveStat("meleeWeaponsDamage", 0.05f).AddParent("meleedmg1").AddLevelRequirement("Combat", 4);
-        PassiveNode.Create("Swordsman", "meleedmg3", combat).AddMultiplicativeStat("meleeWeaponsDamage", 1.3f).AddParent("meleedmg2").AddLevelRequirement("Combat", 7).NotableStyle();
+        PassiveNode.Create("Swordsman", "meleedmg1", combat).AddAdditiveStat("meleeWeaponsDamage", 0.1f).AddParent("start").AddLevelRequirement("Combat", 2);
+        PassiveNode.Create("Swordsman", "meleedmg2", combat).AddAdditiveStat("meleeWeaponsDamage", 0.1f).AddParent("meleedmg1").AddLevelRequirement("Combat", 4);
+        PassiveNode.Create("Swordsman", "meleedmg3", combat).AddAdditiveStatPerLevel("meleeWeaponsDamage", 0.02f, "Combat").AddParent("meleedmg2").AddLevelRequirement("Combat", 7).NotableStyle();
 
         // Berserker keystone — killing an entity restores a small amount of health.
         PassiveNode.Create("Berserker", "berserker", combat).AddParent("meleedmg1").AddSkillStat("berserker", 1, """
             Killing an entity restores 2 health
-            """).AddTagExclusiveRequirementAndTag("class", 2).KeystoneStyle().AddLevelRequirement("Combat", 8);
+            """).KeystoneStyle().AddLevelRequirement("Combat", 8);
 
         // Spore Cloud chain — chance to find a second mushroom when harvesting.
         PassiveNode.Create("Spore Cloud", "sporeCloud1", mycology).AddAdditiveExtraStat("sporeCloud", 0.3f, statBase: 0f).AddParent("start").AddLevelRequirement("Mycology", 3);
@@ -997,7 +997,7 @@ public class PlayerPolarisData
 
     public static float GetExpToReachLevel(int level)
     {
-        return 100f * MathF.Pow(level - 1, 2f);
+        return 100f * MathF.Pow(level - 1, 1.5f);
     }
 
     public PlayerConstellationData GetConstellation(string name)

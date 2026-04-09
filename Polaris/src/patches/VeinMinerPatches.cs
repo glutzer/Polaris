@@ -7,7 +7,7 @@ namespace Polaris;
 
 public class VeinMinerPatches
 {
-    private const int MaxVeinBlocks = 10;
+    private const int MaxVeinBlocks = 5;
 
     [HarmonyPatch(typeof(BlockOre), "OnBlockBroken")]
     public class VeinMinerPatch
