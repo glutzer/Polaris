@@ -9,15 +9,25 @@ public class PlayerPatches
     [HarmonyPatch(typeof(EntityBehaviorHealth), "UpdateMaxHealth")]
     public class HealthPatch
     {
+        [HarmonyPrefix]
+        public static void Prefix(EntityBehaviorHealth __instance, out float __state)
+        {
+            __state = __instance.MaxHealth;
+        }
+
         [HarmonyPostfix]
-        public static void Postfix(EntityBehaviorHealth __instance)
+        public static void Postfix(EntityBehaviorHealth __instance, float __state)
         {
             Entity entity = __instance.entity;
 
-            // Total health increase stat. 
-            if (entity.TryGetExtraStat("healthMultiplier", out float healthMultiplier))
+            if (!entity.TryGetExtraStat("healthMultiplier", out float healthMultiplier)) return;
+
+            float vanillaMax = __instance.MaxHealth;
+            __instance.MaxHealth *= healthMultiplier;
+
+            if (__instance.Health >= vanillaMax)
             {
-                __instance.MaxHealth *= healthMultiplier;
+                __instance.Health = __instance.MaxHealth;
             }
         }
     }

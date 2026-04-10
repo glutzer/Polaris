@@ -50,6 +50,8 @@ public class SystemPolaris : NetworkedGameSystem
 
     private readonly Dictionary<string, PlayerPolarisData> playerDataByUid = [];
 
+    public PolarisConfig Config { get; private set; } = new();
+
     public event Action<PlayerPolarisData>? OnClientDataUpdated;
     public event Action<Constellation, float, int, bool>? OnClientExperienceGain;
 
@@ -75,6 +77,17 @@ public class SystemPolaris : NetworkedGameSystem
     {
         if (api.Side == EnumAppSide.Client) clientInst = this;
         else serverInst = this;
+
+        try
+        {
+            Config = api.LoadModConfig<PolarisConfig>("polarisconfig.json") ?? new PolarisConfig();
+        }
+        catch
+        {
+            Config = new PolarisConfig();
+        }
+        api.StoreModConfig(Config, "polarisconfig.json");
+        PlayerPolarisData.ExpCurve = Config.MainExpCurve;
 
         if (api is ICoreServerAPI sapi)
         {
@@ -156,55 +169,59 @@ public class SystemPolaris : NetworkedGameSystem
     public override void Initialize()
     {
         // Main survival tree.
-        Constellation survival = new Constellation("Survival").SetColor(1f, 0.7f, 0.7f, 1f).AddStartNode();
+        Constellation survival = new Constellation("Survival").SetColor(1f, 0.7f, 0.7f, 1f).SetExpCurve(Config.SurvivalExpCurve, 100f).AddStartNode();
         AddConstellation(survival);
 
         // Temporal tree.
-        Constellation time = new Constellation("Time").SetColor(0f, 1f, 0.6f, 0.5f).AddStartNode();
+        Constellation time = new Constellation("Time").SetColor(0f, 1f, 0.6f, 0.5f).SetExpCurve(Config.TimeExpCurve, 100f).AddStartNode();
         AddConstellation(time);
 
         // Mining and digging combined.
-        Constellation excavation = new Constellation("Excavation").SetColor(0.6f, 0.4f, 0.4f, 1f).AddStartNode();
+        Constellation excavation = new Constellation("Excavation").SetColor(0.6f, 0.4f, 0.4f, 1f).SetExpCurve(Config.ExcavationExpCurve, 100f).AddStartNode();
         AddConstellation(excavation);
 
         // Tree stuff.
-        Constellation forestry = new Constellation("Forestry").SetColor(0f, 0.6f, 0f, 1f).AddStartNode();
+        Constellation forestry = new Constellation("Forestry").SetColor(0f, 0.6f, 0f, 1f).SetExpCurve(Config.ForestryExpCurve, 100f).AddStartNode();
         AddConstellation(forestry);
 
         // Farming.
-        Constellation horticulture = new Constellation("Horticulture").SetColor(0.2f, 1f, 0.2f, 1f).AddStartNode();
+        Constellation horticulture = new Constellation("Horticulture").SetColor(0.2f, 1f, 0.2f, 1f).SetExpCurve(Config.HorticultureExpCurve, 100f).AddStartNode();
         AddConstellation(horticulture);
 
         // Hunting — ranged combat and animal loot.
-        Constellation hunting = new Constellation("Hunting").SetColor(0.6f, 0.2f, 0.2f, 0.75f).AddStartNode();
+        Constellation hunting = new Constellation("Hunting").SetColor(0.6f, 0.2f, 0.2f, 0.75f).SetExpCurve(Config.HuntingExpCurve, 100f).AddStartNode();
         AddConstellation(hunting);
 
         // Combat — melee combat.
-        Constellation combat = new Constellation("Combat").SetColor(0.8f, 0.15f, 0.15f, 1f).AddStartNode();
+        Constellation combat = new Constellation("Combat").SetColor(0.8f, 0.15f, 0.15f, 1f).SetExpCurve(Config.CombatExpCurve, 100f).AddStartNode();
         AddConstellation(combat);
 
         // Smithing.
-        Constellation smithing = new Constellation("Smithing").SetColor(0.7f, 0.4f, 0.2f, 1f).AddStartNode();
+        Constellation smithing = new Constellation("Smithing").SetColor(0.7f, 0.4f, 0.2f, 1f).SetExpCurve(Config.SmithingExpCurve, 100f).AddStartNode();
         AddConstellation(smithing);
 
         // Clay/knapping.
-        Constellation forming = new Constellation("Forming").SetColor(0.1f, 0.1f, 0.3f, 1f).AddStartNode();
+        Constellation forming = new Constellation("Forming").SetColor(0.1f, 0.1f, 0.3f, 1f).SetExpCurve(Config.FormingExpCurve, 100f).AddStartNode();
         AddConstellation(forming);
 
         // Cooking.
-        Constellation cooking = new Constellation("Cooking").SetColor(0.7f, 0.7f, 0f, 1f).AddStartNode();
+        Constellation cooking = new Constellation("Cooking").SetColor(0.7f, 0.7f, 0f, 1f).SetExpCurve(Config.CookingExpCurve, 100f).AddStartNode();
         AddConstellation(cooking);
 
         // Crafting - leatherworking and sewing.
-        Constellation crafting = new Constellation("Crafting").SetColor(0.7f, 0.3f, 0.5f, 1f).AddStartNode();
+        Constellation crafting = new Constellation("Crafting").SetColor(0.7f, 0.3f, 0.5f, 1f).SetExpCurve(Config.CraftingExpCurve, 100f).AddStartNode();
         AddConstellation(crafting);
 
         // Trade.
-        Constellation trade = new Constellation("Trade").SetColor(1f, 0f, 1f, 1f).AddStartNode();
+        Constellation trade = new Constellation("Trade").SetColor(1f, 0f, 1f, 1f).SetExpCurve(Config.TradeExpCurve, 100f).AddStartNode();
         AddConstellation(trade);
 
+        PassiveNode.Create("Mint", "mint", trade).AddParent("start").AddSkillStat("mint", 1, """
+            Craft a Rusty Gear from Metal Parts
+            """).KeystoneStyle().AddLevelRequirement("Trade", 100);
+
         // Mycology — mushroom harvesting and bonuses.
-        Constellation mycology = new Constellation("Mycology").SetColor(0.6f, 0.3f, 0.8f, 1f).AddStartNode();
+        Constellation mycology = new Constellation("Mycology").SetColor(0.6f, 0.3f, 0.8f, 1f).SetExpCurve(Config.MycologyExpCurve, 100f).AddStartNode();
         AddConstellation(mycology);
 
         // Survival passives.
@@ -229,6 +246,11 @@ public class SystemPolaris : NetworkedGameSystem
         PassiveNode.Create("Feather Falling", "featherfall1", survival).AddAdditiveExtraStat("featherFall", 0.2f, statBase: 0f).AddParent("start").AddLevelRequirement("Survival", 3);
         PassiveNode.Create("Feather Falling", "featherfall2", survival).AddAdditiveExtraStat("featherFall", 0.2f, statBase: 0f).AddParent("featherfall1").AddLevelRequirement("Survival", 5);
         PassiveNode.Create("Feather Falling", "featherfall3", survival).AddAdditiveExtraStat("featherFall", 0.2f, statBase: 0f).AddParent("featherfall2").AddLevelRequirement("Survival", 7);
+
+        // Meat Shield chain — absorb incoming damage at the cost of saturation.
+        PassiveNode.Create("Meat Shield", "meatShield1", survival).AddAdditiveExtraStat("meatShield", 0.1f, statBase: 0f).AddParent("sat1").AddLevelRequirement("Survival", 3);
+        PassiveNode.Create("Meat Shield", "meatShield2", survival).AddAdditiveExtraStat("meatShield", 0.1f, statBase: 0f).AddParent("sat2").AddLevelRequirement("Survival", 5);
+        PassiveNode.Create("Meat Shield", "meatShield3", survival).AddAdditiveExtraStat("meatShield", 0.1f, statBase: 0f).AddParent("sat3").AddLevelRequirement("Survival", 7);
 
         PassiveNode.Create("Primalist", "primalist", survival).AddParent("start").AddSkillStat("primalist", 1, """
             You can eat raw meat
@@ -255,6 +277,10 @@ public class SystemPolaris : NetworkedGameSystem
         PassiveNode.Create("Strong Back", "strongBack3", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddAdditiveStat("walkspeed", -0.04f).AddParent("strongBack2").AddLevelRequirement("Survival", 7);
         PassiveNode.Create("Pack Mule", "strongBack4", survival).AddAdditiveExtraStat("strongBack", 3f, true, statBase: 0f).AddAdditiveStat("walkspeed", -0.2f).AddParent("strongBack3").AddLevelRequirement("Survival", 10).NotableStyle();
 
+        PassiveNode.Create("Improviser", "improviser", survival).AddParent("start").AddSkillStat("improviser", 1, """
+            May craft a sling
+            """).KeystoneStyle();
+
         // Crafting passives.
         PassiveNode.Create("Sewing Effectiveness", "sewing1", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 2).AddParent("start");
         PassiveNode.Create("Sewing Effectiveness", "sewing2", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 4).AddParent("sewing1");
@@ -278,6 +304,10 @@ public class SystemPolaris : NetworkedGameSystem
 
         PassiveNode.Create("Cracker", "cracker1", smithing).AddAdditiveExtraStat("bloomeryDrops", 0.1f).AddParent("start").AddLevelRequirement("Smithing", 4);
         PassiveNode.Create("Cracker", "cracker2", smithing).AddAdditiveExtraStat("bloomeryDrops", 0.1f).AddParent("cracker1").AddLevelRequirement("Smithing", 8);
+
+        PassiveNode.Create("Merciless", "merciless", smithing).AddParent("start").AddSkillStat("merciless", 1, """
+            May craft the Blackguard Blade
+            """).KeystoneStyle().AddLevelRequirement("Smithing", 8);
 
         // Excavation passives.
         PassiveNode.Create("Eroder", "eroder", excavation).AddSkillStat("eroder", 1, """
@@ -403,6 +433,21 @@ public class SystemPolaris : NetworkedGameSystem
         PassiveNode.Create("Stable Settler", "stableSettler", time).AddSkillStat("stableSettler", 1, """
             Temporally unstable areas do not affect you near the surface
             """).AddParent("start").AddLevelRequirement("Time", 5).KeystoneStyle();
+
+        PassiveNode.Create("Tinkerer", "tinkerer", time).AddParent("start").AddSkillStat("tinkerer", 1, """
+            May craft hacking spears
+            """).KeystoneStyle().AddLevelRequirement("Time", 5);
+
+        // Temporal Resilience chain — reduce temporal stability drain rate.
+        PassiveNode.Create("Temporal Resilience", "temporalResilience1", time).AddAdditiveExtraStat("temporalResilience", -0.1f, statBase: 1f).AddParent("start").AddLevelRequirement("Time", 3);
+        PassiveNode.Create("Temporal Resilience", "temporalResilience2", time).AddAdditiveExtraStat("temporalResilience", -0.1f, statBase: 1f).AddParent("temporalResilience1").AddLevelRequirement("Time", 5);
+        PassiveNode.Create("Temporal Resilience", "temporalResilience3", time).AddAdditiveExtraStat("temporalResilience", -0.1f, statBase: 1f).AddParent("temporalResilience2").AddLevelRequirement("Time", 7);
+
+        // Schizophrenic Dissociation keystone — damage reduction with deferred health loss and amplified stability drain.
+        PassiveNode.Create("Schizophrenic Dissociation", "schizoDissociation", time).AddParent("start").AddSkillStat("schizoDissociation", 1, """
+            40% less damage taken
+            40% of damage taken is removed from health 4 seconds later
+            """).AddAdditiveExtraStat("temporalResilience", 2f, statBase: 1f).KeystoneStyle().AddLevelRequirement("Time", 10);
 
         // Register one for each vanilla stat.
         RegisterAggregator(new StatAggregator("healingeffectivness"));
@@ -629,7 +674,7 @@ public class SystemPolaris : NetworkedGameSystem
 
         bool shouldServerRecalculate = false;
 
-        while (data.Experience >= constellation.GetExpToReachLevel(data.Level + 1) && data.Level < 100)
+        while (data.Experience >= constellation.GetExpToReachLevel(data.Level + 1) && data.Level < Config.MaxSkillLevel)
         {
             float expNeeded = constellation.GetExpToReachLevel(data.Level + 1);
 
@@ -640,12 +685,22 @@ public class SystemPolaris : NetworkedGameSystem
             shouldServerRecalculate = true;
         }
 
-        while (playerData.Experience >= PlayerPolarisData.GetExpToReachLevel(playerData.Level + 1))
+        if (data.Level >= Config.MaxSkillLevel)
+        {
+            data.Experience = MathF.Min(data.Experience, constellation.GetExpToReachLevel(Config.MaxSkillLevel + 1));
+        }
+
+        while (playerData.Experience >= PlayerPolarisData.GetExpToReachLevel(playerData.Level + 1) && playerData.Level < Config.MaxMainLevel)
         {
             playerData.Experience -= PlayerPolarisData.GetExpToReachLevel(playerData.Level + 1);
             playerData.Level++;
             playerData.SetKnowledgePoints(playerData.KnowledgePoints + 1);
             shouldServerRecalculate = true;
+        }
+
+        if (playerData.Level >= Config.MaxMainLevel)
+        {
+            playerData.Experience = MathF.Min(playerData.Experience, PlayerPolarisData.GetExpToReachLevel(Config.MaxMainLevel + 1));
         }
 
         if (api.Side.IsServer())
@@ -915,10 +970,15 @@ public class PlayerPolarisData
         // Set level.
         Level = 1;
         Experience = exp;
-        while (Experience >= GetExpToReachLevel(Level + 1))
+        while (Experience >= GetExpToReachLevel(Level + 1) && Level < tree.Config.MaxMainLevel)
         {
             Experience -= GetExpToReachLevel(Level + 1);
             Level++;
+        }
+
+        if (Level >= tree.Config.MaxMainLevel)
+        {
+            Experience = MathF.Min(Experience, GetExpToReachLevel(tree.Config.MaxMainLevel + 1));
         }
 
         SetKnowledgePoints(Level - 1 - pointsSpent);
@@ -995,9 +1055,11 @@ public class PlayerPolarisData
         KnowledgePoints = amount;
     }
 
+    public static float ExpCurve = 1.5f;
+
     public static float GetExpToReachLevel(int level)
     {
-        return 100f * MathF.Pow(level - 1, 1.5f);
+        return 100f * MathF.Pow(level - 1, ExpCurve);
     }
 
     public PlayerConstellationData GetConstellation(string name)

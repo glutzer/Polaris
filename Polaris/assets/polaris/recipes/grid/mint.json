@@ -1,0 +1,18 @@
+{
+  "ingredientPattern": "MM,MM",
+  "requiresTrait": "mint",
+  "ingredients": {
+    "M": {
+      "type": "block",
+      "code": "game:metal-parts",
+      "quantity": 1
+    }
+  },
+  "width": 2,
+  "height": 2,
+  "output": {
+    "type": "item",
+    "code": "game:gear-rusty",
+    "quantity": 4
+  }
+}

@@ -50,6 +50,9 @@
   "extrastatincgemDropBonusperlevel": "{0}% increased Gemstone Drop Rate per {1} level",
 
   "extrastatincfeatherFall": "{0}% reduced Fall Damage",
+  "extrastatinctemporalResilience": "{0}% increased Temporal Stability drain",
+  "extrastatdectemporalResilience": "{0}% reduced Temporal Stability drain",
+  "extrastatincmeatShield": "{0}% of incoming Damage absorbed as Saturation loss",
   "extrastatincsporeCloud": "{0}% chance to find an extra Mushroom",
   "extrastatincsporeCloudperlevel": "{0}% chance per {1} level to find an extra Mushroom",
   "extrastatincfungalFortitude": "{0}% increased Saturation from Mushrooms",
@@ -58,5 +61,7 @@
   "extrastatincstrongBack": "+{0} Backpack Slot(s)",
 
   "nodetag-class": "Class",
-  "nodetag-miningmastery": "Mining Mastery"
+  "nodetag-miningmastery": "Mining Mastery",
+
+  "traitname-mint": "Mint"
 }

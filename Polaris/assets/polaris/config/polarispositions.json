@@ -72,6 +72,18 @@
       0,
       300
     ],
+    "Survival:meatShield1": [
+      -30,
+      -140
+    ],
+    "Survival:meatShield2": [
+      30,
+      -240
+    ],
+    "Survival:meatShield3": [
+      -30,
+      -340
+    ],
     "Survival:primalist": [
       -200,
       -200
@@ -108,6 +120,10 @@
       300,
       -100
     ],
+    "Survival:improviser": [
+      100,
+      -100
+    ],
     "Time:start": [
       0,
       0
@@ -115,6 +131,26 @@
     "Time:stableSettler": [
       200,
       200
+    ],
+    "Time:tinkerer": [
+      0,
+      250
+    ],
+    "Time:temporalResilience1": [
+      70,
+      -70
+    ],
+    "Time:temporalResilience2": [
+      140,
+      -140
+    ],
+    "Time:temporalResilience3": [
+      210,
+      -210
+    ],
+    "Time:schizoDissociation": [
+      -200,
+      -200
     ],
     "Excavation:start": [
       0,
@@ -348,6 +384,10 @@
       0,
       200
     ],
+    "Smithing:merciless": [
+      100,
+      0
+    ],
     "Forming:start": [
       0,
       0
@@ -387,6 +427,10 @@
     "Trade:start": [
       0,
       0
+    ],
+    "Trade:mint": [
+      0,
+      -150
     ],
     "Mycology:start": [
       0,
