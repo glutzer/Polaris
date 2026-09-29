@@ -66,6 +66,12 @@ public class PolarisModSystem : ModSystem
 
     public override void StartClientSide(ICoreClientAPI api)
     {
+        api.Input.RegisterHotKey("polarisAchievements", "Achievements", GlKeys.P);
+        api.Input.SetHotKeyHandler("polarisAchievements", key =>
+        {
+            MainAPI.GetClientSystem<SystemPolarisStarScreen>().ToggleStars(true);
+            return true;
+        });
         ScreenManager.hotkeyManager.RegisterHotKey("starMap", "Star Map", (int)GlKeys.O, triggerOnUpAlso: true);
         MainAPI.Capi.Input.SetHotKeyHandler("starMap", key =>
         {

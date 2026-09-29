@@ -76,8 +76,16 @@ public class SystemPolarisStarScreen : GameSystem, IRenderer
         UboRegistry.SetUbo("starLightData", 0);
     }
 
-    public void ToggleStars()
+    public void ToggleStars(bool achievements = false)
     {
+        if (lookingAtStars && gui.ShowAchievements != achievements)
+        {
+            gui.ShowAchievements = achievements;
+            UpdateUbo([]);
+            gui.SetWidgets();
+            return;
+        }
+        gui.ShowAchievements = achievements;
         if (lookingAtStars)
         {
             StopLookingAtStars();

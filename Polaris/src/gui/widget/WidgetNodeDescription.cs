@@ -57,6 +57,24 @@ public class WidgetNodeDescription : Widget
         SetFade = 0f;
     }
 
+    public void SetAchievement(Achievement? achievement, bool unlocked)
+    {
+        if (achievement == null)
+        {
+            SetFade = 1f;
+            return;
+        }
+        StringBuilder text = new();
+        text.AppendLine($"<strong>{achievement.Name}</strong>");
+        text.AppendLine(achievement.Description);
+        text.AppendLine(unlocked ? "Unlocked" : "Locked");
+        foreach (string code in achievement.Requirements)
+            if (Achievements.ByCode.TryGetValue(code, out Achievement? required))
+                text.AppendLine($"Requires: {required.Name}");
+        richText.SetText(text.ToString());
+        SetFade = 0f;
+    }
+
     public override void OnRender(float dt, ShaderGui shader)
     {
         RenderTools.RenderNineSlice(bg, shader, X, Y, Width, Height);

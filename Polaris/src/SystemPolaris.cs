@@ -777,6 +777,20 @@ public class SystemPolaris : NetworkedGameSystem
         return data;
     }
 
+    /// <summary>Server-only, idempotent achievement award. Requirements must already be unlocked.</summary>
+    public static bool TriggerAchievement(string code, IPlayer player)
+    {
+        if (player is not IServerPlayer serverPlayer || player.Entity?.Api is not ICoreServerAPI sapi) return false;
+        if (!Achievements.ByCode.TryGetValue(code, out Achievement? achievement)) return false;
+        SystemPolaris system = Instance(sapi);
+        PlayerPolarisData data = system.GetPlayerData(player.PlayerUID);
+        if (!Achievements.TryUnlock(code, data.Achievements)) return false;
+
+        system.SendPacket(data, serverPlayer);
+        sapi.BroadcastMessageToAllGroups($"{player.PlayerName} has received the achievement {achievement.Name}", EnumChatType.Notification);
+        return true;
+    }
+
     public PlayerPolarisData GetClientData()
     {
         if (!playerDataByUid.TryGetValue(MainAPI.Capi.World.Player.PlayerUID, out PlayerPolarisData? data))
@@ -942,6 +956,9 @@ public class PlayerPolarisData
     // Knowledge points, loaded when verifying data.
     [ProtoMember(4)]
     public int KnowledgePoints { get; private set; }
+
+    [ProtoMember(5)]
+    public HashSet<string> Achievements = [];
 
     public void ConvertToSaveableData(SystemPolaris tree)
     {

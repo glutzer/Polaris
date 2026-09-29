@@ -2,12 +2,24 @@
 
 public class GuiPolarisMenu : Gui
 {
+    public bool ShowAchievements { get; set; }
     public override double DrawOrder => 0;
     public override double InputOrder => 0;
 
     public override bool OnEscapePressed()
     {
         return false;
+    }
+
+    public override void OnKeyDown(Vintagestory.API.Client.KeyEvent args)
+    {
+        if (args.KeyCode == (int)Vintagestory.API.Client.GlKeys.Escape)
+        {
+            MainAPI.GetClientSystem<SystemPolarisStarScreen>().StopLookingAtStars();
+            args.Handled = true;
+            return;
+        }
+        base.OnKeyDown(args);
     }
 
     public override void PopulateWidgets()
@@ -19,7 +31,10 @@ public class GuiPolarisMenu : Gui
         Widget bg;
         AddWidget(bg = new WidgetStarBackground(null, this, offset).Percent(0f, 0f, 1f, 1f));
 
-        new WidgetNodes(bg, this, offset).Percent(0f, 0f, 1f, 1f);
+        if (ShowAchievements)
+            new WidgetAchievements(bg, this, offset).Percent(0f, 0f, 1f, 1f);
+        else
+            new WidgetNodes(bg, this, offset).Percent(0f, 0f, 1f, 1f);
     }
 
     public void FadeIn(float totalTime)
