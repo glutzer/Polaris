@@ -5,10 +5,10 @@
     "authors": [
         "nuts"
     ],
-    "description": "Leveling and skill system.",
+    "description": "Leveling and achievement system.",
     "version": "1.1.0",
     "dependencies": {
       "game": "",
-      "nutslib": "3.1.5"
+      "nutslib": "3.1.8"
     }
 }

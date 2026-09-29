@@ -26,6 +26,28 @@ public static class Achievements
                 ExperienceConstellation = "Combat",
                 ExperienceReward = 250f
             },
+            ["psychedelicMushroom"] = new("psychedelicMushroom", HiddenUntilUnlocked: true)
+            {
+                ExperienceConstellation = "Mycology",
+                ExperienceReward = 1000f
+            },
+            ["fungalFeast"] = new("fungalFeast")
+            {
+                // All 45 ground mushrooms and polypores listed on the Mushroom wiki page.
+                Goals = [
+                    "orangeoakbolete", "kingbolete", "bitterbolete", "devilbolete", "flyagaric",
+                    "greencrackedrussula", "violetwebcap", "almondmushroom", "redwinecap", "paddystraw",
+                    "deathcap", "puffball", "earthball", "chanterelle", "blacktrumpet", "fieldmushroom",
+                    "golddropmilkcap", "indigomilkcap", "saffronmilkcap", "commonmorel", "witchhat",
+                    "lobster", "jackolantern", "devilstooth", "elfinsaddle", "bluemeanie", "foolsconecap",
+                    "goldcap", "honeymushroom", "laughingjim", "libertycap", "sickener", "wavycap",
+                    "shiitake", "pinkbonnet", "livermushroom", "funeralbell", "deerear", "reishi",
+                    "whiteoyster", "beardedtooth", "chickenofthewoods", "tinderhoof", "dryadsaddle", "pinkoyster"
+                ],
+                KnowledgePointReward = 1,
+                ExperienceConstellation = "Mycology",
+                ExperienceReward = 1000f
+            },
             ["metalworker"] = new("metalworker")
             {
                 Goals = ["copper", "tinbronze", "bismuthbronze", "blackbronze", "iron"],

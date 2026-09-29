@@ -73,16 +73,16 @@
       300
     ],
     "Survival:meatShield1": [
-      -30,
-      -140
+      -60,
+      -130
     ],
     "Survival:meatShield2": [
-      30,
-      -240
+      60,
+      -230
     ],
     "Survival:meatShield3": [
-      -30,
-      -340
+      -60,
+      -330
     ],
     "Survival:primalist": [
       -200,
@@ -466,7 +466,7 @@
     ],
     "Mycology:fungalFortitude3": [
       130,
-      50
+      40
     ]
   }
 }
