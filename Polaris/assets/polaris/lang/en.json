@@ -1,4 +1,21 @@
 {
+  "constellation-survival": "Survival",
+  "constellation-time": "Time",
+  "constellation-excavation": "Excavation",
+  "constellation-forestry": "Forestry",
+  "constellation-horticulture": "Horticulture",
+  "constellation-hunting": "Hunting",
+  "constellation-combat": "Combat",
+  "constellation-smithing": "Smithing",
+  "constellation-forming": "Forming",
+  "constellation-cooking": "Cooking",
+  "constellation-crafting": "Crafting",
+  "constellation-trade": "Trade",
+  "constellation-mycology": "Mycology",
+
+  "achievement-firstblood-name": "Top Of The Food Chain",
+  "achievement-firstblood-description": "Kill a wolf.",
+
   "stathealingeffectivness": "Healing Effectiveness",
   "statmaxhealthExtraPoints": "Max Health",
   "statwalkspeed": "Movement Speed",

@@ -1,0 +1,84 @@
+{
+  "constellation-survival": "Выживание",
+  "constellation-time": "Время",
+  "constellation-excavation": "Раскопки",
+  "constellation-forestry": "Лесное хозяйство",
+  "constellation-horticulture": "Садоводство",
+  "constellation-hunting": "Охота",
+  "constellation-combat": "Бой",
+  "constellation-smithing": "Кузнечное дело",
+  "constellation-forming": "Формовка",
+  "constellation-cooking": "Кулинария",
+  "constellation-crafting": "Ремесло",
+  "constellation-trade": "Торговля",
+  "constellation-mycology": "Микология",
+
+  "achievement-firstblood-name": "Вершина пищевой цепи",
+  "achievement-firstblood-description": "Убейте волка.",
+
+  "stathealingeffectivness": "Эффективность лечения",
+  "statmaxhealthExtraPoints": "Максимальное здоровье",
+  "statwalkspeed": "Скорость передвижения",
+  "stathungerrate": "Скорость наступления голода",
+  "statrangedWeaponsAcc": "Точность дальнобойного оружия",
+  "statrangedWeaponsSpeed": "Скорость дальнобойного оружия",
+  "statrangedWeaponsDamage": "Урон дальнобойного оружия",
+  "statmeleeWeaponsDamage": "Урон оружия ближнего боя",
+  "statmechanicalsDamage": "Урон механизмам",
+  "statanimalLootDropRate": "Добыча с животных",
+  "statforageDropRate": "Сбор материалов при поиске растений",
+  "statwildCropDropRate": "Шанс выпадения дикорастущих культур",
+  "statvesselContentsDropRate": "Шанс выпадения содержимого сосудов",
+  "statoreDropRate": "Шанс выпадения руды",
+  "statrustyGearDropRate": "Шанс выпадения ржавых шестерёнок",
+  "statminingSpeedMul": "Скорость добычи",
+  "statanimalSeekingRange": "Дальность обнаружения игрока животными",
+  "statarmorDurabilityLoss": "Потеря прочности брони",
+  "statarmorWalkSpeedAffectedness": "Влияние брони на скорость передвижения",
+  "statbowDrawingStrength": "Сила натяжения лука",
+  "statwholeVesselLootChance": "Шанс найти сосуд целым",
+  "stattemporalGearTLRepairCost": "Стоимость ремонта трансдуктора временного снаряжения",
+  "statanimalHarvestingTime": "Время разделки животного",
+  "statgliderLiftMax": "Максимальная подъёмная сила планера",
+  "statgliderSpeedMax": "Максимальная скорость планера",
+  "statjumpHeightMul": "Множитель высоты прыжка",
+
+  "extrastatincsewingeffectiveness": "На {0}% больше прочности одежды восстанавливается",
+
+  "extrastatinchealthMultiplier": "Максимальное здоровье увеличено на {0}%",
+  "extrastatdechealthMultiplier": "Максимальное здоровье снижено на {0}%",
+  "extrastatmulhealthMultiplier": "Максимальное здоровье дополнительно увеличено на {0}%",
+  "extrastatdivhealthMultiplier": "Максимальное здоровье дополнительно снижено на {0}%",
+
+  "extrastatincsatMultiplier": "Максимальная сытость увеличена на {0}%",
+  "extrastatmulsatMultiplier": "Максимальная сытость дополнительно увеличена на {0}%",
+
+  "extrastatincbloomeryDrops": "На {0}% больше кирпичей возвращается из горнов",
+
+  "extrastatincorchardistBonus": "Шанс выпадения плодов с фруктовых деревьев увеличен на {0}%",
+
+  "extrastatincstoneDropBonus": "Шанс выпадения камня увеличен на {0}%",
+  "extrastatincstoneDropBonusperlevel": "Шанс выпадения камня увеличен на {0}% за каждый уровень {1}",
+
+  "extrastatincstoneCutterChance": "Шанс найти целый каменный блок: {0}%",
+  "extrastatincstoneCutterChanceperlevel": "Шанс найти целый каменный блок увеличивается на {0}% за каждый уровень {1}",
+
+  "extrastatincgemDropBonus": "Шанс выпадения драгоценных камней увеличен на {0}%",
+  "extrastatincgemDropBonusperlevel": "Шанс выпадения драгоценных камней увеличен на {0}% за каждый уровень {1}",
+
+  "extrastatincfeatherFall": "Урон от падения снижен на {0}%",
+  "extrastatinctemporalResilience": "Расход временной стабильности увеличен на {0}%",
+  "extrastatdectemporalResilience": "Расход временной стабильности снижен на {0}%",
+  "extrastatincmeatShield": "{0}% получаемого урона поглощается за счёт сытости",
+  "extrastatincsporeCloud": "Шанс найти дополнительный гриб: {0}%",
+  "extrastatincsporeCloudperlevel": "Шанс найти дополнительный гриб увеличивается на {0}% за каждый уровень {1}",
+  "extrastatincfungalFortitude": "Получаемая от грибов сытость увеличена на {0}%",
+  "extrastatincfungalFortitudeperlevel": "Получаемая от грибов сытость увеличена на {0}% за каждый уровень {1}",
+
+  "extrastatincstrongBack": "+{0} ячейка(и) рюкзака",
+
+  "nodetag-class": "Класс",
+  "nodetag-miningmastery": "Мастерство добычи",
+
+  "traitname-mint": "Мята"
+}

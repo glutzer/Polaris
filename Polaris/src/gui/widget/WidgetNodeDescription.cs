@@ -68,6 +68,14 @@ public class WidgetNodeDescription : Widget
         text.AppendLine($"<strong>{achievement.Name}</strong>");
         text.AppendLine(achievement.Description);
         text.AppendLine(unlocked ? "Unlocked" : "Locked");
+        if (achievement.KnowledgePointReward > 0)
+            text.AppendLine($"Reward: {achievement.KnowledgePointReward} knowledge points");
+        if (achievement.ExperienceReward > 0)
+        {
+            Constellation? rewardConstellation = SystemPolaris.Instance(MainAPI.Capi).GetConstellation(achievement.ExperienceConstellation!);
+            string constellationName = rewardConstellation?.DisplayName ?? achievement.ExperienceConstellation!;
+            text.AppendLine($"Reward: {achievement.ExperienceReward:0.##} {constellationName} EXP");
+        }
         foreach (string code in achievement.Requirements)
             if (Achievements.ByCode.TryGetValue(code, out Achievement? required))
                 text.AppendLine($"Requires: {required.Name}");

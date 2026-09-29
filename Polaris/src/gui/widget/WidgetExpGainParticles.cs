@@ -53,7 +53,7 @@ public class WidgetExpGainParticles : Widget
         if (!alert) return;
 
         // Round amount to 2 digits.
-        string text = $"+{MathF.Round(amount, 2)} {constellation.Name}";
+        string text = $"+{MathF.Round(amount, 2)} {constellation.DisplayName}";
 
         Vector2 position = new(XCenter, YCenter);
 

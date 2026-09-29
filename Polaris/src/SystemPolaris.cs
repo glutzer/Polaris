@@ -783,8 +783,22 @@ public class SystemPolaris : NetworkedGameSystem
         if (player is not IServerPlayer serverPlayer || player.Entity?.Api is not ICoreServerAPI sapi) return false;
         if (!Achievements.ByCode.TryGetValue(code, out Achievement? achievement)) return false;
         SystemPolaris system = Instance(sapi);
+        // Reject invalid rewards before recording the unlock or granting any reward.
+        if (achievement.KnowledgePointReward < 0 || !float.IsFinite(achievement.ExperienceReward)
+            || achievement.ExperienceReward < 0
+            || (achievement.ExperienceReward > 0 && (achievement.ExperienceConstellation == null
+                || system.GetConstellation(achievement.ExperienceConstellation) == null)))
+        {
+            sapi.Logger.Error($"Invalid reward configuration for achievement '{code}'.");
+            return false;
+        }
         PlayerPolarisData data = system.GetPlayerData(player.PlayerUID);
         if (!Achievements.TryUnlock(code, data.Achievements)) return false;
+
+        data.AchievementKnowledgePoints += achievement.KnowledgePointReward;
+        data.SetKnowledgePoints(data.KnowledgePoints + achievement.KnowledgePointReward);
+        if (achievement.ExperienceReward > 0)
+            system.AddExperience(achievement.ExperienceConstellation!, player.PlayerUID, achievement.ExperienceReward);
 
         system.SendPacket(data, serverPlayer);
         sapi.BroadcastMessageToAllGroups($"{player.PlayerName} has received the achievement {achievement.Name}", EnumChatType.Notification);
@@ -960,6 +974,10 @@ public class PlayerPolarisData
     [ProtoMember(5)]
     public HashSet<string> Achievements = [];
 
+    // Historical reward total, retained even after points are spent or definitions change.
+    [ProtoMember(6)]
+    public int AchievementKnowledgePoints;
+
     public void ConvertToSaveableData(SystemPolaris tree)
     {
         foreach (KeyValuePair<string, PlayerConstellationData> constKvp in ConstellationData)
@@ -1015,7 +1033,7 @@ public class PlayerPolarisData
             Experience = MathF.Min(Experience, GetExpToReachLevel(tree.Config.MaxMainLevel + 1));
         }
 
-        SetKnowledgePoints(Level - 1 - pointsSpent);
+        SetKnowledgePoints(Level - 1 + AchievementKnowledgePoints - pointsSpent);
     }
 
     /// <summary>
