@@ -439,15 +439,20 @@ public class SystemPolaris : NetworkedGameSystem
             """).KeystoneStyle().AddLevelRequirement("Time", 5);
 
         // Temporal Resilience chain — reduce temporal stability drain rate.
-        PassiveNode.Create("Temporal Resilience", "temporalResilience1", time).AddAdditiveExtraStat("temporalResilience", -0.1f, statBase: 1f).AddParent("start").AddLevelRequirement("Time", 3);
-        PassiveNode.Create("Temporal Resilience", "temporalResilience2", time).AddAdditiveExtraStat("temporalResilience", -0.1f, statBase: 1f).AddParent("temporalResilience1").AddLevelRequirement("Time", 5);
-        PassiveNode.Create("Temporal Resilience", "temporalResilience3", time).AddAdditiveExtraStat("temporalResilience", -0.1f, statBase: 1f).AddParent("temporalResilience2").AddLevelRequirement("Time", 7);
+        PassiveNode.Create("Temporal Resilience", "temporalResilience1", time).AddAdditiveExtraStat("temporalResilience", -0.2f, statBase: 1f).AddParent("start").AddLevelRequirement("Time", 3);
+        PassiveNode.Create("Temporal Resilience", "temporalResilience2", time).AddAdditiveExtraStat("temporalResilience", -0.2f, statBase: 1f).AddParent("temporalResilience1").AddLevelRequirement("Time", 5);
+        PassiveNode.Create("Temporal Resilience", "temporalResilience3", time).AddAdditiveExtraStat("temporalResilience", -0.2f, statBase: 1f).AddParent("temporalResilience2").AddLevelRequirement("Time", 7);
 
         // Schizophrenic Dissociation keystone — damage reduction with deferred health loss and amplified stability drain.
         PassiveNode.Create("Schizophrenic Dissociation", "schizoDissociation", time).AddParent("start").AddSkillStat("schizoDissociation", 1, """
             40% less damage taken
             40% of damage taken is removed from health 4 seconds later
             """).AddAdditiveExtraStat("temporalResilience", 2f, statBase: 1f).KeystoneStyle().AddLevelRequirement("Time", 10);
+
+        // Temporal Ward keystone — no mob can spawn within 10 meters of you during temporal storms.
+        PassiveNode.Create("Temporal Ward", "temporalWard", time).AddParent("start").AddSkillStat("temporalWard", 1, """
+            Temporal entities cannot spawn within 8 meters of you
+            """).KeystoneStyle().AddLevelRequirement("Time", 8);
 
         // Register one for each vanilla stat.
         RegisterAggregator(new StatAggregator("healingeffectivness"));
@@ -487,6 +492,18 @@ public class SystemPolaris : NetworkedGameSystem
             {
                 // Players passive data should already be loaded here.
                 CalculatePlayerStats(p.Entity);
+
+                // Chain onto the existing OnCanSpawnNearby delegate set by SystemTemporalStability.
+                // Blocks any entity from spawning within 10m of the player if they have the temporalWard skill.
+                CanSpawnNearbyDelegate? existing = p.Entity.OnCanSpawnNearby;
+                p.Entity.OnCanSpawnNearby = (type, spawnPos, sc) =>
+                {
+                    if (p.Entity.GetSkillLevel("temporalWard") > 0)
+                    {
+                        if (p.Entity.Pos.SquareDistanceTo(spawnPos) < 10.0 * 10.0) return false;
+                    }
+                    return existing == null || existing(type, spawnPos, sc);
+                };
             };
 
             sapi.Event.PlayerLeave += p =>

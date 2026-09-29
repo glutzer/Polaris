@@ -134,7 +134,7 @@
     ],
     "Time:tinkerer": [
       0,
-      250
+      260
     ],
     "Time:temporalResilience1": [
       70,
@@ -151,6 +151,10 @@
     "Time:schizoDissociation": [
       -200,
       -200
+    ],
+    "Time:temporalWard": [
+      0,
+      -260
     ],
     "Excavation:start": [
       0,
