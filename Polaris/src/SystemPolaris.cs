@@ -310,6 +310,10 @@ public class SystemPolaris : NetworkedGameSystem
             May craft the Blackguard Blade
             """).KeystoneStyle().AddLevelRequirement("Smithing", 8);
 
+        PassiveNode.Create("Bloomery Extraction", "bloomeryExtraction", smithing).AddParent("start")
+            .AddSkillStat("bloomeryExtraction", 1, "May collect finished bloomery output with an empty hand without breaking the bloomery.")
+            .NotableStyle().AddLevelRequirement("Smithing", 10);
+
         // Excavation passives.
         PassiveNode.Create("Eroder", "eroder", excavation).AddSkillStat("eroder", 1, """
             Rock does not drop small stones
@@ -785,7 +789,7 @@ public class SystemPolaris : NetworkedGameSystem
     }
 
     /// <summary>Server-only, idempotent achievement award. Requirements must already be unlocked.</summary>
-    public static bool TriggerAchievement(string code, IPlayer player)
+    public static bool TriggerAchievement(string code, IPlayer player, string? goalCode = null)
     {
         if (player is not IServerPlayer serverPlayer || player.Entity?.Api is not ICoreServerAPI sapi) return false;
         if (!Achievements.ByCode.TryGetValue(code, out Achievement? achievement)) return false;
@@ -800,7 +804,21 @@ public class SystemPolaris : NetworkedGameSystem
             return false;
         }
         PlayerPolarisData data = system.GetPlayerData(player.PlayerUID);
-        if (!Achievements.TryUnlock(code, data.Achievements)) return false;
+        if (data.Achievements.Contains(code)) return false;
+        data.AchievementProgress.TryGetValue(code, out AchievementProgress? progress);
+        bool changed = false;
+        if (goalCode != null)
+        {
+            if (!achievement.Goals.Contains(goalCode)) return false;
+            if (progress == null)
+                data.AchievementProgress[code] = progress = new AchievementProgress();
+            changed = progress.CompletedGoals.Add(goalCode);
+        }
+        if (!Achievements.TryUnlock(code, data.Achievements, progress?.CompletedGoals))
+        {
+            if (changed) system.SendPacket(data, serverPlayer);
+            return false;
+        }
 
         data.AchievementKnowledgePoints += achievement.KnowledgePointReward;
         data.SetKnowledgePoints(data.KnowledgePoints + achievement.KnowledgePointReward);
@@ -984,6 +1002,9 @@ public class PlayerPolarisData
     // Historical reward total, retained even after points are spent or definitions change.
     [ProtoMember(6)]
     public int AchievementKnowledgePoints;
+
+    [ProtoMember(7)]
+    public Dictionary<string, AchievementProgress> AchievementProgress = [];
 
     public void ConvertToSaveableData(SystemPolaris tree)
     {

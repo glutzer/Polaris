@@ -68,6 +68,18 @@ public class WidgetNodeDescription : Widget
         text.AppendLine($"<strong>{achievement.Name}</strong>");
         text.AppendLine();
         text.AppendLine(achievement.Description);
+
+        PlayerPolarisData data = SystemPolaris.Instance(MainAPI.Capi).GetClientData();
+        data.AchievementProgress.TryGetValue(achievement.Code, out AchievementProgress? progress);
+
+        if (progress != null)
+        {
+            int completedGoals = progress.CompletedGoals.Count;
+            int totalGoals = achievement.Goals.Length;
+
+            text.AppendLine($"{totalGoals}/{completedGoals}");
+        }
+
         text.AppendLine();
 
         if (achievement.KnowledgePointReward > 0)

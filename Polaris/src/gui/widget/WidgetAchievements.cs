@@ -10,6 +10,7 @@ public class WidgetAchievements : Widget
     private readonly WidgetNodeDescription description;
     private Achievement? lastHovered;
     private bool lastUnlocked;
+    private int lastGoalCount;
     private readonly TextObject label = new("", PolarisGuiThemes.Font, 18f, Vector4.One) { Shadow = true };
     private readonly TextObject title = new("Achievements", PolarisGuiThemes.Font, 36f, Vector4.One) { Shadow = true };
 
@@ -60,13 +61,17 @@ public class WidgetAchievements : Widget
         }
         shader.ResetColor();
         title.RenderCenteredLine(center.X, 50f, shader, true);
+
         bool hoveredUnlocked = hovered != null && data.Achievements.Contains(hovered.Code);
-        if (hovered != lastHovered || hoveredUnlocked != lastUnlocked)
+        int goalCount = hovered != null && data.AchievementProgress.TryGetValue(hovered.Code, out AchievementProgress? progress)
+            ? progress.CompletedGoals.Count : 0;
+
+        if (hovered != lastHovered || hoveredUnlocked != lastUnlocked || goalCount != lastGoalCount)
         {
             description.SetAchievement(hovered, hoveredUnlocked);
             lastHovered = hovered;
             lastUnlocked = hoveredUnlocked;
+            lastGoalCount = goalCount;
         }
     }
-
 }

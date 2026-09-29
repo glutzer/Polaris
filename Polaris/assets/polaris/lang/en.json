@@ -1,4 +1,6 @@
 {
+  "achievement-metalworker-name": "Metalworker",
+  "achievement-metalworker-description": "Produce all types of Copper, Tin Bronze, and Iron Ingots.",
   "skill-level-increased": "{0} increased to {1}",
   "constellation-survival": "Survival",
   "constellation-time": "Time",

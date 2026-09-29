@@ -11,6 +11,8 @@ public sealed record Achievement(string Code, bool HiddenUntilUnlocked = false, 
     public string? ExperienceConstellation { get; init; }
     /// <summary>Base EXP, subject to the player's normal EXP multipliers.</summary>
     public float ExperienceReward { get; init; }
+    /// <summary>Every goal code must be recorded before this achievement unlocks.</summary>
+    public string[] Goals { get; init; } = [];
 }
 
 public static class Achievements
@@ -23,6 +25,13 @@ public static class Achievements
                 KnowledgePointReward = 1,
                 ExperienceConstellation = "Combat",
                 ExperienceReward = 250f
+            },
+            ["metalworker"] = new("metalworker")
+            {
+                Goals = ["copper", "tinbronze", "bismuthbronze", "blackbronze", "iron"],
+                KnowledgePointReward = 1,
+                ExperienceConstellation = "Smithing",
+                ExperienceReward = 500f
             }
         };
 
@@ -41,9 +50,11 @@ public static class Achievements
         }
     }
 
-    public static bool TryUnlock(string code, ISet<string> unlocked)
+    public static bool TryUnlock(string code, ISet<string> unlocked, ISet<string>? completedGoals = null)
     {
         if (!ByCode.TryGetValue(code, out Achievement? achievement)) return false;
+        foreach (string goal in achievement.Goals)
+            if (completedGoals == null || !completedGoals.Contains(goal)) return false;
         foreach (string requirement in achievement.Requirements)
             if (!unlocked.Contains(requirement)) return false;
         return unlocked.Add(code);

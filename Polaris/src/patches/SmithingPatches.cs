@@ -102,7 +102,8 @@ public class SmithingPatches
             {
                 Player = byPlayer,
                 HitCount = __instance.WorkItemStack?.Attributes.GetInt("polarisHits") ?? 0,
-                HadWorkItem = __instance.WorkItemStack != null
+                HadWorkItem = __instance.WorkItemStack != null,
+                Output = __instance.Api.Side == EnumAppSide.Server ? __instance.SelectedRecipe?.Output.ResolvedItemstack?.Clone() : null
             };
         }
 
@@ -115,6 +116,11 @@ public class SmithingPatches
 
             float exp = 1f + (0.02f * __state.HitCount);
             SystemPolaris.AddExperience("Smithing", __state.Player, exp);
+            if (__state.Output?.Collectible.Code.Path == "ingot-iron")
+            {
+                SystemPolaris.AddExperience("Smithing", __state.Player, __state.Output.StackSize * 2f);
+                SystemPolaris.TriggerAchievement("metalworker", __state.Player, "iron");
+            }
         }
     }
 
@@ -123,6 +129,7 @@ public class SmithingPatches
         public IPlayer? Player;
         public int HitCount;
         public bool HadWorkItem;
+        public ItemStack? Output;
     }
 
     [HarmonyPatch(typeof(BlockBloomery), "GetDrops")]
