@@ -1,0 +1,84 @@
+{
+  "constellation-survival": "サバイバル",
+  "constellation-time": "時間",
+  "constellation-excavation": "採掘",
+  "constellation-forestry": "林業",
+  "constellation-horticulture": "園芸",
+  "constellation-hunting": "狩猟",
+  "constellation-combat": "戦闘",
+  "constellation-smithing": "鍛冶",
+  "constellation-forming": "成形",
+  "constellation-cooking": "料理",
+  "constellation-crafting": "クラフト",
+  "constellation-trade": "交易",
+  "constellation-mycology": "菌類学",
+
+  "achievement-firstblood-name": "食物連鎖の頂点",
+  "achievement-firstblood-description": "オオカミを倒す。",
+
+  "stathealingeffectivness": "回復効果",
+  "statmaxhealthExtraPoints": "最大体力",
+  "statwalkspeed": "移動速度",
+  "stathungerrate": "空腹になる速度",
+  "statrangedWeaponsAcc": "遠距離武器の精度",
+  "statrangedWeaponsSpeed": "遠距離武器の速度",
+  "statrangedWeaponsDamage": "遠距離武器のダメージ",
+  "statmeleeWeaponsDamage": "近接武器のダメージ",
+  "statmechanicalsDamage": "機械へのダメージ",
+  "statanimalLootDropRate": "動物からの戦利品",
+  "statforageDropRate": "採集で得られる素材",
+  "statwildCropDropRate": "野生作物のドロップ率",
+  "statvesselContentsDropRate": "容器の中身のドロップ率",
+  "statoreDropRate": "鉱石のドロップ率",
+  "statrustyGearDropRate": "錆びた歯車のドロップ率",
+  "statminingSpeedMul": "採掘速度",
+  "statanimalSeekingRange": "動物の索敵範囲",
+  "statarmorDurabilityLoss": "防具の耐久度減少",
+  "statarmorWalkSpeedAffectedness": "防具による移動速度への影響",
+  "statbowDrawingStrength": "弓を引く強さ",
+  "statwholeVesselLootChance": "容器が無傷で見つかる確率",
+  "stattemporalGearTLRepairCost": "時間装備の転送装置の修理コスト",
+  "statanimalHarvestingTime": "動物の解体時間",
+  "statgliderLiftMax": "グライダーの最大揚力",
+  "statgliderSpeedMax": "グライダーの最大速度",
+  "statjumpHeightMul": "ジャンプ高度倍率",
+
+  "extrastatincsewingeffectiveness": "衣服の耐久度回復量が{0}%増加",
+
+  "extrastatinchealthMultiplier": "最大体力が{0}%増加",
+  "extrastatdechealthMultiplier": "最大体力が{0}%減少",
+  "extrastatmulhealthMultiplier": "最大体力がさらに{0}%増加",
+  "extrastatdivhealthMultiplier": "最大体力がさらに{0}%減少",
+
+  "extrastatincsatMultiplier": "最大満腹度が{0}%増加",
+  "extrastatmulsatMultiplier": "最大満腹度がさらに{0}%増加",
+
+  "extrastatincbloomeryDrops": "ブルーマリーから回収できるレンガが{0}%増加",
+
+  "extrastatincorchardistBonus": "果樹のドロップ率が{0}%増加",
+
+  "extrastatincstoneDropBonus": "石のドロップ率が{0}%増加",
+  "extrastatincstoneDropBonusperlevel": "{1}レベルごとに石のドロップ率が{0}%増加",
+
+  "extrastatincstoneCutterChance": "無傷の石ブロックを見つける確率: {0}%",
+  "extrastatincstoneCutterChanceperlevel": "{1}レベルごとに無傷の石ブロックを見つける確率が{0}%増加",
+
+  "extrastatincgemDropBonus": "宝石のドロップ率が{0}%増加",
+  "extrastatincgemDropBonusperlevel": "{1}レベルごとに宝石のドロップ率が{0}%増加",
+
+  "extrastatincfeatherFall": "落下ダメージが{0}%減少",
+  "extrastatinctemporalResilience": "時間安定性の消耗が{0}%増加",
+  "extrastatdectemporalResilience": "時間安定性の消耗が{0}%減少",
+  "extrastatincmeatShield": "受けるダメージの{0}%を満腹度の減少として吸収",
+  "extrastatincsporeCloud": "追加のキノコを見つける確率: {0}%",
+  "extrastatincsporeCloudperlevel": "{1}レベルごとに追加のキノコを見つける確率が{0}%増加",
+  "extrastatincfungalFortitude": "キノコから得られる満腹度が{0}%増加",
+  "extrastatincfungalFortitudeperlevel": "{1}レベルごとにキノコから得られる満腹度が{0}%増加",
+
+  "extrastatincstrongBack": "バックパックスロット+{0}個",
+
+  "nodetag-class": "クラス",
+  "nodetag-miningmastery": "採掘の熟練度",
+
+  "traitname-mint": "ミント"
+}

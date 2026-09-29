@@ -66,11 +66,19 @@ public class WidgetNodeDescription : Widget
         }
         StringBuilder text = new();
         text.AppendLine($"<strong>{achievement.Name}</strong>");
+        text.AppendLine();
         text.AppendLine(achievement.Description);
-        text.AppendLine(unlocked ? "Unlocked" : "Locked");
-        foreach (string code in achievement.Requirements)
-            if (Achievements.ByCode.TryGetValue(code, out Achievement? required))
-                text.AppendLine($"Requires: {required.Name}");
+        text.AppendLine();
+
+        if (achievement.KnowledgePointReward > 0)
+            text.AppendLine($"Awards {achievement.KnowledgePointReward} Knowledge Point" + (achievement.KnowledgePointReward > 1 ? "s" : ""));
+
+        if (achievement.ExperienceReward > 0)
+        {
+            Constellation? rewardConstellation = SystemPolaris.Instance(MainAPI.Capi).GetConstellation(achievement.ExperienceConstellation!);
+            string constellationName = rewardConstellation?.DisplayName ?? achievement.ExperienceConstellation!;
+            text.AppendLine($"Awards {achievement.ExperienceReward:0.##} {constellationName} Experience");
+        }
         richText.SetText(text.ToString());
         SetFade = 0f;
     }

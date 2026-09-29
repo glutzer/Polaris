@@ -667,7 +667,7 @@ public class WidgetNodes : Widget
             cy = cPos.Y;
 
             constText.color = constellation.Color;
-            constText.Text = posConst.Constellation.Name;
+            constText.Text = posConst.Constellation.DisplayName;
             constText.RenderCenteredLine(cx, cy, shader);
 
             cPos.Y += 10f;

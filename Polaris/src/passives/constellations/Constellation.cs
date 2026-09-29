@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Vintagestory.API.Config;
 
 namespace Polaris;
 
@@ -9,6 +10,7 @@ namespace Polaris;
 public class Constellation
 {
     public string Name { get; }
+    public string DisplayName => Lang.Get($"polaris:constellation-{Name.ToLowerInvariant()}");
     private readonly List<PassiveNode> nodes = [];
     private readonly Dictionary<string, PassiveNode> nodesByCode = [];
     public IEnumerable<PassiveNode> AllNodes => nodes;

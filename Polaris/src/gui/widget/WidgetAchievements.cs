@@ -55,7 +55,7 @@ public class WidgetAchievements : Widget
             shader.ResetColor();
             label.Text = achievement.Name;
             label.RenderCenteredLine(pos.X, pos.Y + (radius * 2), shader, true);
-            label.Text = unlocked ? "Unlocked" : "Locked";
+            label.Text = unlocked ? "Claimed" : "Unclaimed";
             label.RenderCenteredLine(pos.X, pos.Y + (radius * 3.5f), shader, true);
         }
         shader.ResetColor();
