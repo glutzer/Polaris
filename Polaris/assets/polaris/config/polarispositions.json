@@ -4,6 +4,10 @@
       0,
       0
     ],
+    "Survival:dualSpecialization": [
+      200,
+      -100
+    ],
     "Survival:move1": [
       100,
       100
@@ -371,6 +375,10 @@
     "Smithing:start": [
       0,
       0
+    ],
+    "Smithing:smith": [
+      -150,
+      -100
     ],
     "Smithing:masterSmith1": [
       -300,

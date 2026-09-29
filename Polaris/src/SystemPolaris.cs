@@ -283,6 +283,10 @@ public class SystemPolaris : NetworkedGameSystem
             """).KeystoneStyle();
 
         // Crafting passives.
+        PassiveNode.Create("Dual Specialization", "dualSpecialization", survival).AddParent("start")
+            .AddSkillStat("dualSpecialization", 1, "You may allocate up to 2 specialization nodes.")
+            .NotableStyle().AddLevelRequirement("Survival", 6);
+
         PassiveNode.Create("Sewing Effectiveness", "sewing1", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 2).AddParent("start");
         PassiveNode.Create("Sewing Effectiveness", "sewing2", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 4).AddParent("sewing1");
         PassiveNode.Create("Sewing Effectiveness", "sewing3", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 6).AddParent("sewing2");
@@ -295,13 +299,16 @@ public class SystemPolaris : NetworkedGameSystem
             """).KeystoneStyle().AddLevelRequirement("Crafting", 8);
 
         // Smithing passives.
+        PassiveNode.Create("Smith", "smith", smithing).AddParent("start").WithTag("specialization")
+            .AddRequirement(new SpecializationRequirement()).NotableStyle();
+
         PassiveNode.Create("Master Smith", "masterSmith1", smithing).AddSkillStat("masterSmith", 1, """
             Your heavy hit also moves 1 voxel of material to the correct position
-            """).KeystoneStyle().AddParent("start").AddLevelRequirement("Smithing", 5);
+            """).KeystoneStyle().AddParent("smith").AddRequirement(new NodeRequirement("Smithing", "smith")).AddLevelRequirement("Smithing", 5);
 
         PassiveNode.Create("Master Smith", "masterSmith2", smithing).AddSkillStat("masterSmith", 1, """
             Your heavy hit also moves 1 voxel of material to the correct position
-            """).NotableStyle().AddParent("masterSmith1").AddLevelRequirement("Smithing", 10);
+            """).NotableStyle().AddParent("masterSmith1").AddRequirement(new NodeRequirement("Smithing", "smith")).AddLevelRequirement("Smithing", 10);
 
         PassiveNode.Create("Cracker", "cracker1", smithing).AddAdditiveExtraStat("bloomeryDrops", 0.1f).AddParent("start").AddLevelRequirement("Smithing", 4);
         PassiveNode.Create("Cracker", "cracker2", smithing).AddAdditiveExtraStat("bloomeryDrops", 0.1f).AddParent("cracker1").AddLevelRequirement("Smithing", 8);
@@ -310,7 +317,7 @@ public class SystemPolaris : NetworkedGameSystem
             May craft the Blackguard Blade
             """).KeystoneStyle().AddLevelRequirement("Smithing", 8);
 
-        PassiveNode.Create("Bloomery Extraction", "bloomeryExtraction", smithing).AddParent("start")
+        PassiveNode.Create("Bloomery Extraction", "bloomeryExtraction", smithing).AddParent("smith").AddRequirement(new NodeRequirement("Smithing", "smith"))
             .AddSkillStat("bloomeryExtraction", 1, "May collect finished bloomery output with an empty hand without breaking the bloomery.")
             .NotableStyle().AddLevelRequirement("Smithing", 10);
 
@@ -1073,6 +1080,12 @@ public class PlayerPolarisData
     {
         List<PassiveNode> list = GetAllAllocatedNodes(treeSystem);
         string code = node.GetFullCode();
+
+        if (code == "Survival:dualSpecialization" && list.Count(allocatedNode => allocatedNode.Tags.Contains("specialization") && !pendingUnallocations.Contains(allocatedNode)) > 1)
+        {
+            return true;
+        }
+
         foreach (PassiveNode allocatedNode in list)
         {
             if (pendingUnallocations.Contains(allocatedNode) || node == allocatedNode) continue;
