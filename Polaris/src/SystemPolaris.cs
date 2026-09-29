@@ -665,6 +665,9 @@ public class SystemPolaris : NetworkedGameSystem
     {
         if (!constellationByName.TryGetValue(constellationName, out Constellation? constellation)) return; // Invalid.
 
+        // Prevent weird numbers.
+        amount = MathF.Round(amount, 2);
+
         // Apply exp multipliers from extra stats.
         if (api is ICoreServerAPI sapi
             && sapi.World.PlayerByUid(uid) is IPlayer sPlayer
