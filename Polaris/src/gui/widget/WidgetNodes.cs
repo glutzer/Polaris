@@ -63,6 +63,7 @@ public class WidgetNodes : Widget
         SystemPolaris.Instance(MainAPI.Capi).OnClientDataUpdated += OnClientDataUpdated;
         SystemPolaris.Instance(MainAPI.Capi).OnClientExperienceGain += UpdateConstellationExperience;
         nodeDescription = new WidgetNodeDescription(this, gui);
+        nodeDescription.SetNode(null);
 
         new PolarisToggleButton(this, gui, OnRefundToggle, true, false, "Refund Passives").Alignment(Align.LeftTop).Percent(0f, 0.25f, 0.1f, 0.05f);
 

@@ -10,7 +10,7 @@ public class PolarisConfig
     /// Formula: expToReachLevel = 100 * (level - 1) ^ Curve
     /// Higher values make high levels require exponentially more experience.
     /// </summary>
-    public float MainExpCurve { get; set; } = 1.7f;
+    public float MainExpCurve { get; set; } = 2.2f;
 
     /// <summary>
     /// Maximum Knowledge (main) level a player can reach.
