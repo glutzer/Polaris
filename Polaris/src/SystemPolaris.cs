@@ -54,6 +54,7 @@ public class SystemPolaris : NetworkedGameSystem
 
     public event Action<PlayerPolarisData>? OnClientDataUpdated;
     public event Action<Constellation, float, int, bool>? OnClientExperienceGain;
+    public event Action<Constellation, int>? OnClientSkillLevelUp;
 
     private static SystemPolaris clientInst = null!;
     private static SystemPolaris serverInst = null!;
@@ -687,6 +688,7 @@ public class SystemPolaris : NetworkedGameSystem
 
         PlayerPolarisData playerData = GetPlayerData(uid);
         PlayerConstellationData data = playerData.GetConstellation(constellationName);
+        int previousLevel = data.Level;
         data.Experience += amount;
 
         bool shouldServerRecalculate = false;
@@ -742,6 +744,8 @@ public class SystemPolaris : NetworkedGameSystem
         else
         {
             OnClientExperienceGain?.Invoke(constellation, amount, data.Level, giveAlert);
+            if (data.Level > previousLevel)
+                OnClientSkillLevelUp?.Invoke(constellation, data.Level);
         }
     }
 

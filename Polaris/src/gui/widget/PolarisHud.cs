@@ -8,6 +8,6 @@ public class PolarisHud : Gui
 
     public override void PopulateWidgets()
     {
-        AddWidget(new WidgetExpGainParticles(null, this).Alignment(Align.RightBottom).Fixed(0, 0, 100, 50));
+        AddWidget(new WidgetSkillLevelUp(null, this).Percent(0f, 0f, 1f, 1f));
     }
 }
