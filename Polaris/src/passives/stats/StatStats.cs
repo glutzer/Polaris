@@ -33,11 +33,11 @@ public class AdditiveStat : PassiveNodeStat
         float percentage = addition * 100f;
         if (percentage > 0f)
         {
-            builder.AppendLine($"{percentage:F0}% increased {Lang.Get($"polaris:stat{stat}")}");
+            builder.AppendLine($"{percentage:0.##}% increased {Lang.Get($"polaris:stat{stat}")}");
         }
         else if (percentage < 0f)
         {
-            builder.AppendLine($"{-percentage:F0}% decreased {Lang.Get($"polaris:stat{stat}")}");
+            builder.AppendLine($"{-percentage:0.##}% decreased {Lang.Get($"polaris:stat{stat}")}");
         }
     }
 }
@@ -79,11 +79,11 @@ public class AdditiveStatPerLevel : PassiveNodeStat
         float pctTotal = total * 100f;
         if (pctPerLevel > 0f)
         {
-            builder.AppendLine($"{pctPerLevel:F0}% increased {Lang.Get($"polaris:stat{stat}")} per {constellationName} level");
+            builder.AppendLine($"{pctPerLevel:0.##}% increased {Lang.Get($"polaris:stat{stat}")} per {constellationName} level");
         }
         else if (pctPerLevel < 0f)
         {
-            builder.AppendLine($"{-pctPerLevel:F0}% decreased {Lang.Get($"polaris:stat{stat}")} per {constellationName} level");
+            builder.AppendLine($"{-pctPerLevel:0.##}% decreased {Lang.Get($"polaris:stat{stat}")} per {constellationName} level");
         }
     }
 }
@@ -111,12 +111,12 @@ public class MultiplicativeStat : PassiveNodeStat
         if (multi < 1f)
         {
             float reduction = (1f - multi) * 100f;
-            builder.AppendLine($"{reduction:F0}% less {Lang.Get($"polaris:stat{stat}")} gained from passives");
+            builder.AppendLine($"{reduction:0.##}% less {Lang.Get($"polaris:stat{stat}")} gained from passives");
         }
         else if (multi > 1f)
         {
             float increase = (multi - 1f) * 100f;
-            builder.AppendLine($"{increase:F0}% more {Lang.Get($"polaris:stat{stat}")} gained from passives");
+            builder.AppendLine($"{increase:0.##}% more {Lang.Get($"polaris:stat{stat}")} gained from passives");
         }
     }
 }

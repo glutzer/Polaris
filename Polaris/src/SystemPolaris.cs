@@ -422,13 +422,22 @@ public class SystemPolaris : NetworkedGameSystem
             .AddSkillStat("bowyer", 1, "May craft powerful bows");
 
         // Combat passives.
+        PassiveNode.Create("Warrior", "warrior", combat).AddParent("start").WithTag("specialization")
+            .AddRequirement(new SpecializationRequirement()).NotableStyle();
+
         // Swordsman chain — increased melee weapon damage.
         PassiveNode.Create("Swordsman", "meleedmg1", combat).AddAdditiveStat("meleeWeaponsDamage", 0.1f).AddParent("start").AddLevelRequirement("Combat", 2);
         PassiveNode.Create("Swordsman", "meleedmg2", combat).AddAdditiveStat("meleeWeaponsDamage", 0.1f).AddParent("meleedmg1").AddLevelRequirement("Combat", 4);
         PassiveNode.Create("Swordsman", "meleedmg3", combat).AddAdditiveStatPerLevel("meleeWeaponsDamage", 0.02f, "Combat").AddParent("meleedmg2").AddLevelRequirement("Combat", 7).NotableStyle();
+        PassiveNode.Create("Swordsman", "meleedmg4", combat).AddAdditiveStatPerLevel("meleeWeaponsDamage", 0.02f, "Combat")
+            .AddParent("warrior").AddRequirement(new NodeRequirement("Combat", "warrior")).NotableStyle();
+
+        PassiveNode.Create("Armor Training", "armorTraining1", combat).AddAdditiveStat("armorWalkSpeedAffectedness", -0.15f).AddParent("start");
+        PassiveNode.Create("Armor Training", "armorTraining2", combat).AddAdditiveStatPerLevel("armorWalkSpeedAffectedness", -0.005f, "Combat")
+            .AddParent("warrior").AddRequirement(new NodeRequirement("Combat", "warrior")).NotableStyle();
 
         // Berserker keystone — killing an entity restores a small amount of health.
-        PassiveNode.Create("Berserker", "berserker", combat).AddParent("meleedmg1").AddSkillStat("berserker", 1, """
+        PassiveNode.Create("Berserker", "berserker", combat).AddParent("warrior").AddRequirement(new NodeRequirement("Combat", "warrior")).AddSkillStat("berserker", 1, """
             Killing an entity restores 2 health
             """).KeystoneStyle().AddLevelRequirement("Combat", 8);
 

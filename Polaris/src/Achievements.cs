@@ -20,6 +20,10 @@ public static class Achievements
     public static readonly IReadOnlyDictionary<string, Achievement> ByCode =
         new Dictionary<string, Achievement>
         {
+            ["balancedDiet"] = new("balancedDiet")
+            {
+                KnowledgePointReward = 1
+            },
             ["firstBlood"] = new("firstBlood")
             {
                 KnowledgePointReward = 1,

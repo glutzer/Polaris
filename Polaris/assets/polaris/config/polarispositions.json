@@ -4,10 +4,6 @@
       0,
       0
     ],
-    "Survival:dualSpecialization": [
-      200,
-      -100
-    ],
     "Survival:move1": [
       100,
       100
@@ -126,6 +122,10 @@
     ],
     "Survival:improviser": [
       100,
+      -100
+    ],
+    "Survival:dualSpecialization": [
+      200,
       -100
     ],
     "Time:start": [
@@ -356,6 +356,10 @@
       0,
       0
     ],
+    "Combat:warrior": [
+      -150,
+      0
+    ],
     "Combat:meleedmg1": [
       0,
       -100
@@ -368,8 +372,20 @@
       0,
       -300
     ],
+    "Combat:meleedmg4": [
+      -300,
+      0
+    ],
+    "Combat:armorTraining1": [
+      100,
+      0
+    ],
+    "Combat:armorTraining2": [
+      -150,
+      100
+    ],
     "Combat:berserker": [
-      -100,
+      -150,
       -100
     ],
     "Smithing:start": [

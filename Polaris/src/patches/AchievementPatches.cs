@@ -4,6 +4,28 @@ using Vintagestory.GameContent;
 
 namespace Polaris;
 
+[HarmonyPatch(typeof(EntityBehaviorHunger), nameof(EntityBehaviorHunger.UpdateNutrientHealthBoost))]
+public static class NutritionAchievementPatch
+{
+    [HarmonyPostfix]
+    public static void Postfix(EntityBehaviorHunger __instance)
+    {
+        if (__instance.entity.Api.Side != EnumAppSide.Server ||
+            __instance.entity is not EntityPlayer player || player.Player == null) return;
+
+        float maximum = __instance.MaxSaturation;
+        if (maximum > 0f &&
+            __instance.FruitLevel >= maximum &&
+            __instance.VegetableLevel >= maximum &&
+            __instance.ProteinLevel >= maximum &&
+            __instance.GrainLevel >= maximum &&
+            __instance.DairyLevel >= maximum)
+        {
+            SystemPolaris.TriggerAchievement("balancedDiet", player.Player);
+        }
+    }
+}
+
 [HarmonyPatch(typeof(Entity), nameof(Entity.Die))]
 public static class AchievementPatches
 {
