@@ -1,4 +1,11 @@
 {
+  "achievement-fungalfeast-name": "Порча",
+  "achievement-fungalfeast-description": "Съешьте все виды грибов.",
+  "achievement-psychedelicmushroom-name": "В бреду",
+  "achievement-psychedelicmushroom-description": "Съешьте психоделический гриб.",
+  "achievement-metalworker-name": "Металлург",
+  "achievement-metalworker-description": "Изготовьте все виды слитков меди, оловянной бронзы и железа.",
+  "skill-level-increased": "Уровень навыка «{0}» повышен до {1}",
   "constellation-survival": "Выживание",
   "constellation-time": "Время",
   "constellation-excavation": "Раскопки",
@@ -54,6 +61,7 @@
   "extrastatmulsatMultiplier": "Максимальная сытость дополнительно увеличена на {0}%",
 
   "extrastatincbloomeryDrops": "На {0}% больше кирпичей возвращается из горнов",
+  "extrastatincquenchBreakChanceReductionperlevel": "Шанс разрушения при закалке снижен на {0}% за каждый уровень навыка «{1}»",
 
   "extrastatincorchardistBonus": "Шанс выпадения плодов с фруктовых деревьев увеличен на {0}%",
 
@@ -78,7 +86,11 @@
   "extrastatincstrongBack": "+{0} ячейка(и) рюкзака",
 
   "nodetag-class": "Класс",
+  "nodetag-specialization": "Специализация",
   "nodetag-miningmastery": "Мастерство добычи",
+
+  "achievement-balanceddiet-name": "Сбалансированное питание",
+  "achievement-balanceddiet-description": "Одновременно доведите до максимума все показатели питания: фрукты, овощи, белки, злаки и молочные продукты.",
 
   "traitname-mint": "Мята"
 }

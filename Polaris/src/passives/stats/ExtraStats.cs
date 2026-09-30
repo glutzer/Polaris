@@ -71,7 +71,7 @@ public class ExtraStatAdditivePerLevel : PassiveNodeStat
 
     public override void BuildDescription(StringBuilder builder, PlayerPolarisData data, EntityPlayer player, AllocatedNodesInfo info)
     {
-        float displayAmount = MathF.Round(amountPerLevel * 100f, 2);
+        float displayAmount = MathF.Round(amountPerLevel * 100f, 3);
         builder.AppendLine(Lang.Get($"polaris:extrastatinc{stat}perlevel", displayAmount, constellationName));
     }
 }

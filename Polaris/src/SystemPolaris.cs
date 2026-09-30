@@ -326,6 +326,10 @@ public class SystemPolaris : NetworkedGameSystem
             .AddSkillStat("bloomeryExtraction", 1, "May collect finished bloomery output with an empty hand without breaking the bloomery.")
             .NotableStyle().AddLevelRequirement("Smithing", 10);
 
+        PassiveNode.Create("Careful Quenching", "carefulQuenching", smithing).AddParent("smith")
+            .AddRequirement(new NodeRequirement("Smithing", "smith"))
+            .AddAdditiveExtraStatPerLevel("quenchBreakChanceReduction", 0.01f, "Smithing").NotableStyle();
+
         // Excavation passives.
         PassiveNode.Create("Eroder", "eroder", excavation).AddSkillStat("eroder", 1, """
             Rock does not drop small stones

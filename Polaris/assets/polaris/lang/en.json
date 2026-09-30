@@ -61,6 +61,7 @@
   "extrastatmulsatMultiplier": "{0}% more maximum Saturation",
 
   "extrastatincbloomeryDrops": "{0}% increased Bricks recovered from Bloomeries",
+  "extrastatincquenchBreakChanceReductionperlevel": "{0}% reduced chance to shatter per {1} level",
 
   "extrastatincorchardistBonus": "{0}% increased Fruit Tree Drop Rate",
 
