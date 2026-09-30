@@ -1,0 +1,125 @@
+Fasting: 10% decreased maximum Health. Hunger does not decrease while sitting.
+Movement Speed: 5% increased Movement Speed.
+Movement Speed: 5% increased Movement Speed.
+Movement Speed: 5% increased Movement Speed.
+Movement Speed: 5% increased Movement Speed.
+Health: 5% increased maximum Health.
+Health: 5% increased maximum Health.
+Health: 5% increased maximum Health.
+Health: 20% more maximum Health.
+Saturation: 20% increased maximum Saturation.
+Saturation: 20% increased maximum Saturation.
+Saturation: 20% increased maximum Saturation.
+Saturation: 20% increased maximum Saturation.
+Saturation: 20% increased maximum Saturation.
+Saturation: 50% more maximum Saturation.
+Feather Falling: 20% reduced Fall Damage.
+Feather Falling: 20% reduced Fall Damage.
+Feather Falling: 20% reduced Fall Damage.
+Meat Shield: 10% of incoming Damage absorbed as Saturation loss.
+Meat Shield: 10% of incoming Damage absorbed as Saturation loss.
+Meat Shield: 10% of incoming Damage absorbed as Saturation loss.
+Primalist: You can eat raw meat. Grain provides no nutrition.
+Shroud Walker: 50% decreased maximum Health. Gain Chameleon while sneaking.
+Luminiferous: +15 ambient light emission.
+Luminiferous: +5 ambient light emission.
+Luminiferous: +5 ambient light emission.
+Strong Back: +1 Backpack Slot(s). 4% decreased Movement Speed.
+Strong Back: +1 Backpack Slot(s). 4% decreased Movement Speed.
+Strong Back: +1 Backpack Slot(s). 4% decreased Movement Speed.
+Pack Mule: +3 Backpack Slot(s). 20% decreased Movement Speed.
+Improviser: May craft a sling.
+Dual Specialization: You may allocate up to 2 specialization nodes.
+Stable Settler: Temporally unstable areas do not affect you near the surface.
+Tinkerer: May craft hacking spears.
+Temporal Resilience: 20% reduced Temporal Stability drain.
+Temporal Resilience: 20% reduced Temporal Stability drain.
+Temporal Resilience: 20% reduced Temporal Stability drain.
+Schizophrenic Dissociation: 200% increased Temporal Stability drain. 40% less damage taken. 40% of damage taken is removed from health 4 seconds later.
+Temporal Ward: Temporal entities cannot spawn within 8 meters of you.
+Chronomancer: 40% increased Time experience gained.
+Eroder: Rock does not drop small stones.
+Ore Miner: 10% increased Ore Drop Rate.
+Ore Miner: 10% increased Ore Drop Rate.
+Ore Miner: 10% increased Ore Drop Rate.
+Ore Miner: 2% increased Ore Drop Rate per Excavation level.
+Pickaxe Expert: 10% increased Mining Speed.
+Pickaxe Expert: 10% increased Mining Speed.
+Pickaxe Expert: 2% increased Mining Speed per Excavation level.
+Vein Miner: Mining an ore block breaks some connected ore blocks of the same type. Costs extra tool durability per block broken.
+Stone Breaker: 10% increased Stone Drop Rate.
+Stone Breaker: 10% increased Stone Drop Rate.
+Stone Breaker: 2% increased Stone Drop Rate per Excavation level.
+Stone Cutter: 10% chance to find an intact Stone Block.
+Stone Cutter: 10% chance to find an intact Stone Block.
+Stone Cutter: 2% chance per Excavation level to find an intact Stone Block.
+Gemstone Miner: 10% increased Gemstone Drop Rate.
+Gemstone Miner: 10% increased Gemstone Drop Rate.
+Gemstone Miner: 2% increased Gemstone Drop Rate per Excavation level.
+Miner: 40% increased Excavation experience gained.
+Lumberjack: 40% increased Forestry experience gained.
+Green Thumb: 10% increased Wild Crop Drop Rate.
+Green Thumb: 10% increased Wild Crop Drop Rate.
+Green Thumb: 10% increased Wild Crop Drop Rate.
+Green Thumb: 10% increased Wild Crop Drop Rate.
+Gatherer: 10% increased Materials Gathered From Foraging.
+Gatherer: 10% increased Materials Gathered From Foraging.
+Gatherer: 10% increased Materials Gathered From Foraging.
+Beemaster: May harvest skeps without breaking them.
+Extensive Farming: +1 to hoe and shear radius tool modes.
+Extensive Farming: +1 to hoe and shear radius tool modes.
+Orchardist: 20% increased Fruit Tree Drop Rate.
+Orchardist: 20% increased Fruit Tree Drop Rate.
+Orchardist: 20% increased Fruit Tree Drop Rate.
+Farmer: 40% increased Horticulture experience gained.
+Archer: 10% increased Ranged Weapon Damage.
+Archer: 10% increased Ranged Weapon Damage.
+Archer: 10% increased Ranged Weapon Damage.
+Archer: 10% increased Ranged Weapon Damage.
+Sharpshooter: 15% increased Ranged Weapon Accuracy.
+Sharpshooter: 15% increased Ranged Weapon Accuracy.
+Sharpshooter: 15% increased Ranged Weapon Accuracy.
+Looter: 10% increased Loot From Animals.
+Looter: 10% increased Loot From Animals.
+Looter: 10% increased Loot From Animals.
+Looter: 10% increased Loot From Animals.
+Biogenesis: 1% chance to receive an itemized version of the entity when harvesting.
+Hunter: 25% increased Animal Harvesting Time. 25% increased Bow Drawing Strength. May craft powerful bows.
+Huntsman: 40% increased Hunting experience gained.
+Shield Training: 50% increased passive block chance.
+Shield Training: 50% increased passive block chance.
+Deflecting Guard: 100% more passive block chance. 50% less shield damage absorption.
+Warrior: 40% increased Combat experience gained.
+Swordsman: 10% increased Melee Weapon Damage.
+Swordsman: 10% increased Melee Weapon Damage.
+Swordsman: 2% increased Melee Weapon Damage per Combat level.
+Sword Master: 2% increased Melee Weapon Damage per Combat level.
+Armor Training: 15% decreased Armor Movement Speed Affectedness.
+Armor Conditioning: 0.5% decreased Armor Movement Speed Affectedness per Combat level.
+Berserker: Killing an entity restores 2 health.
+Smith: 40% increased Smithing experience gained.
+Master Smith: Your heavy hit also moves 1 voxel of material to the correct position.
+Master Smith: Your heavy hit also moves 1 voxel of material to the correct position.
+Cracker: 10% increased Bricks recovered from Bloomeries.
+Cracker: 10% increased Bricks recovered from Bloomeries.
+Merciless: May craft the Blackguard Blade.
+Bloomery Extraction: May collect finished bloomery output with an empty hand without breaking the bloomery.
+Careful Quenching: 1% reduced chance to shatter per Smithing level.
+Artisan: 40% increased Forming experience gained.
+Chef: 40% increased Cooking experience gained.
+Sewing Effectiveness: 10% increased amount of Clothing Durability restored.
+Sewing Effectiveness: 10% increased amount of Clothing Durability restored.
+Sewing Effectiveness: 10% increased amount of Clothing Durability restored.
+Path of the Seamster: 5% less maximum Health.
+Path of the Seamster: 5% less maximum Health.
+Clothier: You may sew certain kinds of clothing.
+Crafter: 40% increased Crafting experience gained.
+Mint: Craft a Rusty Gear from Metal Parts.
+Merchant: 40% increased Trade experience gained.
+Spore Cloud: 30% chance to find an extra Mushroom.
+Spore Cloud: 30% chance to find an extra Mushroom.
+Spore Storm: 10% chance per Mycology level to find an extra Mushroom.
+Fungal Fortitude: 50% increased Saturation from Mushrooms.
+Fungal Fortitude: 50% increased Saturation from Mushrooms.
+Fungal Fortitude: 10% increased Saturation from Mushrooms per Mycology level.
+Mycologist: 40% increased Mycology experience gained.
