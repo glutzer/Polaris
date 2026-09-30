@@ -431,6 +431,14 @@ public class SystemPolaris : NetworkedGameSystem
             .AddSkillStat("bowyer", 1, "May craft powerful bows");
 
         // Combat passives.
+        PassiveNode.Create("Shield Training", "passiveBlock1", combat).AddParent("start")
+            .AddAdditiveExtraStat("passiveBlockChance", 0.5f);
+        PassiveNode.Create("Shield Training", "passiveBlock2", combat).AddParent("passiveBlock1")
+            .AddAdditiveExtraStat("passiveBlockChance", 0.5f);
+        PassiveNode.Create("Deflecting Guard", "deflectingGuard", combat).AddParent("passiveBlock2")
+            .AddMultiplicativeExtraStat("passiveBlockChance", 2f)
+            .AddMultiplicativeExtraStat("shieldDamageAbsorption", 0.5f).KeystoneStyle();
+
         PassiveNode.Create("Warrior", "warrior", combat).AddParent("start").WithTag("specialization")
             .AddRequirement(new SpecializationRequirement()).NotableStyle();
 

@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Passieve blokkans verhoogd met {0}%",
+  "extrastatmulpassiveBlockChance": "{0}% meer passieve blokkans",
+  "extrastatdivshieldDamageAbsorption": "{0}% minder schadeabsorptie door het schild",
   "achievement-fungalfeast-name": "Verderf",
   "achievement-fungalfeast-description": "Eet elke soort paddenstoel.",
   "achievement-psychedelicmushroom-name": "Waanzin",

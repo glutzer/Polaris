@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Probabilidade de bloqueio passivo aumentada em {0}%",
+  "extrastatmulpassiveBlockChance": "Mais {0}% de probabilidade de bloqueio passivo",
+  "extrastatdivshieldDamageAbsorption": "Menos {0}% de absorção de dano pelo escudo",
   "achievement-fungalfeast-name": "Praga",
   "achievement-fungalfeast-description": "Come todos os tipos de cogumelos.",
   "achievement-psychedelicmushroom-name": "Delírio",

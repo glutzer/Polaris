@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Шанс пасивного блоку збільшений на {0}%",
+  "extrastatmulpassiveBlockChance": "На {0}% більше шансу пасивного блоку",
+  "extrastatdivshieldDamageAbsorption": "На {0}% менше поглинання шкоди щитом",
   "achievement-fungalfeast-name": "Мор",
   "achievement-fungalfeast-description": "З'їжте всі види грибів.",
   "achievement-psychedelicmushroom-name": "Марення",

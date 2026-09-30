@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Tăng {0}% xác suất đỡ đòn thụ động",
+  "extrastatmulpassiveBlockChance": "Thêm {0}% xác suất đỡ đòn thụ động",
+  "extrastatdivshieldDamageAbsorption": "Bớt {0}% lượng sát thương khiên hấp thụ",
   "achievement-fungalfeast-name": "Tai ương",
   "achievement-fungalfeast-description": "Ăn mọi loại nấm.",
   "achievement-psychedelicmushroom-name": "Mê sảng",

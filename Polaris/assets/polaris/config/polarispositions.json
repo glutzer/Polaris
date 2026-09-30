@@ -360,6 +360,18 @@
       0,
       0
     ],
+    "Combat:passiveBlock1": [
+      0,
+      100
+    ],
+    "Combat:passiveBlock2": [
+      0,
+      200
+    ],
+    "Combat:deflectingGuard": [
+      0,
+      300
+    ],
     "Combat:warrior": [
       -150,
       0

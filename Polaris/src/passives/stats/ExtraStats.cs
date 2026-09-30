@@ -78,6 +78,8 @@ public class ExtraStatAdditivePerLevel : PassiveNodeStat
 
 public class ExtraStatMultiplicative : PassiveNodeStat
 {
+    public override EnumCalculationPriority Priority => EnumCalculationPriority.Multipliers;
+
     private readonly string stat;
     private readonly float multi;
     private readonly bool flatAmount;

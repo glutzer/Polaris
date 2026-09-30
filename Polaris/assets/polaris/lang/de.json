@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Passive Blockchance um {0}% erhöht",
+  "extrastatmulpassiveBlockChance": "{0}% mehr passive Blockchance",
+  "extrastatdivshieldDamageAbsorption": "{0}% weniger Schadensabsorption durch Schilde",
   "achievement-fungalfeast-name": "Verderben",
   "achievement-fungalfeast-description": "Iss jede Pilzart.",
   "achievement-psychedelicmushroom-name": "Im Delirium",

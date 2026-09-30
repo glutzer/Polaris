@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Шанс пассивного блока увеличен на {0}%",
+  "extrastatmulpassiveBlockChance": "На {0}% больше шанса пассивного блока",
+  "extrastatdivshieldDamageAbsorption": "На {0}% меньше поглощения урона щитом",
   "achievement-fungalfeast-name": "Порча",
   "achievement-fungalfeast-description": "Съешьте все виды грибов.",
   "achievement-psychedelicmushroom-name": "В бреду",

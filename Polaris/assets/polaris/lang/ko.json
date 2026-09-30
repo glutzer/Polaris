@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "수동적 막기 확률 {0}% 증가",
+  "extrastatmulpassiveBlockChance": "수동적 막기 확률 {0}% 추가 증가",
+  "extrastatdivshieldDamageAbsorption": "방패 피해 흡수량 {0}% 추가 감소",
   "achievement-fungalfeast-name": "역병",
   "achievement-fungalfeast-description": "모든 종류의 버섯을 먹으세요.",
   "achievement-psychedelicmushroom-name": "섬망",

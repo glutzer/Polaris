@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "被动格挡概率提高{0}%",
+  "extrastatmulpassiveBlockChance": "被动格挡概率额外提高{0}%",
+  "extrastatdivshieldDamageAbsorption": "盾牌伤害吸收量额外降低{0}%",
   "achievement-fungalfeast-name": "灾厄",
   "achievement-fungalfeast-description": "吃遍所有种类的蘑菇。",
   "achievement-psychedelicmushroom-name": "谵妄",

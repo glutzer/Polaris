@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "เพิ่มโอกาสบล็อกแบบพาสซีฟ {0}%",
+  "extrastatmulpassiveBlockChance": "โอกาสบล็อกแบบพาสซีฟเพิ่มขึ้นอีก {0}%",
+  "extrastatdivshieldDamageAbsorption": "การดูดซับความเสียหายของโล่ลดลงอีก {0}%",
   "achievement-fungalfeast-name": "โรคระบาด",
   "achievement-fungalfeast-description": "กินเห็ดทุกชนิด",
   "achievement-psychedelicmushroom-name": "เพ้อคลั่ง",

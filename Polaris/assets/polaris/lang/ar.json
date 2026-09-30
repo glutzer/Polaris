@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "زيادة فرصة الصد السلبي بنسبة {0}%",
+  "extrastatmulpassiveBlockChance": "فرصة صد سلبي أكثر بنسبة {0}%",
+  "extrastatdivshieldDamageAbsorption": "امتصاص ضرر الدرع أقل بنسبة {0}%",
   "achievement-fungalfeast-name": "الآفة",
   "achievement-fungalfeast-description": "تناول جميع أنواع الفطر.",
   "achievement-psychedelicmushroom-name": "الهذيان",

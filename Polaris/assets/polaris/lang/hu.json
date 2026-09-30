@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "A passzív blokkolás esélye {0}%-kal nő",
+  "extrastatmulpassiveBlockChance": "{0}%-kal több esély passzív blokkolásra",
+  "extrastatdivshieldDamageAbsorption": "A pajzs {0}%-kal kevesebb sebzést nyel el",
   "achievement-fungalfeast-name": "Ragály",
   "achievement-fungalfeast-description": "Egyél minden gombafajtából.",
   "achievement-psychedelicmushroom-name": "Önkívület",

@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Passiv blokeringschance øget med {0}%",
+  "extrastatmulpassiveBlockChance": "{0}% større passiv blokeringschance",
+  "extrastatdivshieldDamageAbsorption": "{0}% mindre skade absorberet af skjoldet",
   "achievement-fungalfeast-name": "Pest",
   "achievement-fungalfeast-description": "Spis alle slags svampe.",
   "achievement-psychedelicmushroom-name": "I vildelse",

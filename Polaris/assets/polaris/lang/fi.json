@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Passiivisen torjunnan todennäköisyys kasvaa {0}%",
+  "extrastatmulpassiveBlockChance": "{0}% suurempi passiivisen torjunnan todennäköisyys",
+  "extrastatdivshieldDamageAbsorption": "Kilven vahingonvaimennus on {0}% pienempi",
   "achievement-fungalfeast-name": "Vitsaus",
   "achievement-fungalfeast-description": "Syö kaikkia sienilajeja.",
   "achievement-psychedelicmushroom-name": "Houreissa",

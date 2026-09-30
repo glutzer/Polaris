@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Pasif blok olasılığı %{0} artar",
+  "extrastatmulpassiveBlockChance": "%{0} daha fazla pasif blok olasılığı",
+  "extrastatdivshieldDamageAbsorption": "Kalkan %{0} daha az hasar emer",
   "achievement-fungalfeast-name": "Felaket",
   "achievement-fungalfeast-description": "Her mantar türünden ye.",
   "achievement-psychedelicmushroom-name": "Hezeyan",

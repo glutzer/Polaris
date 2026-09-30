@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "パッシブブロック確率が{0}%増加",
+  "extrastatmulpassiveBlockChance": "パッシブブロック確率がさらに{0}%増加",
+  "extrastatdivshieldDamageAbsorption": "盾のダメージ吸収量がさらに{0}%減少",
   "achievement-fungalfeast-name": "疫病",
   "achievement-fungalfeast-description": "すべての種類のキノコを食べる。",
   "achievement-psychedelicmushroom-name": "幻覚に酔う",

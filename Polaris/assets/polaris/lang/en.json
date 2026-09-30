@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "{0}% increased passive block chance",
+  "extrastatmulpassiveBlockChance": "{0}% more passive block chance",
+  "extrastatdivshieldDamageAbsorption": "{0}% less shield damage absorption",
   "achievement-fungalfeast-name": "Blight",
   "achievement-fungalfeast-description": "Eat every type of mushroom.",
   "achievement-psychedelicmushroom-name": "Delirious",

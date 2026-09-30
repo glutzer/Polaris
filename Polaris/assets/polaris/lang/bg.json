@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Шансът за пасивно блокиране е увеличен с {0}%",
+  "extrastatmulpassiveBlockChance": "{0}% повече шанс за пасивно блокиране",
+  "extrastatdivshieldDamageAbsorption": "{0}% по-малко поглъщане на щети от щита",
   "achievement-fungalfeast-name": "Погибел",
   "achievement-fungalfeast-description": "Изяжте всички видове гъби.",
   "achievement-psychedelicmushroom-name": "Делириум",

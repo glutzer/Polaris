@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Probabilidad de bloqueo pasivo aumentada un {0}%",
+  "extrastatmulpassiveBlockChance": "Un {0}% más de probabilidad de bloqueo pasivo",
+  "extrastatdivshieldDamageAbsorption": "Un {0}% menos de absorción de daño del escudo",
   "achievement-fungalfeast-name": "Plaga",
   "achievement-fungalfeast-description": "Come todos los tipos de setas.",
   "achievement-psychedelicmushroom-name": "Delirio",

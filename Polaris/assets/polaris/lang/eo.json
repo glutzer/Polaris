@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Ŝanco de pasiva blokado pliiĝas je {0}%",
+  "extrastatmulpassiveBlockChance": "{0}% pli da ŝanco de pasiva blokado",
+  "extrastatdivshieldDamageAbsorption": "{0}% malpli da damaĝosorbado per ŝildo",
   "achievement-fungalfeast-name": "Plago",
   "achievement-fungalfeast-description": "Manĝu ĉiun specon de fungo.",
   "achievement-psychedelicmushroom-name": "Deliro",

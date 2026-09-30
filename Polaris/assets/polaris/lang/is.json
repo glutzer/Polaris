@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Líkur á óvirkri vörn aukast um {0}%",
+  "extrastatmulpassiveBlockChance": "{0}% meiri líkur á óvirkri vörn",
+  "extrastatdivshieldDamageAbsorption": "{0}% minni skaðaupptaka með skildi",
   "achievement-fungalfeast-name": "Plága",
   "achievement-fungalfeast-description": "Borðaðu allar tegundir sveppa.",
   "achievement-psychedelicmushroom-name": "Óráð",

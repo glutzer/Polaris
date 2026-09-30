@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Pasyvaus blokavimo tikimybė padidėja {0}%",
+  "extrastatmulpassiveBlockChance": "{0}% didesnė pasyvaus blokavimo tikimybė",
+  "extrastatdivshieldDamageAbsorption": "{0}% mažiau skydo sugeriamos žalos",
   "achievement-fungalfeast-name": "Maras",
   "achievement-fungalfeast-description": "Suvalgykite visų rūšių grybų.",
   "achievement-psychedelicmushroom-name": "Kliedesiai",

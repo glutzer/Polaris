@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Шанса за пасивно блокирање повећана за {0}%",
+  "extrastatmulpassiveBlockChance": "{0}% већа шанса за пасивно блокирање",
+  "extrastatdivshieldDamageAbsorption": "{0}% мање штете коју штит упија",
   "achievement-fungalfeast-name": "Пошаст",
   "achievement-fungalfeast-description": "Поједите све врсте печурака.",
   "achievement-psychedelicmushroom-name": "Делиријум",

@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Passiv blockeringschans ökad med {0}%",
+  "extrastatmulpassiveBlockChance": "{0}% större passiv blockeringschans",
+  "extrastatdivshieldDamageAbsorption": "{0}% mindre skadeabsorption från skölden",
   "achievement-fungalfeast-name": "Pest",
   "achievement-fungalfeast-description": "Ät alla typer av svamp.",
   "achievement-psychedelicmushroom-name": "I delirium",

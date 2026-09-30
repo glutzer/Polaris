@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Chance de blocage passif augmentée de {0}%",
+  "extrastatmulpassiveBlockChance": "{0}% de chance de blocage passif en plus",
+  "extrastatdivshieldDamageAbsorption": "{0}% d'absorption des dégâts par le bouclier en moins",
   "achievement-fungalfeast-name": "Fléau",
   "achievement-fungalfeast-description": "Mangez tous les types de champignons.",
   "achievement-psychedelicmushroom-name": "Délire",

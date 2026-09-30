@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Probabilità di blocco passivo aumentata del {0}%",
+  "extrastatmulpassiveBlockChance": "{0}% di probabilità di blocco passivo in più",
+  "extrastatdivshieldDamageAbsorption": "{0}% di assorbimento dei danni dello scudo in meno",
   "achievement-fungalfeast-name": "Flagello",
   "achievement-fungalfeast-description": "Mangia ogni tipo di fungo.",
   "achievement-psychedelicmushroom-name": "Delirio",

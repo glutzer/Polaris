@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Шанец пасіўнага блакавання павялічаны на {0}%",
+  "extrastatmulpassiveBlockChance": "На {0}% больш шанцаў пасіўнага блакавання",
+  "extrastatdivshieldDamageAbsorption": "На {0}% менш паглынання шкоды шчытом",
   "achievement-fungalfeast-name": "Пошасць",
   "achievement-fungalfeast-description": "З'ешце ўсе віды грыбоў.",
   "achievement-psychedelicmushroom-name": "Трызненне",

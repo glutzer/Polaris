@@ -1,4 +1,7 @@
 {
+  "extrastatincpassiveBlockChance": "Šance na pasivní blokování zvýšena o {0}%",
+  "extrastatmulpassiveBlockChance": "O {0}% více šance na pasivní blokování",
+  "extrastatdivshieldDamageAbsorption": "O {0}% méně poškození pohlceného štítem",
   "achievement-fungalfeast-name": "Zkáza",
   "achievement-fungalfeast-description": "Sněz všechny druhy hub.",
   "achievement-psychedelicmushroom-name": "Blouznění",
