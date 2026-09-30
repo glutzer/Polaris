@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "鍛造獲得的經驗提高{0}%",
+  "extrastatincCombatExpMul": "戰鬥獲得的經驗提高{0}%",
   "extrastatincpassiveBlockChance": "被動格擋機率提高{0}%",
   "extrastatmulpassiveBlockChance": "被動格擋機率額外提高{0}%",
   "extrastatdivshieldDamageAbsorption": "盾牌傷害吸收量額外降低{0}%",

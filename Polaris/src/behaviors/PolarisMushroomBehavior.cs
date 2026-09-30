@@ -23,7 +23,7 @@ public class PolarisMushroomBehavior : BlockBehavior
         // Add 100 mycology exp.
         if (world.Side.IsServer() && byPlayer != null)
         {
-            SystemPolaris.AddExperience("Mycology", byPlayer, 100f);
+            SystemPolaris.AddExperience("Mycology", byPlayer, ExpGlobals.MushroomHarvestExperience);
         }
     }
 

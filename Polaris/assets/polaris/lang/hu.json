@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "A(z) Kovácsolás során szerzett tapasztalat {0}%-kal nő",
+  "extrastatincCombatExpMul": "A(z) Harc során szerzett tapasztalat {0}%-kal nő",
   "extrastatincpassiveBlockChance": "A passzív blokkolás esélye {0}%-kal nő",
   "extrastatmulpassiveBlockChance": "{0}%-kal több esély passzív blokkolásra",
   "extrastatdivshieldDamageAbsorption": "A pajzs {0}%-kal kevesebb sebzést nyel el",

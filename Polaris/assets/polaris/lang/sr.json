@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Стечено искуство у вештини Ковачки занат повећано за {0}%",
+  "extrastatincCombatExpMul": "Стечено искуство у вештини Борба повећано за {0}%",
   "extrastatincpassiveBlockChance": "Шанса за пасивно блокирање повећана за {0}%",
   "extrastatmulpassiveBlockChance": "{0}% већа шанса за пасивно блокирање",
   "extrastatdivshieldDamageAbsorption": "{0}% мање штете коју штит упија",

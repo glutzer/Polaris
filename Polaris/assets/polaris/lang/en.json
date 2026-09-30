@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "{0}% increased Smithing experience gained",
+  "extrastatincCombatExpMul": "{0}% increased Combat experience gained",
   "extrastatincpassiveBlockChance": "{0}% increased passive block chance",
   "extrastatmulpassiveBlockChance": "{0}% more passive block chance",
   "extrastatdivshieldDamageAbsorption": "{0}% less shield damage absorption",

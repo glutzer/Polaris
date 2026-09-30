@@ -20,7 +20,7 @@ public static class MetalProductionPatches
     {
         if (stack.StackSize <= 0 || stack.Collectible.Code.Path == "ingot-iron"
             || !stack.Collectible.Code.Path.StartsWith("ingot-")) return;
-        SystemPolaris.AddExperience("Smithing", player, stack.StackSize * 2f);
+        SystemPolaris.AddExperience("Smithing", player, stack.StackSize * ExpGlobals.MetalProductionExperiencePerIngot);
         RecordIngot(player, stack);
     }
 
@@ -42,7 +42,7 @@ public static class MetalProductionPatches
         {
             if (!__result || __state == null || __instance.SelectedContents != null || byPlayer == null) return;
             if (__state.Collectible.Code.Path == "ingot-iron") return;
-            SystemPolaris.AddExperience("Smithing", byPlayer, __instance.RequiredUnits / 50f);
+            SystemPolaris.AddExperience("Smithing", byPlayer, __instance.RequiredUnits * ExpGlobals.MoldExperiencePerMetalUnit);
             RecordIngot(byPlayer, __state);
         }
     }
@@ -64,7 +64,7 @@ public static class MetalProductionPatches
             ItemStack[]? __state, int ___requiredUnits)
         {
             if (!__result || __state == null || __instance.MetalContent != null || byPlayer == null) return;
-            SystemPolaris.AddExperience("Smithing", byPlayer, ___requiredUnits / 50f);
+            SystemPolaris.AddExperience("Smithing", byPlayer, ___requiredUnits * ExpGlobals.MoldExperiencePerMetalUnit);
             foreach (ItemStack stack in __state) RecordIngot(byPlayer, stack);
         }
     }

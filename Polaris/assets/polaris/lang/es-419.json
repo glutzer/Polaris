@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Experiencia obtenida en Herrería aumentada un {0}%",
+  "extrastatincCombatExpMul": "Experiencia obtenida en Combate aumentada un {0}%",
   "extrastatincpassiveBlockChance": "Probabilidad de bloqueo pasivo aumentada un {0}%",
   "extrastatmulpassiveBlockChance": "Un {0}% más de probabilidad de bloqueo pasivo",
   "extrastatdivshieldDamageAbsorption": "Un {0}% menos de absorción de daño del escudo",

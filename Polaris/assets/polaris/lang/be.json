@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Атрыманы вопыт навыку «Кавальства» павялічаны на {0}%",
+  "extrastatincCombatExpMul": "Атрыманы вопыт навыку «Бой» павялічаны на {0}%",
   "extrastatincpassiveBlockChance": "Шанец пасіўнага блакавання павялічаны на {0}%",
   "extrastatmulpassiveBlockChance": "На {0}% больш шанцаў пасіўнага блакавання",
   "extrastatdivshieldDamageAbsorption": "На {0}% менш паглынання шкоды шчытом",

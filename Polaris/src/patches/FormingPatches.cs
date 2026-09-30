@@ -6,8 +6,8 @@ namespace Polaris;
 
 public static class FormingPatches
 {
-    public const float ExpPerClay = 1f;
-    public const float KnappingExp = 2f;
+
+
 
     [HarmonyPatch(typeof(BlockEntityClayForm), nameof(BlockEntityClayForm.CheckIfFinished))]
     public static class ClayCompletionPatch
@@ -31,7 +31,7 @@ public static class FormingPatches
             // Same required-clay calculation shown by the game's recipe selector:
             // the initial form supplies 64 voxels and additional clay supplies 25 each.
             int requiredClay = (int)Math.Ceiling(Math.Max(1f, (requiredVoxels - 64) / 25f));
-            SystemPolaris.AddExperience("Forming", byPlayer, requiredClay * ExpPerClay);
+            SystemPolaris.AddExperience("Forming", byPlayer, requiredClay * ExpGlobals.FormingExperiencePerClay);
         }
     }
 
@@ -48,7 +48,7 @@ public static class FormingPatches
         public static void Postfix(BlockEntityKnappingSurface __instance, IPlayer byPlayer, bool __state)
         {
             if (!__state || __instance.SelectedRecipe != null || byPlayer == null) return;
-            SystemPolaris.AddExperience("Forming", byPlayer, KnappingExp);
+            SystemPolaris.AddExperience("Forming", byPlayer, ExpGlobals.KnappingExperience);
         }
     }
 }

@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Získané skúsenosti v zručnosti Kováčstvo zvýšené o {0}%",
+  "extrastatincCombatExpMul": "Získané skúsenosti v zručnosti Boj zvýšené o {0}%",
   "extrastatincpassiveBlockChance": "Šanca na pasívne blokovanie zvýšená o {0}%",
   "extrastatmulpassiveBlockChance": "O {0}% väčšia šanca na pasívne blokovanie",
   "extrastatdivshieldDamageAbsorption": "O {0}% menej poškodenia pohlteného štítom",

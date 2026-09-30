@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Tăng {0}% kinh nghiệm Rèn nhận được",
+  "extrastatincCombatExpMul": "Tăng {0}% kinh nghiệm Chiến đấu nhận được",
   "extrastatincpassiveBlockChance": "Tăng {0}% xác suất đỡ đòn thụ động",
   "extrastatmulpassiveBlockChance": "Thêm {0}% xác suất đỡ đòn thụ động",
   "extrastatdivshieldDamageAbsorption": "Bớt {0}% lượng sát thương khiên hấp thụ",

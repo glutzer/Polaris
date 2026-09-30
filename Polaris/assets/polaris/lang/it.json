@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Esperienza ottenuta in Forgiatura aumentata del {0}%",
+  "extrastatincCombatExpMul": "Esperienza ottenuta in Combattimento aumentata del {0}%",
   "extrastatincpassiveBlockChance": "Probabilità di blocco passivo aumentata del {0}%",
   "extrastatmulpassiveBlockChance": "{0}% di probabilità di blocco passivo in più",
   "extrastatdivshieldDamageAbsorption": "{0}% di assorbimento dei danni dello scudo in meno",

@@ -45,7 +45,7 @@ public class BeemasterPatches
                 beh.FromTreeAttributes(tree, world);
                 beh.MarkDirty();
 
-                SystemPolaris.AddExperience("Horticulture", byPlayer, 10f);
+                SystemPolaris.AddExperience("Horticulture", byPlayer, ExpGlobals.HoneyHarvestExperience);
             }
 
             world.PlaySoundAt(new AssetLocation("sounds/block/plant"), blockSel.Position, -0.5, byPlayer);

@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Taidosta Taonta saatu kokemus kasvaa {0}%",
+  "extrastatincCombatExpMul": "Taidosta Taistelu saatu kokemus kasvaa {0}%",
   "extrastatincpassiveBlockChance": "Passiivisen torjunnan todennäköisyys kasvaa {0}%",
   "extrastatmulpassiveBlockChance": "{0}% suurempi passiivisen torjunnan todennäköisyys",
   "extrastatdivshieldDamageAbsorption": "Kilven vahingonvaimennus on {0}% pienempi",

@@ -5,15 +5,15 @@
     "path": "/server/behaviors/-",
     "value": {
       "code": "EntityBehaviorPolarisExp",
-      "xpByType": {
-        "*-normal": 1.0,
-        "*-deep": 2.0,
-        "*-tainted": 3.0,
-        "*-corrupt": 4.0,
-        "*-nightmare": 5.0,
-        "*-double-headed": 10.0
+      "xpRewardByType": {
+        "*-normal": "tier1",
+        "*-deep": "tier2",
+        "*-tainted": "tier3",
+        "*-corrupt": "tier4",
+        "*-nightmare": "tier5",
+        "*-double-headed": "elite"
       },
-      "harvestXp": 0.25
+      "harvestReward": "drifter"
     }
   },
   {
@@ -22,13 +22,13 @@
     "path": "/server/behaviors/-",
     "value": {
       "code": "EntityBehaviorPolarisExp",
-      "xpByType": {
-        "*-surface": 1.0,
-        "*-deep": 2.0,
-        "*-tainted": 3.0,
-        "*-corrupt": 4.0,
-        "*-nightmare": 5.0,
-        "*-gearfoot": 10.0
+      "xpRewardByType": {
+        "*-surface": "tier1",
+        "*-deep": "tier2",
+        "*-tainted": "tier3",
+        "*-corrupt": "tier4",
+        "*-nightmare": "tier5",
+        "*-gearfoot": "elite"
       }
     }
   },
@@ -38,15 +38,15 @@
     "path": "/server/behaviors/-",
     "value": {
       "code": "EntityBehaviorPolarisExp",
-      "xpByType": {
-        "*-surface": 1.0,
-        "*-deep": 2.0,
-        "*-tainted": 3.0,
-        "*-corrupt": 4.0,
-        "*-nightmare": 5.0,
-        "*-stilt": 6.0,
-        "*-bellhead": 7.0,
-        "*-deepsplit": 10.0
+      "xpRewardByType": {
+        "*-surface": "tier1",
+        "*-deep": "tier2",
+        "*-tainted": "tier3",
+        "*-corrupt": "tier4",
+        "*-nightmare": "tier5",
+        "*-stilt": "tier6",
+        "*-bellhead": "tier7",
+        "*-deepsplit": "elite"
       }
     }
   },
@@ -56,10 +56,10 @@
     "path": "/server/behaviors/-",
     "value": {
       "code": "EntityBehaviorPolarisExp",
-      "xpByType": {
-        "*-bronze": 1.0,
-        "*-corrupt": 2.0,
-        "locust-corrupt-sawblade": 10.0
+      "xpRewardByType": {
+        "*-bronze": "tier1",
+        "*-corrupt": "tier2",
+        "locust-corrupt-sawblade": "elite"
       }
     }
   },
@@ -69,7 +69,7 @@
     "path": "/server/behaviors/-",
     "value": {
       "code": "EntityBehaviorPolarisExp",
-      "xp": 30.0
+      "xpReward": "bell"
     }
   },
   {
@@ -78,7 +78,7 @@
     "path": "/server/behaviors/-",
     "value": {
       "code": "EntityBehaviorPolarisExp",
-      "xp": 100.0
+      "xpReward": "boss"
     }
   },
   {
@@ -87,7 +87,7 @@
     "path": "/server/behaviors/-",
     "value": {
       "code": "EntityBehaviorPolarisExp",
-      "xp": 100.0
+      "xpReward": "boss"
     }
   }
 ]

@@ -10,7 +10,7 @@ public class HorticulturePatches
     [HarmonyPatch(typeof(BlockCrop), "GetDrops")]
     public class CropGetDropsPatch
     {
-        public const float CROP_EXP_MULTI = 10f;
+
 
         [HarmonyPostfix]
         public static void Postfix(BlockCrop __instance, IWorldAccessor world, BlockPos pos, IPlayer? byPlayer, ref ItemStack[] __result)
@@ -19,7 +19,7 @@ public class HorticulturePatches
             if (byPlayer?.Entity == null) return;
             if (__result == null || __result.Length == 0) return;
 
-            float xp = ComputeCropXp(__instance) * CROP_EXP_MULTI;
+            float xp = ComputeCropXp(__instance) * ExpGlobals.CropExperienceMultiplier;
             if (xp <= 0f) return;
 
             SystemPolaris.AddExperience("Horticulture", byPlayer, xp);
@@ -33,11 +33,11 @@ public class HorticulturePatches
 
             float monthsPerStep = block.CropProps.TotalGrowthMonths / block.CropProps.GrowthStages;
             float xp = block.CropProps.HarvestGrowthStageLoss > 0
-                ? block.CropProps.HarvestGrowthStageLoss * monthsPerStep * 0.5f
-                : block.CropProps.TotalGrowthMonths * 0.5f;
+                ? block.CropProps.HarvestGrowthStageLoss * monthsPerStep * ExpGlobals.CropExperiencePerGrowthMonth
+                : block.CropProps.TotalGrowthMonths * ExpGlobals.CropExperiencePerGrowthMonth;
 
-            float penalty = (float)Math.Pow(0.5f, block.CropProps.GrowthStages - currentCropStage);
-            return Math.Clamp(xp * penalty, 0f, 3f);
+            float penalty = (float)Math.Pow(ExpGlobals.ImmatureCropExperienceFactor, block.CropProps.GrowthStages - currentCropStage);
+            return Math.Clamp(xp * penalty, 0f, ExpGlobals.MaximumBaseCropExperience);
         }
     }
 }

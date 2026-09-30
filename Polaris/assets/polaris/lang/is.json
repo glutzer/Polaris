@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Fengin reynsla í Smíði eykst um {0}%",
+  "extrastatincCombatExpMul": "Fengin reynsla í Bardagi eykst um {0}%",
   "extrastatincpassiveBlockChance": "Líkur á óvirkri vörn aukast um {0}%",
   "extrastatmulpassiveBlockChance": "{0}% meiri líkur á óvirkri vörn",
   "extrastatdivshieldDamageAbsorption": "{0}% minni skaðaupptaka með skildi",

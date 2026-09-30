@@ -6,7 +6,7 @@
         "nuts"
     ],
     "description": "Leveling and achievement system.",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "dependencies": {
       "game": "",
       "nutslib": "3.1.9"

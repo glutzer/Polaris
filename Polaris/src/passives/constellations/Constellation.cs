@@ -20,9 +20,6 @@ public class Constellation
     public Vector2i StartBounds { get; private set; }
     public Vector2i EndBounds { get; private set; }
 
-    public float BaseExpCurve { get; private set; } = 1.5f;
-    public float BaseExpRequirement { get; private set; } = 100f;
-
     private int indexCounter;
 
     public Constellation(string name)
@@ -40,7 +37,7 @@ public class Constellation
     /// </summary>
     public float GetExpToReachLevel(int level)
     {
-        return BaseExpRequirement * MathF.Pow(level - 1, BaseExpCurve);
+        return ExpGlobals.BaseExpRequirement * MathF.Pow(level - 1, ExpGlobals.ConstellationExpCurve);
     }
 
     public float GetTotalExpGained(int level, float currentExp)
@@ -51,13 +48,6 @@ public class Constellation
             totalExp += GetExpToReachLevel(i);
         }
         return totalExp + currentExp;
-    }
-
-    public Constellation SetExpCurve(float power, float baseRequirement)
-    {
-        BaseExpCurve = power;
-        BaseExpRequirement = baseRequirement;
-        return this;
     }
 
     public PassiveNode? GetNodeById(int nodeId)

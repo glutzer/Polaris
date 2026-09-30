@@ -114,11 +114,11 @@ public class SmithingPatches
             if (!__state.HadWorkItem || __instance.WorkItemStack != null) return;
             if (__state.Player == null || __instance.Api.Side != EnumAppSide.Server) return;
 
-            float exp = 1f + (0.02f * __state.HitCount);
+            float exp = ExpGlobals.SmithingCompletionExperience + (ExpGlobals.SmithingExperiencePerHit * __state.HitCount);
             SystemPolaris.AddExperience("Smithing", __state.Player, exp);
             if (__state.Output?.Collectible.Code.Path == "ingot-iron")
             {
-                SystemPolaris.AddExperience("Smithing", __state.Player, __state.Output.StackSize * 2f);
+                SystemPolaris.AddExperience("Smithing", __state.Player, __state.Output.StackSize * ExpGlobals.MetalProductionExperiencePerIngot);
                 SystemPolaris.TriggerAchievement("metalworker", __state.Player, "iron");
             }
         }

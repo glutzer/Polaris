@@ -53,7 +53,7 @@ public class CraftingPatches
 
                 float condition = slot.Itemstack.Attributes.GetFloat("condition", 1f);
                 float toRepair = Math.Min(1f - condition, changeVal);
-                SystemPolaris.AddExperience("Crafting", LastSlotActivator, toRepair * 50f);
+                SystemPolaris.AddExperience("Crafting", LastSlotActivator, toRepair * ExpGlobals.RepairExperiencePerDurability);
             }
 
             return true;

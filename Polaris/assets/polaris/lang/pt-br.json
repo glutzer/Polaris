@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Experiência obtida em Ferraria aumentada em {0}%",
+  "extrastatincCombatExpMul": "Experiência obtida em Combate aumentada em {0}%",
   "extrastatincpassiveBlockChance": "Probabilidade de bloqueio passivo aumentada em {0}%",
   "extrastatmulpassiveBlockChance": "Mais {0}% de probabilidade de bloqueio passivo",
   "extrastatdivshieldDamageAbsorption": "Menos {0}% de absorção de dano pelo escudo",

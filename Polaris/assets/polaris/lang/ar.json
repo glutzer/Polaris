@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "زيادة الخبرة المكتسبة في الحدادة بنسبة {0}%",
+  "extrastatincCombatExpMul": "زيادة الخبرة المكتسبة في القتال بنسبة {0}%",
   "extrastatincpassiveBlockChance": "زيادة فرصة الصد السلبي بنسبة {0}%",
   "extrastatmulpassiveBlockChance": "فرصة صد سلبي أكثر بنسبة {0}%",
   "extrastatdivshieldDamageAbsorption": "امتصاص ضرر الدرع أقل بنسبة {0}%",

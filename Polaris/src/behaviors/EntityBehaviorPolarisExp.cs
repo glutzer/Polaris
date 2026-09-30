@@ -6,7 +6,7 @@ namespace Polaris;
 
 /// <summary>
 /// Entity behavior that awards constellation experience to the killing player on death.
-/// Add to entities via JSON patch with "xp" and optionally "constellation" attributes.
+/// Add to entities via JSON patch with an "xpReward" balance key or numeric "xp" override.
 /// Supports byType resolution for type-variant entities.
 /// </summary>
 [EntityBehavior]
@@ -14,11 +14,6 @@ public class EntityBehaviorPolarisExp : EntityBehavior
 {
     private float xp;
     public float HarvestXp { get; private set; }
-
-    public const float COMBAT_EXP_MULTI = 5f;
-    public const float HARVESTING_EXP_MULTI = 10f;
-
-    public const float DefaultHarvestExp = 1f;
 
     public EntityBehaviorPolarisExp(Entity entity) : base(entity)
     {
@@ -29,8 +24,8 @@ public class EntityBehaviorPolarisExp : EntityBehavior
     public override void Initialize(EntityProperties properties, JsonObject attributes)
     {
         base.Initialize(properties, attributes);
-        xp = attributes["xp"].AsFloat(0f);
-        HarvestXp = attributes["harvestXp"].AsFloat(0f);
+        xp = attributes["xp"].AsFloat(ExpGlobals.GetEntityExperience(attributes["xpReward"].AsString("")));
+        HarvestXp = attributes["harvestXp"].AsFloat(attributes["harvestReward"].AsString("") == "drifter" ? ExpGlobals.DrifterHarvestExperience : 0f);
     }
 
     public override void OnEntityDeath(DamageSource damageSourceForDeath)
@@ -50,11 +45,11 @@ public class EntityBehaviorPolarisExp : EntityBehavior
 
         if (damageSourceForDeath.SourceEntity is EntityProjectile)
         {
-            SystemPolaris.AddExperience("Hunting", killer, xp * COMBAT_EXP_MULTI);
+            SystemPolaris.AddExperience("Hunting", killer, xp * ExpGlobals.HuntingKillExperienceMultiplier);
         }
         else
         {
-            SystemPolaris.AddExperience("Combat", killer, xp * COMBAT_EXP_MULTI);
+            SystemPolaris.AddExperience("Combat", killer, xp * ExpGlobals.CombatKillExperienceMultiplier);
         }
     }
 }

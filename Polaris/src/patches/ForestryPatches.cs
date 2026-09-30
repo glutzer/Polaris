@@ -9,7 +9,7 @@ namespace Polaris;
 [HarmonyPatch(typeof(ItemAxe), nameof(ItemAxe.OnBlockBrokenWith))]
 public static class ForestryPatches
 {
-    public const float ExpPerWoodBlock = 0.5f;
+
 
     [HarmonyPrefix]
     public static void Prefix(ItemAxe __instance, IWorldAccessor world, Entity byEntity,
@@ -40,6 +40,6 @@ public static class ForestryPatches
             if (world.BlockAccessor.GetBlock(block.Position).BlockId != block.BlockId) felled++;
 
         if (felled > 0)
-            SystemPolaris.AddExperience("Forestry", player.Player, felled * ExpPerWoodBlock);
+            SystemPolaris.AddExperience("Forestry", player.Player, felled * ExpGlobals.ForestryExperiencePerWoodBlock);
     }
 }

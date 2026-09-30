@@ -55,17 +55,17 @@ public class PolarisStoneBehavior : BlockBehavior
 
     private float GetExp()
     {
-        if (IsRock) return 0.5f;
-        if (IsGemOre) return 1f;
+        if (IsRock) return ExpGlobals.RockExperience;
+        if (IsGemOre) return ExpGlobals.GemExperience;
 
         // Graded ore: exp based on richness.
         string path = block.Code.Path;
-        if (path.Contains("-poor-")) return 1f;
-        if (path.Contains("-medium-")) return 1.5f;
-        if (path.Contains("-rich-")) return 2f;
-        if (path.Contains("-bountiful-")) return 2.5f;
+        if (path.Contains("-poor-")) return ExpGlobals.PoorOreExperience;
+        if (path.Contains("-medium-")) return ExpGlobals.MediumOreExperience;
+        if (path.Contains("-rich-")) return ExpGlobals.RichOreExperience;
+        if (path.Contains("-bountiful-")) return ExpGlobals.BountifulOreExperience;
 
-        return 1f; // Ungraded ore.
+        return ExpGlobals.UngradedOreExperience; // Ungraded ore.
     }
 
     public override ItemStack[]? GetDrops(IWorldAccessor world, BlockPos pos, IPlayer? byPlayer, ref float dropChanceMultiplier, ref EnumHandling handling)

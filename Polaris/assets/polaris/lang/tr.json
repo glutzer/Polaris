@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Demircilik alanında kazanılan deneyim %{0} artar",
+  "extrastatincCombatExpMul": "Savaş alanında kazanılan deneyim %{0} artar",
   "extrastatincpassiveBlockChance": "Pasif blok olasılığı %{0} artar",
   "extrastatmulpassiveBlockChance": "%{0} daha fazla pasif blok olasılığı",
   "extrastatdivshieldDamageAbsorption": "Kalkan %{0} daha az hasar emer",

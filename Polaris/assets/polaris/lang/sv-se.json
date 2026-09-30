@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Erhållen erfarenhet i Smide ökad med {0}%",
+  "extrastatincCombatExpMul": "Erhållen erfarenhet i Strid ökad med {0}%",
   "extrastatincpassiveBlockChance": "Passiv blockeringschans ökad med {0}%",
   "extrastatmulpassiveBlockChance": "{0}% större passiv blockeringschans",
   "extrastatdivshieldDamageAbsorption": "{0}% mindre skadeabsorption från skölden",

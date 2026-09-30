@@ -7,7 +7,7 @@ namespace Polaris;
 
 public static class CookingPatches
 {
-    public const float ExpPerServing = 2f;
+
 
     // Inventory packets identify the cook; merely opening the firepit or taking its output does not.
     [HarmonyPatch(typeof(BlockEntityFirepit), nameof(BlockEntityFirepit.OnReceivedClientPacket))]
@@ -57,7 +57,7 @@ public static class CookingPatches
 
             float servings = cooked.GetQuantityServings(__instance.Api.World, __instance.outputSlot.Itemstack);
             if (servings > 0f)
-                SystemPolaris.Instance(__instance.Api).AddExperience("Cooking", __state, servings * ExpPerServing);
+                SystemPolaris.Instance(__instance.Api).AddExperience("Cooking", __state, servings * ExpGlobals.CookingExperiencePerServing);
         }
     }
 }

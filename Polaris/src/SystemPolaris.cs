@@ -88,7 +88,6 @@ public class SystemPolaris : NetworkedGameSystem
             Config = new PolarisConfig();
         }
         api.StoreModConfig(Config, "polarisconfig.json");
-        PlayerPolarisData.ExpCurve = Config.MainExpCurve;
 
         if (api is ICoreServerAPI sapi)
         {
@@ -170,51 +169,51 @@ public class SystemPolaris : NetworkedGameSystem
     public override void Initialize()
     {
         // Main survival tree.
-        Constellation survival = new Constellation("Survival").SetColor(1f, 0.7f, 0.7f, 1f).SetExpCurve(Config.SurvivalExpCurve, 100f).AddStartNode();
+        Constellation survival = new Constellation("Survival").SetColor(1f, 0.7f, 0.7f, 1f).AddStartNode();
         AddConstellation(survival);
 
         // Temporal tree.
-        Constellation time = new Constellation("Time").SetColor(0f, 1f, 0.6f, 0.5f).SetExpCurve(Config.TimeExpCurve, 100f).AddStartNode();
+        Constellation time = new Constellation("Time").SetColor(0f, 1f, 0.6f, 0.5f).AddStartNode();
         AddConstellation(time);
 
         // Mining and digging combined.
-        Constellation excavation = new Constellation("Excavation").SetColor(0.6f, 0.4f, 0.4f, 1f).SetExpCurve(Config.ExcavationExpCurve, 100f).AddStartNode();
+        Constellation excavation = new Constellation("Excavation").SetColor(0.6f, 0.4f, 0.4f, 1f).AddStartNode();
         AddConstellation(excavation);
 
         // Tree stuff.
-        Constellation forestry = new Constellation("Forestry").SetColor(0f, 0.6f, 0f, 1f).SetExpCurve(Config.ForestryExpCurve, 100f).AddStartNode();
+        Constellation forestry = new Constellation("Forestry").SetColor(0f, 0.6f, 0f, 1f).AddStartNode();
         AddConstellation(forestry);
 
         // Farming.
-        Constellation horticulture = new Constellation("Horticulture").SetColor(0.2f, 1f, 0.2f, 1f).SetExpCurve(Config.HorticultureExpCurve, 100f).AddStartNode();
+        Constellation horticulture = new Constellation("Horticulture").SetColor(0.2f, 1f, 0.2f, 1f).AddStartNode();
         AddConstellation(horticulture);
 
         // Hunting — ranged combat and animal loot.
-        Constellation hunting = new Constellation("Hunting").SetColor(0.6f, 0.2f, 0.2f, 0.75f).SetExpCurve(Config.HuntingExpCurve, 100f).AddStartNode();
+        Constellation hunting = new Constellation("Hunting").SetColor(0.6f, 0.2f, 0.2f, 0.75f).AddStartNode();
         AddConstellation(hunting);
 
         // Combat — melee combat.
-        Constellation combat = new Constellation("Combat").SetColor(0.8f, 0.15f, 0.15f, 1f).SetExpCurve(Config.CombatExpCurve, 100f).AddStartNode();
+        Constellation combat = new Constellation("Combat").SetColor(0.8f, 0.15f, 0.15f, 1f).AddStartNode();
         AddConstellation(combat);
 
         // Smithing.
-        Constellation smithing = new Constellation("Smithing").SetColor(0.7f, 0.4f, 0.2f, 1f).SetExpCurve(Config.SmithingExpCurve, 100f).AddStartNode();
+        Constellation smithing = new Constellation("Smithing").SetColor(0.7f, 0.4f, 0.2f, 1f).AddStartNode();
         AddConstellation(smithing);
 
         // Clay/knapping.
-        Constellation forming = new Constellation("Forming").SetColor(0.1f, 0.1f, 0.3f, 1f).SetExpCurve(Config.FormingExpCurve, 100f).AddStartNode();
+        Constellation forming = new Constellation("Forming").SetColor(0.1f, 0.1f, 0.3f, 1f).AddStartNode();
         AddConstellation(forming);
 
         // Cooking.
-        Constellation cooking = new Constellation("Cooking").SetColor(0.7f, 0.7f, 0f, 1f).SetExpCurve(Config.CookingExpCurve, 100f).AddStartNode();
+        Constellation cooking = new Constellation("Cooking").SetColor(0.7f, 0.7f, 0f, 1f).AddStartNode();
         AddConstellation(cooking);
 
         // Crafting - leatherworking and sewing.
-        Constellation crafting = new Constellation("Crafting").SetColor(0.7f, 0.3f, 0.5f, 1f).SetExpCurve(Config.CraftingExpCurve, 100f).AddStartNode();
+        Constellation crafting = new Constellation("Crafting").SetColor(0.7f, 0.3f, 0.5f, 1f).AddStartNode();
         AddConstellation(crafting);
 
         // Trade.
-        Constellation trade = new Constellation("Trade").SetColor(1f, 0f, 1f, 1f).SetExpCurve(Config.TradeExpCurve, 100f).AddStartNode();
+        Constellation trade = new Constellation("Trade").SetColor(1f, 0f, 1f, 1f).AddStartNode();
         AddConstellation(trade);
 
         PassiveNode.Create("Mint", "mint", trade).AddParent("start").AddSkillStat("mint", 1, """
@@ -222,7 +221,7 @@ public class SystemPolaris : NetworkedGameSystem
             """).KeystoneStyle().AddLevelRequirement("Trade", 100);
 
         // Mycology — mushroom harvesting and bonuses.
-        Constellation mycology = new Constellation("Mycology").SetColor(0.6f, 0.3f, 0.8f, 1f).SetExpCurve(Config.MycologyExpCurve, 100f).AddStartNode();
+        Constellation mycology = new Constellation("Mycology").SetColor(0.6f, 0.3f, 0.8f, 1f).AddStartNode();
         AddConstellation(mycology);
 
         // Survival passives.
@@ -231,32 +230,32 @@ public class SystemPolaris : NetworkedGameSystem
             .AddAdditiveExtraStat("healthMultiplier", -0.1f)
             .AddLevelRequirement("Cooking", 5).AddLevelRequirement("Survival", 5).AddLevelRequirement("Time", 5).NotableStyle();
 
-        PassiveNode.Create("Movement Speed", "move1", survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("start").AddLevelRequirement("Survival", 3);
-        PassiveNode.Create("Movement Speed", "move2", survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("move1").AddLevelRequirement("Survival", 5);
-        PassiveNode.Create("Movement Speed", "move3", survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("move2").AddLevelRequirement("Survival", 7);
-        PassiveNode.Create("Movement Speed", "move4", survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("move3").AddLevelRequirement("Survival", 9);
+        PassiveNode.Create("Movement Speed", "move1", survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("start").AddLevelRequirement("Survival", 2);
+        PassiveNode.Create("Movement Speed", "move2", survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("move1").AddLevelRequirement("Survival", 4);
+        PassiveNode.Create("Movement Speed", "move3", survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("move2").AddLevelRequirement("Survival", 8);
+        PassiveNode.Create("Movement Speed", "move4", survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("move3").AddLevelRequirement("Survival", 16);
 
-        PassiveNode.Create("Health", "health1", survival).AddAdditiveExtraStat("healthMultiplier", 0.05f).AddParent("start");
-        PassiveNode.Create("Health", "health2", survival).AddAdditiveExtraStat("healthMultiplier", 0.05f).AddParent("health1").AddLevelRequirement("Survival", 3);
-        PassiveNode.Create("Health", "health3", survival).AddAdditiveExtraStat("healthMultiplier", 0.05f).AddParent("health2").AddLevelRequirement("Survival", 5);
-        PassiveNode.Create("Health", "health4", survival).AddMultiplicativeExtraStat("healthMultiplier", 1.2f).AddParent("health3").AddLevelRequirement("Survival", 7).NotableStyle();
+        PassiveNode.Create("Health", "health1", survival).AddAdditiveExtraStat("healthMultiplier", 0.05f).AddParent("start").AddLevelRequirement("Survival", 2);
+        PassiveNode.Create("Health", "health2", survival).AddAdditiveExtraStat("healthMultiplier", 0.05f).AddParent("health1").AddLevelRequirement("Survival", 4);
+        PassiveNode.Create("Health", "health3", survival).AddAdditiveExtraStat("healthMultiplier", 0.05f).AddParent("health2").AddLevelRequirement("Survival", 8);
+        PassiveNode.Create("Health", "health4", survival).AddMultiplicativeExtraStat("healthMultiplier", 1.2f).AddParent("health3").AddLevelRequirement("Survival", 16).NotableStyle();
 
         PassiveNode.Create("Saturation", "sat1", survival).AddAdditiveExtraStat("satMultiplier", 0.2f).AddParent("start");
-        PassiveNode.Create("Saturation", "sat2", survival).AddAdditiveExtraStat("satMultiplier", 0.2f).AddParent("sat1").AddLevelRequirement("Survival", 3);
-        PassiveNode.Create("Saturation", "sat3", survival).AddAdditiveExtraStat("satMultiplier", 0.2f).AddParent("sat2").AddLevelRequirement("Survival", 5);
-        PassiveNode.Create("Saturation", "sat4", survival).AddAdditiveExtraStat("satMultiplier", 0.2f).AddParent("sat3").AddLevelRequirement("Survival", 7);
-        PassiveNode.Create("Saturation", "sat5", survival).AddAdditiveExtraStat("satMultiplier", 0.2f).AddParent("sat4").AddLevelRequirement("Survival", 9);
+        PassiveNode.Create("Saturation", "sat2", survival).AddAdditiveExtraStat("satMultiplier", 0.2f).AddParent("sat1").AddLevelRequirement("Survival", 2);
+        PassiveNode.Create("Saturation", "sat3", survival).AddAdditiveExtraStat("satMultiplier", 0.2f).AddParent("sat2").AddLevelRequirement("Survival", 4);
+        PassiveNode.Create("Saturation", "sat4", survival).AddAdditiveExtraStat("satMultiplier", 0.2f).AddParent("sat3").AddLevelRequirement("Survival", 8);
+        PassiveNode.Create("Saturation", "sat5", survival).AddAdditiveExtraStat("satMultiplier", 0.2f).AddParent("sat4").AddLevelRequirement("Survival", 16);
         PassiveNode.Create("Saturation", "sat6", survival).AddMultiplicativeExtraStat("satMultiplier", 1.5f).AddParent("sat5").AddLevelRequirement("Survival", 20).NotableStyle();
 
         // Feather Falling chain — reduced fall damage.
-        PassiveNode.Create("Feather Falling", "featherfall1", survival).AddAdditiveExtraStat("featherFall", 0.2f, statBase: 0f).AddParent("start").AddLevelRequirement("Survival", 3);
-        PassiveNode.Create("Feather Falling", "featherfall2", survival).AddAdditiveExtraStat("featherFall", 0.2f, statBase: 0f).AddParent("featherfall1").AddLevelRequirement("Survival", 5);
-        PassiveNode.Create("Feather Falling", "featherfall3", survival).AddAdditiveExtraStat("featherFall", 0.2f, statBase: 0f).AddParent("featherfall2").AddLevelRequirement("Survival", 7);
+        PassiveNode.Create("Feather Falling", "featherfall1", survival).AddAdditiveExtraStat("featherFall", 0.2f, statBase: 0f).AddParent("start").AddLevelRequirement("Survival", 2);
+        PassiveNode.Create("Feather Falling", "featherfall2", survival).AddAdditiveExtraStat("featherFall", 0.2f, statBase: 0f).AddParent("featherfall1").AddLevelRequirement("Survival", 4);
+        PassiveNode.Create("Feather Falling", "featherfall3", survival).AddAdditiveExtraStat("featherFall", 0.2f, statBase: 0f).AddParent("featherfall2").AddLevelRequirement("Survival", 8);
 
         // Meat Shield chain — absorb incoming damage at the cost of saturation.
-        PassiveNode.Create("Meat Shield", "meatShield1", survival).AddAdditiveExtraStat("meatShield", 0.1f, statBase: 0f).AddParent("sat1").AddLevelRequirement("Survival", 3);
-        PassiveNode.Create("Meat Shield", "meatShield2", survival).AddAdditiveExtraStat("meatShield", 0.1f, statBase: 0f).AddParent("sat2").AddLevelRequirement("Survival", 5);
-        PassiveNode.Create("Meat Shield", "meatShield3", survival).AddAdditiveExtraStat("meatShield", 0.1f, statBase: 0f).AddParent("sat3").AddLevelRequirement("Survival", 7);
+        PassiveNode.Create("Meat Shield", "meatShield1", survival).AddAdditiveExtraStat("meatShield", 0.1f, statBase: 0f).AddParent("sat1");
+        PassiveNode.Create("Meat Shield", "meatShield2", survival).AddAdditiveExtraStat("meatShield", 0.1f, statBase: 0f).AddParent("sat2");
+        PassiveNode.Create("Meat Shield", "meatShield3", survival).AddAdditiveExtraStat("meatShield", 0.1f, statBase: 0f).AddParent("sat3");
 
         PassiveNode.Create("Primalist", "primalist", survival).AddParent("start").AddSkillStat("primalist", 1, """
             You can eat raw meat
@@ -265,23 +264,23 @@ public class SystemPolaris : NetworkedGameSystem
 
         PassiveNode.Create("Shroud Walker", "shroudWalker", survival).AddParent("featherfall2").AddSkillStat("shroudWalker", 1, """
             Gain Chameleon while sneaking
-            """).AddAdditiveExtraStat("healthMultiplier", -0.5f).AddLevelRequirement("Survival", 8).KeystoneStyle();
+            """).AddAdditiveExtraStat("healthMultiplier", -0.5f).AddLevelRequirement("Survival", 6).KeystoneStyle();
 
         PassiveNode.Create("Luminiferous", "luminiferous1", survival).AddParent("start").AddSkillStat("luminiferous", 1, """
             +15 ambient light emission
-            """).NotableStyle().AddLevelRequirement("Survival", 8);
+            """).NotableStyle().AddLevelRequirement("Survival", 10);
         PassiveNode.Create("Luminiferous", "luminiferous2", survival).AddParent("luminiferous1").AddSkillStat("luminiferous", 1, """
             +5 ambient light emission
-            """).NotableStyle().AddLevelRequirement("Survival", 10);
+            """).NotableStyle().AddLevelRequirement("Survival", 20);
         PassiveNode.Create("Luminiferous", "luminiferous3", survival).AddParent("luminiferous2").AddSkillStat("luminiferous", 1, """
             +5 ambient light emission
-            """).NotableStyle().AddLevelRequirement("Survival", 20);
+            """).NotableStyle().AddLevelRequirement("Survival", 30);
 
         // Strong Back chain — extra backpack slots.
-        PassiveNode.Create("Strong Back", "strongBack1", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddAdditiveStat("walkspeed", -0.04f).AddParent("start").AddLevelRequirement("Survival", 3);
-        PassiveNode.Create("Strong Back", "strongBack2", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddAdditiveStat("walkspeed", -0.04f).AddParent("strongBack1").AddLevelRequirement("Survival", 5);
-        PassiveNode.Create("Strong Back", "strongBack3", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddAdditiveStat("walkspeed", -0.04f).AddParent("strongBack2").AddLevelRequirement("Survival", 7);
-        PassiveNode.Create("Pack Mule", "strongBack4", survival).AddAdditiveExtraStat("strongBack", 3f, true, statBase: 0f).AddAdditiveStat("walkspeed", -0.2f).AddParent("strongBack3").AddLevelRequirement("Survival", 10).NotableStyle();
+        PassiveNode.Create("Strong Back", "strongBack1", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddAdditiveStat("walkspeed", -0.04f).AddParent("start").AddLevelRequirement("Survival", 5);
+        PassiveNode.Create("Strong Back", "strongBack2", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddAdditiveStat("walkspeed", -0.04f).AddParent("strongBack1").AddLevelRequirement("Survival", 10);
+        PassiveNode.Create("Strong Back", "strongBack3", survival).AddAdditiveExtraStat("strongBack", 1f, true, statBase: 0f).AddAdditiveStat("walkspeed", -0.04f).AddParent("strongBack2").AddLevelRequirement("Survival", 15);
+        PassiveNode.Create("Pack Mule", "strongBack4", survival).AddAdditiveExtraStat("strongBack", 3f, true, statBase: 0f).AddAdditiveStat("walkspeed", -0.2f).AddParent("strongBack3").AddLevelRequirement("Survival", 20).NotableStyle();
 
         PassiveNode.Create("Improviser", "improviser", survival).AddParent("start").AddSkillStat("improviser", 1, """
             May craft a sling
@@ -290,43 +289,44 @@ public class SystemPolaris : NetworkedGameSystem
         // Crafting passives.
         PassiveNode.Create("Dual Specialization", "dualSpecialization", survival).AddParent("start")
             .AddSkillStat("dualSpecialization", 1, "You may allocate up to 2 specialization nodes.")
-            .NotableStyle().AddLevelRequirement("Survival", 6);
+            .NotableStyle().AddLevelRequirement("Survival", 20);
 
         PassiveNode.Create("Sewing Effectiveness", "sewing1", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 2).AddParent("start");
         PassiveNode.Create("Sewing Effectiveness", "sewing2", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 4).AddParent("sewing1");
-        PassiveNode.Create("Sewing Effectiveness", "sewing3", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 6).AddParent("sewing2");
+        PassiveNode.Create("Sewing Effectiveness", "sewing3", crafting).AddAdditiveExtraStat("sewingeffectiveness", 0.1f).AddLevelRequirement("Crafting", 8).AddParent("sewing2");
 
-        PassiveNode.Create("Path of the Seamster", "pts1", crafting).AddMultiplicativeExtraStat("healthMultiplier", 0.9f).AddParent("sewing3");
-        PassiveNode.Create("Path of the Seamster", "pts2", crafting).AddMultiplicativeExtraStat("healthMultiplier", 0.9f).AddParent("pts1");
+        PassiveNode.Create("Path of the Seamster", "pts1", crafting).AddMultiplicativeExtraStat("healthMultiplier", 0.95f).AddParent("sewing3");
+        PassiveNode.Create("Path of the Seamster", "pts2", crafting).AddMultiplicativeExtraStat("healthMultiplier", 0.95f).AddParent("pts1");
 
         PassiveNode.Create("Clothier", "clothier", crafting).AddParent("pts2").AddSkillStat("clothier", 1, """
             You may sew certain kinds of clothing
-            """).KeystoneStyle().AddLevelRequirement("Crafting", 8);
+            """).KeystoneStyle().AddLevelRequirement("Crafting", 10);
 
         // Smithing passives.
         PassiveNode.Create("Smith", "smith", smithing).AddParent("start").WithTag("specialization")
-            .AddRequirement(new SpecializationRequirement()).NotableStyle();
+            .AddRequirement(new SpecializationRequirement()).AddLevelRequirement("Smithing", 5)
+            .AddAdditiveExtraStat("SmithingExpMul", ExpGlobals.SpecializationExperienceBonus).NotableStyle();
 
         PassiveNode.Create("Master Smith", "masterSmith1", smithing).AddSkillStat("masterSmith", 1, """
             Your heavy hit also moves 1 voxel of material to the correct position
-            """).KeystoneStyle().AddParent("smith").AddRequirement(new NodeRequirement("Smithing", "smith")).AddLevelRequirement("Smithing", 5);
+            """).KeystoneStyle().AddParent("start").AddRequirement(new NodeRequirement("Smithing", "smith")).AddLevelRequirement("Smithing", 10);
 
         PassiveNode.Create("Master Smith", "masterSmith2", smithing).AddSkillStat("masterSmith", 1, """
             Your heavy hit also moves 1 voxel of material to the correct position
-            """).NotableStyle().AddParent("masterSmith1").AddRequirement(new NodeRequirement("Smithing", "smith")).AddLevelRequirement("Smithing", 10);
+            """).NotableStyle().AddParent("masterSmith1").AddRequirement(new NodeRequirement("Smithing", "smith")).AddLevelRequirement("Smithing", 15);
 
-        PassiveNode.Create("Cracker", "cracker1", smithing).AddAdditiveExtraStat("bloomeryDrops", 0.1f).AddParent("start").AddLevelRequirement("Smithing", 4);
-        PassiveNode.Create("Cracker", "cracker2", smithing).AddAdditiveExtraStat("bloomeryDrops", 0.1f).AddParent("cracker1").AddLevelRequirement("Smithing", 8);
+        PassiveNode.Create("Cracker", "cracker1", smithing).AddAdditiveExtraStat("bloomeryDrops", 0.1f).AddParent("start").AddLevelRequirement("Smithing", 5);
+        PassiveNode.Create("Cracker", "cracker2", smithing).AddAdditiveExtraStat("bloomeryDrops", 0.1f).AddParent("cracker1").AddLevelRequirement("Smithing", 10);
 
         PassiveNode.Create("Merciless", "merciless", smithing).AddParent("start").AddSkillStat("merciless", 1, """
             May craft the Blackguard Blade
             """).KeystoneStyle().AddLevelRequirement("Smithing", 8);
 
-        PassiveNode.Create("Bloomery Extraction", "bloomeryExtraction", smithing).AddParent("smith").AddRequirement(new NodeRequirement("Smithing", "smith"))
+        PassiveNode.Create("Bloomery Extraction", "bloomeryExtraction", smithing).AddParent("start").AddRequirement(new NodeRequirement("Smithing", "smith"))
             .AddSkillStat("bloomeryExtraction", 1, "May collect finished bloomery output with an empty hand without breaking the bloomery.")
-            .NotableStyle().AddLevelRequirement("Smithing", 10);
+            .NotableStyle().AddLevelRequirement("Smithing", 20);
 
-        PassiveNode.Create("Careful Quenching", "carefulQuenching", smithing).AddParent("smith")
+        PassiveNode.Create("Careful Quenching", "carefulQuenching", smithing).AddParent("start")
             .AddRequirement(new NodeRequirement("Smithing", "smith"))
             .AddAdditiveExtraStatPerLevel("quenchBreakChanceReduction", 0.01f, "Smithing").NotableStyle();
 
@@ -440,21 +440,22 @@ public class SystemPolaris : NetworkedGameSystem
             .AddMultiplicativeExtraStat("shieldDamageAbsorption", 0.5f).KeystoneStyle();
 
         PassiveNode.Create("Warrior", "warrior", combat).AddParent("start").WithTag("specialization")
-            .AddRequirement(new SpecializationRequirement()).NotableStyle();
+            .AddRequirement(new SpecializationRequirement()).AddLevelRequirement("Combat", 5)
+            .AddAdditiveExtraStat("CombatExpMul", ExpGlobals.SpecializationExperienceBonus).NotableStyle();
 
         // Swordsman chain — increased melee weapon damage.
         PassiveNode.Create("Swordsman", "meleedmg1", combat).AddAdditiveStat("meleeWeaponsDamage", 0.1f).AddParent("start").AddLevelRequirement("Combat", 2);
         PassiveNode.Create("Swordsman", "meleedmg2", combat).AddAdditiveStat("meleeWeaponsDamage", 0.1f).AddParent("meleedmg1").AddLevelRequirement("Combat", 4);
         PassiveNode.Create("Swordsman", "meleedmg3", combat).AddAdditiveStatPerLevel("meleeWeaponsDamage", 0.02f, "Combat").AddParent("meleedmg2").AddLevelRequirement("Combat", 7).NotableStyle();
-        PassiveNode.Create("Swordsman", "meleedmg4", combat).AddAdditiveStatPerLevel("meleeWeaponsDamage", 0.02f, "Combat")
-            .AddParent("warrior").AddRequirement(new NodeRequirement("Combat", "warrior")).NotableStyle();
+        PassiveNode.Create("Sword Master", "meleedmg4", combat).AddAdditiveStatPerLevel("meleeWeaponsDamage", 0.02f, "Combat")
+            .AddParent("meleedmg3").AddRequirement(new NodeRequirement("Combat", "warrior")).NotableStyle();
 
         PassiveNode.Create("Armor Training", "armorTraining1", combat).AddAdditiveStat("armorWalkSpeedAffectedness", -0.15f).AddParent("start");
-        PassiveNode.Create("Armor Training", "armorTraining2", combat).AddAdditiveStatPerLevel("armorWalkSpeedAffectedness", -0.005f, "Combat")
-            .AddParent("warrior").AddRequirement(new NodeRequirement("Combat", "warrior")).NotableStyle();
+        PassiveNode.Create("Armor Conditioning", "armorTraining2", combat).AddAdditiveStatPerLevel("armorWalkSpeedAffectedness", -0.005f, "Combat")
+            .AddParent("armorTraining1").AddRequirement(new NodeRequirement("Combat", "warrior")).NotableStyle();
 
         // Berserker keystone — killing an entity restores a small amount of health.
-        PassiveNode.Create("Berserker", "berserker", combat).AddParent("warrior").AddRequirement(new NodeRequirement("Combat", "warrior")).AddSkillStat("berserker", 1, """
+        PassiveNode.Create("Berserker", "berserker", combat).AddParent("meleedmg2").AddRequirement(new NodeRequirement("Combat", "warrior")).AddSkillStat("berserker", 1, """
             Killing an entity restores 2 health
             """).KeystoneStyle().AddLevelRequirement("Combat", 8);
 
@@ -1174,11 +1175,9 @@ public class PlayerPolarisData
         KnowledgePoints = amount;
     }
 
-    public static float ExpCurve = 1.5f;
-
     public static float GetExpToReachLevel(int level)
     {
-        return 100f * MathF.Pow(level - 1, ExpCurve);
+        return ExpGlobals.BaseExpRequirement * MathF.Pow(level - 1, ExpGlobals.MainExpCurve);
     }
 
     public PlayerConstellationData GetConstellation(string name)

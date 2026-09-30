@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "鍛冶の獲得経験値が{0}%増加",
+  "extrastatincCombatExpMul": "戦闘の獲得経験値が{0}%増加",
   "extrastatincpassiveBlockChance": "パッシブブロック確率が{0}%増加",
   "extrastatmulpassiveBlockChance": "パッシブブロック確率がさらに{0}%増加",
   "extrastatdivshieldDamageAbsorption": "盾のダメージ吸収量がさらに{0}%減少",

@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Отримуваний досвід навички «Ковальство» збільшений на {0}%",
+  "extrastatincCombatExpMul": "Отримуваний досвід навички «Бій» збільшений на {0}%",
   "extrastatincpassiveBlockChance": "Шанс пасивного блоку збільшений на {0}%",
   "extrastatmulpassiveBlockChance": "На {0}% більше шансу пасивного блоку",
   "extrastatdivshieldDamageAbsorption": "На {0}% менше поглинання шкоди щитом",

@@ -17,7 +17,7 @@ public class HarvestablePatches
 
             EntityBehaviorPolarisExp? expBehavior = __instance.entity.GetBehavior<EntityBehaviorPolarisExp>();
 
-            SystemPolaris.AddExperience("Hunting", byPlayer, (expBehavior?.HarvestXp ?? EntityBehaviorPolarisExp.DefaultHarvestExp) * EntityBehaviorPolarisExp.HARVESTING_EXP_MULTI);
+            SystemPolaris.AddExperience("Hunting", byPlayer, (expBehavior?.HarvestXp ?? ExpGlobals.DefaultHarvestExperience) * ExpGlobals.HuntingHarvestExperienceMultiplier);
 
             if (byPlayer.Entity.GetSkillLevel("biogenesis") > 0 && __instance.entity.World.Rand.NextDouble() <= 0.01)
             {

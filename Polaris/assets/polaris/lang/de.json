@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Gewonnene Erfahrung in Schmieden um {0}% erhöht",
+  "extrastatincCombatExpMul": "Gewonnene Erfahrung in Kampf um {0}% erhöht",
   "extrastatincpassiveBlockChance": "Passive Blockchance um {0}% erhöht",
   "extrastatmulpassiveBlockChance": "{0}% mehr passive Blockchance",
   "extrastatdivshieldDamageAbsorption": "{0}% weniger Schadensabsorption durch Schilde",

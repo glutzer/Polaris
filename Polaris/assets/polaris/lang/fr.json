@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Expérience gagnée en Forge augmentée de {0}%",
+  "extrastatincCombatExpMul": "Expérience gagnée en Combat augmentée de {0}%",
   "extrastatincpassiveBlockChance": "Chance de blocage passif augmentée de {0}%",
   "extrastatmulpassiveBlockChance": "{0}% de chance de blocage passif en plus",
   "extrastatdivshieldDamageAbsorption": "{0}% d'absorption des dégâts par le bouclier en moins",

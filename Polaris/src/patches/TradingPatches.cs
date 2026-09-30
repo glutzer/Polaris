@@ -21,7 +21,7 @@ public class TradingPatches
             if (__result != EnumTransactionResult.Success) return;
             if (__state.gears <= 0) return;
 
-            SystemPolaris.AddExperience("Trade", __state.player, __state.gears);
+            SystemPolaris.AddExperience("Trade", __state.player, __state.gears * ExpGlobals.TradeExperiencePerGear);
         }
     }
 }

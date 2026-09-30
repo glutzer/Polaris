@@ -73,7 +73,7 @@ public class PlayerBehaviorPolaris : EntityBehavior
             // Remove half of survival experience when dying.
             PlayerConstellationData playerData = SystemPolaris.Instance(entity.Api).GetConstellationData("Survival", ePlayer.PlayerUID);
             int currentSurvivalExp = (int)playerData.Experience;
-            SystemPolaris.AddExperience("Survival", ePlayer.Player, -currentSurvivalExp / 2);
+            SystemPolaris.AddExperience("Survival", ePlayer.Player, -currentSurvivalExp / ExpGlobals.SurvivalDeathPenaltyDivisor);
         }
     }
 
@@ -89,10 +89,10 @@ public class PlayerBehaviorPolaris : EntityBehavior
         if (entity is not EntityPlayer ePlayer) return;
 
         survivalAccum += dt;
-        if (survivalAccum >= 10f)
+        if (survivalAccum >= ExpGlobals.SurvivalRewardIntervalSeconds)
         {
-            survivalAccum %= 10f;
-            SystemPolaris.AddExperience("Survival", ePlayer.Player, 1f, false);
+            survivalAccum %= ExpGlobals.SurvivalRewardIntervalSeconds;
+            SystemPolaris.AddExperience("Survival", ePlayer.Player, ExpGlobals.SurvivalExperiencePerInterval, false);
         }
 
         // Shroud Walker — apply/remove chameleon effect when the player starts/stops sneaking.
@@ -140,9 +140,9 @@ public class PlayerBehaviorPolaris : EntityBehavior
                 float lossMultiplier = 1f;
 
                 // Experience is gained from losing stability.
-                if (loss > 0.001)
+                if (loss > ExpGlobals.MinimumStabilityLoss)
                 {
-                    SystemPolaris.AddExperience("Time", player, (float)(loss * 10.0), false);
+                    SystemPolaris.AddExperience("Time", player, (float)(loss * ExpGlobals.TimeExperiencePerStability), false);
                 }
 
                 if (ePlayer.TryGetExtraStat("stabilityLossMul", out float stabilityLossMul))

@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Doświadczenie zdobywane w umiejętności Kowalstwo zwiększone o {0}%",
+  "extrastatincCombatExpMul": "Doświadczenie zdobywane w umiejętności Walka zwiększone o {0}%",
   "extrastatincpassiveBlockChance": "Szansa na pasywny blok zwiększona o {0}%",
   "extrastatmulpassiveBlockChance": "O {0}% większa szansa na pasywny blok",
   "extrastatdivshieldDamageAbsorption": "O {0}% mniej obrażeń pochłanianych przez tarczę",

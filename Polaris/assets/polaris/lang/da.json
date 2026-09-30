@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Opnået erfaring i Smedning øget med {0}%",
+  "extrastatincCombatExpMul": "Opnået erfaring i Kamp øget med {0}%",
   "extrastatincpassiveBlockChance": "Passiv blokeringschance øget med {0}%",
   "extrastatmulpassiveBlockChance": "{0}% større passiv blokeringschance",
   "extrastatdivshieldDamageAbsorption": "{0}% mindre skade absorberet af skjoldet",

@@ -389,39 +389,39 @@
       -300
     ],
     "Combat:meleedmg4": [
-      -300,
-      0
+      0,
+      -400
     ],
     "Combat:armorTraining1": [
       100,
       0
     ],
     "Combat:armorTraining2": [
-      -150,
-      100
+      200,
+      0
     ],
     "Combat:berserker": [
       -150,
-      -100
+      -200
     ],
     "Smithing:start": [
       0,
       0
     ],
     "Smithing:smith": [
-      -150,
-      -100
+      150,
+      100
     ],
     "Smithing:carefulQuenching": [
-      -150,
-      -250
+      100,
+      -200
     ],
     "Smithing:masterSmith1": [
-      -300,
+      -100,
       -100
     ],
     "Smithing:masterSmith2": [
-      -400,
+      -200,
       -100
     ],
     "Smithing:cracker1": [

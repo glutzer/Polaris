@@ -1,4 +1,6 @@
 {
+  "extrastatincSmithingExpMul": "Получаемый опыт навыка «Кузнечное дело» увеличен на {0}%",
+  "extrastatincCombatExpMul": "Получаемый опыт навыка «Бой» увеличен на {0}%",
   "extrastatincpassiveBlockChance": "Шанс пассивного блока увеличен на {0}%",
   "extrastatmulpassiveBlockChance": "На {0}% больше шанса пассивного блока",
   "extrastatdivshieldDamageAbsorption": "На {0}% меньше поглощения урона щитом",
