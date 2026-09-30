@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "Hayatta kalma için kazanılan deneyim %{0} artar",
+  "extrastatincTimeExpMul": "Zaman için kazanılan deneyim %{0} artar",
+  "extrastatincExcavationExpMul": "Kazı için kazanılan deneyim %{0} artar",
+  "extrastatincForestryExpMul": "Ormancılık için kazanılan deneyim %{0} artar",
+  "extrastatincHorticultureExpMul": "Bahçecilik için kazanılan deneyim %{0} artar",
+  "extrastatincHuntingExpMul": "Avcılık için kazanılan deneyim %{0} artar",
+  "extrastatincFormingExpMul": "Şekillendirme için kazanılan deneyim %{0} artar",
+  "extrastatincCookingExpMul": "Aşçılık için kazanılan deneyim %{0} artar",
+  "extrastatincCraftingExpMul": "Zanaat için kazanılan deneyim %{0} artar",
+  "extrastatincTradeExpMul": "Ticaret için kazanılan deneyim %{0} artar",
+  "extrastatincMycologyExpMul": "Mikoloji için kazanılan deneyim %{0} artar",
+
   "extrastatincSmithingExpMul": "Demircilik alanında kazanılan deneyim %{0} artar",
   "extrastatincCombatExpMul": "Savaş alanında kazanılan deneyim %{0} artar",
   "extrastatincpassiveBlockChance": "Pasif blok olasılığı %{0} artar",

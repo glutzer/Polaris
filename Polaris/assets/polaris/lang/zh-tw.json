@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "生存獲得的經驗增加{0}%",
+  "extrastatincTimeExpMul": "時間獲得的經驗增加{0}%",
+  "extrastatincExcavationExpMul": "挖掘獲得的經驗增加{0}%",
+  "extrastatincForestryExpMul": "林業獲得的經驗增加{0}%",
+  "extrastatincHorticultureExpMul": "園藝獲得的經驗增加{0}%",
+  "extrastatincHuntingExpMul": "狩獵獲得的經驗增加{0}%",
+  "extrastatincFormingExpMul": "塑形獲得的經驗增加{0}%",
+  "extrastatincCookingExpMul": "烹飪獲得的經驗增加{0}%",
+  "extrastatincCraftingExpMul": "製作獲得的經驗增加{0}%",
+  "extrastatincTradeExpMul": "貿易獲得的經驗增加{0}%",
+  "extrastatincMycologyExpMul": "菌類學獲得的經驗增加{0}%",
+
   "extrastatincSmithingExpMul": "鍛造獲得的經驗提高{0}%",
   "extrastatincCombatExpMul": "戰鬥獲得的經驗提高{0}%",
   "extrastatincpassiveBlockChance": "被動格擋機率提高{0}%",

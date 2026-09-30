@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "{0}% daugiau gaunamos patirties: Išgyvenimas",
+  "extrastatincTimeExpMul": "{0}% daugiau gaunamos patirties: Laikas",
+  "extrastatincExcavationExpMul": "{0}% daugiau gaunamos patirties: Kasimas",
+  "extrastatincForestryExpMul": "{0}% daugiau gaunamos patirties: Miškininkystė",
+  "extrastatincHorticultureExpMul": "{0}% daugiau gaunamos patirties: Sodininkystė",
+  "extrastatincHuntingExpMul": "{0}% daugiau gaunamos patirties: Medžioklė",
+  "extrastatincFormingExpMul": "{0}% daugiau gaunamos patirties: Formavimas",
+  "extrastatincCookingExpMul": "{0}% daugiau gaunamos patirties: Maisto gaminimas",
+  "extrastatincCraftingExpMul": "{0}% daugiau gaunamos patirties: Amatai",
+  "extrastatincTradeExpMul": "{0}% daugiau gaunamos patirties: Prekyba",
+  "extrastatincMycologyExpMul": "{0}% daugiau gaunamos patirties: Mikologija",
+
   "extrastatincSmithingExpMul": "Gaunama įgūdžio Kalvystė patirtis padidėja {0}%",
   "extrastatincCombatExpMul": "Gaunama įgūdžio Kova patirtis padidėja {0}%",
   "extrastatincpassiveBlockChance": "Pasyvaus blokavimo tikimybė padidėja {0}%",

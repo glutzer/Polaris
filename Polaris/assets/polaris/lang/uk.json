@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "На {0}% більше отримуваного досвіду: Виживання",
+  "extrastatincTimeExpMul": "На {0}% більше отримуваного досвіду: Час",
+  "extrastatincExcavationExpMul": "На {0}% більше отримуваного досвіду: Розкопки",
+  "extrastatincForestryExpMul": "На {0}% більше отримуваного досвіду: Лісове господарство",
+  "extrastatincHorticultureExpMul": "На {0}% більше отримуваного досвіду: Садівництво",
+  "extrastatincHuntingExpMul": "На {0}% більше отримуваного досвіду: Полювання",
+  "extrastatincFormingExpMul": "На {0}% більше отримуваного досвіду: Формування",
+  "extrastatincCookingExpMul": "На {0}% більше отримуваного досвіду: Кулінарія",
+  "extrastatincCraftingExpMul": "На {0}% більше отримуваного досвіду: Ремесло",
+  "extrastatincTradeExpMul": "На {0}% більше отримуваного досвіду: Торгівля",
+  "extrastatincMycologyExpMul": "На {0}% більше отримуваного досвіду: Мікологія",
+
   "extrastatincSmithingExpMul": "Отримуваний досвід навички «Ковальство» збільшений на {0}%",
   "extrastatincCombatExpMul": "Отримуваний досвід навички «Бій» збільшений на {0}%",
   "extrastatincpassiveBlockChance": "Шанс пасивного блоку збільшений на {0}%",

@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "{0}% increased Survival experience gained",
+  "extrastatincTimeExpMul": "{0}% increased Time experience gained",
+  "extrastatincExcavationExpMul": "{0}% increased Excavation experience gained",
+  "extrastatincForestryExpMul": "{0}% increased Forestry experience gained",
+  "extrastatincHorticultureExpMul": "{0}% increased Horticulture experience gained",
+  "extrastatincHuntingExpMul": "{0}% increased Hunting experience gained",
+  "extrastatincFormingExpMul": "{0}% increased Forming experience gained",
+  "extrastatincCookingExpMul": "{0}% increased Cooking experience gained",
+  "extrastatincCraftingExpMul": "{0}% increased Crafting experience gained",
+  "extrastatincTradeExpMul": "{0}% increased Trade experience gained",
+  "extrastatincMycologyExpMul": "{0}% increased Mycology experience gained",
+
   "extrastatincSmithingExpMul": "{0}% increased Smithing experience gained",
   "extrastatincCombatExpMul": "{0}% increased Combat experience gained",
   "extrastatincpassiveBlockChance": "{0}% increased passive block chance",

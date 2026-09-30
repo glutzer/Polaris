@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "ได้รับค่าประสบการณ์ การเอาชีวิตรอด เพิ่มขึ้น {0}%",
+  "extrastatincTimeExpMul": "ได้รับค่าประสบการณ์ เวลา เพิ่มขึ้น {0}%",
+  "extrastatincExcavationExpMul": "ได้รับค่าประสบการณ์ การขุด เพิ่มขึ้น {0}%",
+  "extrastatincForestryExpMul": "ได้รับค่าประสบการณ์ การป่าไม้ เพิ่มขึ้น {0}%",
+  "extrastatincHorticultureExpMul": "ได้รับค่าประสบการณ์ การทำสวน เพิ่มขึ้น {0}%",
+  "extrastatincHuntingExpMul": "ได้รับค่าประสบการณ์ การล่าสัตว์ เพิ่มขึ้น {0}%",
+  "extrastatincFormingExpMul": "ได้รับค่าประสบการณ์ การขึ้นรูป เพิ่มขึ้น {0}%",
+  "extrastatincCookingExpMul": "ได้รับค่าประสบการณ์ การทำอาหาร เพิ่มขึ้น {0}%",
+  "extrastatincCraftingExpMul": "ได้รับค่าประสบการณ์ งานฝีมือ เพิ่มขึ้น {0}%",
+  "extrastatincTradeExpMul": "ได้รับค่าประสบการณ์ การค้า เพิ่มขึ้น {0}%",
+  "extrastatincMycologyExpMul": "ได้รับค่าประสบการณ์ วิทยาเห็ดรา เพิ่มขึ้น {0}%",
+
   "extrastatincSmithingExpMul": "ค่าประสบการณ์ที่ได้รับจากการตีเหล็กเพิ่มขึ้น {0}%",
   "extrastatincCombatExpMul": "ค่าประสบการณ์ที่ได้รับจากการต่อสู้เพิ่มขึ้น {0}%",
   "extrastatincpassiveBlockChance": "เพิ่มโอกาสบล็อกแบบพาสซีฟ {0}%",

@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "O {0}% viac získaných skúseností: Prežitie",
+  "extrastatincTimeExpMul": "O {0}% viac získaných skúseností: Čas",
+  "extrastatincExcavationExpMul": "O {0}% viac získaných skúseností: Výkopové práce",
+  "extrastatincForestryExpMul": "O {0}% viac získaných skúseností: Lesníctvo",
+  "extrastatincHorticultureExpMul": "O {0}% viac získaných skúseností: Záhradníctvo",
+  "extrastatincHuntingExpMul": "O {0}% viac získaných skúseností: Lov",
+  "extrastatincFormingExpMul": "O {0}% viac získaných skúseností: Tvarovanie",
+  "extrastatincCookingExpMul": "O {0}% viac získaných skúseností: Varenie",
+  "extrastatincCraftingExpMul": "O {0}% viac získaných skúseností: Remeslo",
+  "extrastatincTradeExpMul": "O {0}% viac získaných skúseností: Obchod",
+  "extrastatincMycologyExpMul": "O {0}% viac získaných skúseností: Mykológia",
+
   "extrastatincSmithingExpMul": "Získané skúsenosti v zručnosti Kováčstvo zvýšené o {0}%",
   "extrastatincCombatExpMul": "Získané skúsenosti v zručnosti Boj zvýšené o {0}%",
   "extrastatincpassiveBlockChance": "Šanca na pasívne blokovanie zvýšená o {0}%",

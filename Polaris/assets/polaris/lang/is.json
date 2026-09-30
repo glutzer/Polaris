@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "{0}% meiri reynsla í Lifun",
+  "extrastatincTimeExpMul": "{0}% meiri reynsla í Tími",
+  "extrastatincExcavationExpMul": "{0}% meiri reynsla í Uppgröftur",
+  "extrastatincForestryExpMul": "{0}% meiri reynsla í Skógrækt",
+  "extrastatincHorticultureExpMul": "{0}% meiri reynsla í Garðyrkja",
+  "extrastatincHuntingExpMul": "{0}% meiri reynsla í Veiðar",
+  "extrastatincFormingExpMul": "{0}% meiri reynsla í Mótun",
+  "extrastatincCookingExpMul": "{0}% meiri reynsla í Matreiðsla",
+  "extrastatincCraftingExpMul": "{0}% meiri reynsla í Handverk",
+  "extrastatincTradeExpMul": "{0}% meiri reynsla í Verslun",
+  "extrastatincMycologyExpMul": "{0}% meiri reynsla í Sveppafræði",
+
   "extrastatincSmithingExpMul": "Fengin reynsla í Smíði eykst um {0}%",
   "extrastatincCombatExpMul": "Fengin reynsla í Bardagi eykst um {0}%",
   "extrastatincpassiveBlockChance": "Líkur á óvirkri vörn aukast um {0}%",

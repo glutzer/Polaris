@@ -89,8 +89,8 @@
       -330
     ],
     "Survival:primalist": [
-      -200,
-      -200
+      300,
+      -250
     ],
     "Survival:shroudWalker": [
       -100,
@@ -125,8 +125,8 @@
       -100
     ],
     "Survival:improviser": [
-      -200,
-      0
+      150,
+      -350
     ],
     "Survival:dualSpecialization": [
       200,
@@ -141,20 +141,20 @@
       200
     ],
     "Time:tinkerer": [
-      0,
-      260
+      -200,
+      200
     ],
     "Time:temporalResilience1": [
-      70,
-      -70
+      60,
+      -60
     ],
     "Time:temporalResilience2": [
-      140,
-      -140
+      130,
+      -130
     ],
     "Time:temporalResilience3": [
-      210,
-      -210
+      200,
+      -200
     ],
     "Time:schizoDissociation": [
       -200,
@@ -163,6 +163,10 @@
     "Time:temporalWard": [
       0,
       -260
+    ],
+    "Time:chronomancer": [
+      0,
+      260
     ],
     "Excavation:start": [
       0,
@@ -240,9 +244,17 @@
       -300,
       100
     ],
+    "Excavation:miner": [
+      -100,
+      0
+    ],
     "Forestry:start": [
       0,
       0
+    ],
+    "Forestry:lumberjack": [
+      0,
+      150
     ],
     "Horticulture:start": [
       0,
@@ -300,6 +312,10 @@
       0,
       -300
     ],
+    "Horticulture:farmer": [
+      0,
+      150
+    ],
     "Hunting:start": [
       0,
       0
@@ -354,7 +370,11 @@
     ],
     "Hunting:hunter": [
       0,
-      120
+      150
+    ],
+    "Hunting:huntsman": [
+      0,
+      50
     ],
     "Combat:start": [
       0,
@@ -409,12 +429,8 @@
       0
     ],
     "Smithing:smith": [
-      150,
-      100
-    ],
-    "Smithing:carefulQuenching": [
-      100,
-      -200
+      -100,
+      0
     ],
     "Smithing:masterSmith1": [
       -100,
@@ -440,13 +456,25 @@
       0,
       -150
     ],
+    "Smithing:carefulQuenching": [
+      100,
+      -200
+    ],
     "Forming:start": [
       0,
       0
     ],
+    "Forming:artisan": [
+      0,
+      150
+    ],
     "Cooking:start": [
       0,
       0
+    ],
+    "Cooking:chef": [
+      0,
+      150
     ],
     "Crafting:start": [
       0,
@@ -476,6 +504,10 @@
       -450,
       -150
     ],
+    "Crafting:crafter": [
+      100,
+      100
+    ],
     "Trade:start": [
       0,
       0
@@ -483,6 +515,10 @@
     "Trade:mint": [
       0,
       -150
+    ],
+    "Trade:merchant": [
+      0,
+      150
     ],
     "Mycology:start": [
       0,
@@ -511,6 +547,10 @@
     "Mycology:fungalFortitude3": [
       130,
       40
+    ],
+    "Mycology:mycologist": [
+      0,
+      150
     ]
   }
 }

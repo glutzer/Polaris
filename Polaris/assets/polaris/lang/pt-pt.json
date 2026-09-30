@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "Mais {0}% de experiência obtida em Sobrevivência",
+  "extrastatincTimeExpMul": "Mais {0}% de experiência obtida em Tempo",
+  "extrastatincExcavationExpMul": "Mais {0}% de experiência obtida em Escavação",
+  "extrastatincForestryExpMul": "Mais {0}% de experiência obtida em Silvicultura",
+  "extrastatincHorticultureExpMul": "Mais {0}% de experiência obtida em Horticultura",
+  "extrastatincHuntingExpMul": "Mais {0}% de experiência obtida em Caça",
+  "extrastatincFormingExpMul": "Mais {0}% de experiência obtida em Modelação",
+  "extrastatincCookingExpMul": "Mais {0}% de experiência obtida em Culinária",
+  "extrastatincCraftingExpMul": "Mais {0}% de experiência obtida em Artesanato",
+  "extrastatincTradeExpMul": "Mais {0}% de experiência obtida em Comércio",
+  "extrastatincMycologyExpMul": "Mais {0}% de experiência obtida em Micologia",
+
   "extrastatincSmithingExpMul": "Experiência obtida em Ferraria aumentada em {0}%",
   "extrastatincCombatExpMul": "Experiência obtida em Combate aumentada em {0}%",
   "extrastatincpassiveBlockChance": "Probabilidade de bloqueio passivo aumentada em {0}%",

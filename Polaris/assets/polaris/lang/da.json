@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "{0}% mere erfaring opnået i Overlevelse",
+  "extrastatincTimeExpMul": "{0}% mere erfaring opnået i Tid",
+  "extrastatincExcavationExpMul": "{0}% mere erfaring opnået i Udgravning",
+  "extrastatincForestryExpMul": "{0}% mere erfaring opnået i Skovbrug",
+  "extrastatincHorticultureExpMul": "{0}% mere erfaring opnået i Havebrug",
+  "extrastatincHuntingExpMul": "{0}% mere erfaring opnået i Jagt",
+  "extrastatincFormingExpMul": "{0}% mere erfaring opnået i Formgivning",
+  "extrastatincCookingExpMul": "{0}% mere erfaring opnået i Madlavning",
+  "extrastatincCraftingExpMul": "{0}% mere erfaring opnået i Håndværk",
+  "extrastatincTradeExpMul": "{0}% mere erfaring opnået i Handel",
+  "extrastatincMycologyExpMul": "{0}% mere erfaring opnået i Mykologi",
+
   "extrastatincSmithingExpMul": "Opnået erfaring i Smedning øget med {0}%",
   "extrastatincCombatExpMul": "Opnået erfaring i Kamp øget med {0}%",
   "extrastatincpassiveBlockChance": "Passiv blokeringschance øget med {0}%",

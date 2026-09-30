@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "{0}%-kal több szerzett tapasztalat: Túlélés",
+  "extrastatincTimeExpMul": "{0}%-kal több szerzett tapasztalat: Idő",
+  "extrastatincExcavationExpMul": "{0}%-kal több szerzett tapasztalat: Ásás",
+  "extrastatincForestryExpMul": "{0}%-kal több szerzett tapasztalat: Erdészet",
+  "extrastatincHorticultureExpMul": "{0}%-kal több szerzett tapasztalat: Kertészet",
+  "extrastatincHuntingExpMul": "{0}%-kal több szerzett tapasztalat: Vadászat",
+  "extrastatincFormingExpMul": "{0}%-kal több szerzett tapasztalat: Formázás",
+  "extrastatincCookingExpMul": "{0}%-kal több szerzett tapasztalat: Főzés",
+  "extrastatincCraftingExpMul": "{0}%-kal több szerzett tapasztalat: Kézművesség",
+  "extrastatincTradeExpMul": "{0}%-kal több szerzett tapasztalat: Kereskedelem",
+  "extrastatincMycologyExpMul": "{0}%-kal több szerzett tapasztalat: Gombászat",
+
   "extrastatincSmithingExpMul": "A(z) Kovácsolás során szerzett tapasztalat {0}%-kal nő",
   "extrastatincCombatExpMul": "A(z) Harc során szerzett tapasztalat {0}%-kal nő",
   "extrastatincpassiveBlockChance": "A passzív blokkolás esélye {0}%-kal nő",

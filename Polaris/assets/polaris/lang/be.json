@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "На {0}% больш атрыманага досведу: Выжыванне",
+  "extrastatincTimeExpMul": "На {0}% больш атрыманага досведу: Час",
+  "extrastatincExcavationExpMul": "На {0}% больш атрыманага досведу: Раскопкі",
+  "extrastatincForestryExpMul": "На {0}% больш атрыманага досведу: Лясная гаспадарка",
+  "extrastatincHorticultureExpMul": "На {0}% больш атрыманага досведу: Садоўніцтва",
+  "extrastatincHuntingExpMul": "На {0}% больш атрыманага досведу: Паляванне",
+  "extrastatincFormingExpMul": "На {0}% больш атрыманага досведу: Фармоўка",
+  "extrastatincCookingExpMul": "На {0}% больш атрыманага досведу: Кулінарыя",
+  "extrastatincCraftingExpMul": "На {0}% больш атрыманага досведу: Рамяство",
+  "extrastatincTradeExpMul": "На {0}% больш атрыманага досведу: Гандаль",
+  "extrastatincMycologyExpMul": "На {0}% больш атрыманага досведу: Мікалогія",
+
   "extrastatincSmithingExpMul": "Атрыманы вопыт навыку «Кавальства» павялічаны на {0}%",
   "extrastatincCombatExpMul": "Атрыманы вопыт навыку «Бой» павялічаны на {0}%",
   "extrastatincpassiveBlockChance": "Шанец пасіўнага блакавання павялічаны на {0}%",

@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "زيادة خبرة البقاء المكتسبة بنسبة {0}%",
+  "extrastatincTimeExpMul": "زيادة خبرة الزمن المكتسبة بنسبة {0}%",
+  "extrastatincExcavationExpMul": "زيادة خبرة الحفر المكتسبة بنسبة {0}%",
+  "extrastatincForestryExpMul": "زيادة خبرة الحراجة المكتسبة بنسبة {0}%",
+  "extrastatincHorticultureExpMul": "زيادة خبرة البستنة المكتسبة بنسبة {0}%",
+  "extrastatincHuntingExpMul": "زيادة خبرة الصيد المكتسبة بنسبة {0}%",
+  "extrastatincFormingExpMul": "زيادة خبرة التشكيل المكتسبة بنسبة {0}%",
+  "extrastatincCookingExpMul": "زيادة خبرة الطبخ المكتسبة بنسبة {0}%",
+  "extrastatincCraftingExpMul": "زيادة خبرة الحرف اليدوية المكتسبة بنسبة {0}%",
+  "extrastatincTradeExpMul": "زيادة خبرة التجارة المكتسبة بنسبة {0}%",
+  "extrastatincMycologyExpMul": "زيادة خبرة علم الفطريات المكتسبة بنسبة {0}%",
+
   "extrastatincSmithingExpMul": "زيادة الخبرة المكتسبة في الحدادة بنسبة {0}%",
   "extrastatincCombatExpMul": "زيادة الخبرة المكتسبة في القتال بنسبة {0}%",
   "extrastatincpassiveBlockChance": "زيادة فرصة الصد السلبي بنسبة {0}%",

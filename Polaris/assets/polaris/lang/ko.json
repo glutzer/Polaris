@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "생존 경험치 획득량 {0}% 증가",
+  "extrastatincTimeExpMul": "시간 경험치 획득량 {0}% 증가",
+  "extrastatincExcavationExpMul": "굴착 경험치 획득량 {0}% 증가",
+  "extrastatincForestryExpMul": "임업 경험치 획득량 {0}% 증가",
+  "extrastatincHorticultureExpMul": "원예 경험치 획득량 {0}% 증가",
+  "extrastatincHuntingExpMul": "사냥 경험치 획득량 {0}% 증가",
+  "extrastatincFormingExpMul": "성형 경험치 획득량 {0}% 증가",
+  "extrastatincCookingExpMul": "요리 경험치 획득량 {0}% 증가",
+  "extrastatincCraftingExpMul": "제작 경험치 획득량 {0}% 증가",
+  "extrastatincTradeExpMul": "거래 경험치 획득량 {0}% 증가",
+  "extrastatincMycologyExpMul": "균류학 경험치 획득량 {0}% 증가",
+
   "extrastatincSmithingExpMul": "대장장이 획득 경험치 {0}% 증가",
   "extrastatincCombatExpMul": "전투 획득 경험치 {0}% 증가",
   "extrastatincpassiveBlockChance": "수동적 막기 확률 {0}% 증가",

@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "{0}% више стеченог искуства: Преживљавање",
+  "extrastatincTimeExpMul": "{0}% више стеченог искуства: Време",
+  "extrastatincExcavationExpMul": "{0}% више стеченог искуства: Ископавање",
+  "extrastatincForestryExpMul": "{0}% више стеченог искуства: Шумарство",
+  "extrastatincHorticultureExpMul": "{0}% више стеченог искуства: Баштованство",
+  "extrastatincHuntingExpMul": "{0}% више стеченог искуства: Лов",
+  "extrastatincFormingExpMul": "{0}% више стеченог искуства: Обликовање",
+  "extrastatincCookingExpMul": "{0}% више стеченог искуства: Кување",
+  "extrastatincCraftingExpMul": "{0}% више стеченог искуства: Занатство",
+  "extrastatincTradeExpMul": "{0}% више стеченог искуства: Трговина",
+  "extrastatincMycologyExpMul": "{0}% више стеченог искуства: Микологија",
+
   "extrastatincSmithingExpMul": "Стечено искуство у вештини Ковачки занат повећано за {0}%",
   "extrastatincCombatExpMul": "Стечено искуство у вештини Борба повећано за {0}%",
   "extrastatincpassiveBlockChance": "Шанса за пасивно блокирање повећана за {0}%",

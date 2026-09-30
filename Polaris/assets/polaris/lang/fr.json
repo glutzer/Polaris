@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "Expérience gagnée en Survie augmentée de {0}%",
+  "extrastatincTimeExpMul": "Expérience gagnée en Temps augmentée de {0}%",
+  "extrastatincExcavationExpMul": "Expérience gagnée en Excavation augmentée de {0}%",
+  "extrastatincForestryExpMul": "Expérience gagnée en Sylviculture augmentée de {0}%",
+  "extrastatincHorticultureExpMul": "Expérience gagnée en Horticulture augmentée de {0}%",
+  "extrastatincHuntingExpMul": "Expérience gagnée en Chasse augmentée de {0}%",
+  "extrastatincFormingExpMul": "Expérience gagnée en Façonnage augmentée de {0}%",
+  "extrastatincCookingExpMul": "Expérience gagnée en Cuisine augmentée de {0}%",
+  "extrastatincCraftingExpMul": "Expérience gagnée en Artisanat augmentée de {0}%",
+  "extrastatincTradeExpMul": "Expérience gagnée en Commerce augmentée de {0}%",
+  "extrastatincMycologyExpMul": "Expérience gagnée en Mycologie augmentée de {0}%",
+
   "extrastatincSmithingExpMul": "Expérience gagnée en Forge augmentée de {0}%",
   "extrastatincCombatExpMul": "Expérience gagnée en Combat augmentée de {0}%",
   "extrastatincpassiveBlockChance": "Chance de blocage passif augmentée de {0}%",

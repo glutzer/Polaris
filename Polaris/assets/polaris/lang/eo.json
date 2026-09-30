@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "{0}% pli da akirita sperto pri Postvivado",
+  "extrastatincTimeExpMul": "{0}% pli da akirita sperto pri Tempo",
+  "extrastatincExcavationExpMul": "{0}% pli da akirita sperto pri Elfosado",
+  "extrastatincForestryExpMul": "{0}% pli da akirita sperto pri Forstado",
+  "extrastatincHorticultureExpMul": "{0}% pli da akirita sperto pri Hortikulturo",
+  "extrastatincHuntingExpMul": "{0}% pli da akirita sperto pri Ĉasado",
+  "extrastatincFormingExpMul": "{0}% pli da akirita sperto pri Formado",
+  "extrastatincCookingExpMul": "{0}% pli da akirita sperto pri Kuirado",
+  "extrastatincCraftingExpMul": "{0}% pli da akirita sperto pri Metiado",
+  "extrastatincTradeExpMul": "{0}% pli da akirita sperto pri Komercado",
+  "extrastatincMycologyExpMul": "{0}% pli da akirita sperto pri Mikologio",
+
   "extrastatincSmithingExpMul": "Akirita sperto en Forĝado pliiĝas je {0}%",
   "extrastatincCombatExpMul": "Akirita sperto en Batalo pliiĝas je {0}%",
   "extrastatincpassiveBlockChance": "Ŝanco de pasiva blokado pliiĝas je {0}%",

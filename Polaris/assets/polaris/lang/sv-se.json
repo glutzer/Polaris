@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "{0}% mer erfarenhet från Överlevnad",
+  "extrastatincTimeExpMul": "{0}% mer erfarenhet från Tid",
+  "extrastatincExcavationExpMul": "{0}% mer erfarenhet från Utgrävning",
+  "extrastatincForestryExpMul": "{0}% mer erfarenhet från Skogsbruk",
+  "extrastatincHorticultureExpMul": "{0}% mer erfarenhet från Trädgårdsodling",
+  "extrastatincHuntingExpMul": "{0}% mer erfarenhet från Jakt",
+  "extrastatincFormingExpMul": "{0}% mer erfarenhet från Formning",
+  "extrastatincCookingExpMul": "{0}% mer erfarenhet från Matlagning",
+  "extrastatincCraftingExpMul": "{0}% mer erfarenhet från Hantverk",
+  "extrastatincTradeExpMul": "{0}% mer erfarenhet från Handel",
+  "extrastatincMycologyExpMul": "{0}% mer erfarenhet från Mykologi",
+
   "extrastatincSmithingExpMul": "Erhållen erfarenhet i Smide ökad med {0}%",
   "extrastatincCombatExpMul": "Erhållen erfarenhet i Strid ökad med {0}%",
   "extrastatincpassiveBlockChance": "Passiv blockeringschans ökad med {0}%",

@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "На {0}% больше получаемого опыта: Выживание",
+  "extrastatincTimeExpMul": "На {0}% больше получаемого опыта: Время",
+  "extrastatincExcavationExpMul": "На {0}% больше получаемого опыта: Раскопки",
+  "extrastatincForestryExpMul": "На {0}% больше получаемого опыта: Лесное хозяйство",
+  "extrastatincHorticultureExpMul": "На {0}% больше получаемого опыта: Садоводство",
+  "extrastatincHuntingExpMul": "На {0}% больше получаемого опыта: Охота",
+  "extrastatincFormingExpMul": "На {0}% больше получаемого опыта: Формовка",
+  "extrastatincCookingExpMul": "На {0}% больше получаемого опыта: Кулинария",
+  "extrastatincCraftingExpMul": "На {0}% больше получаемого опыта: Ремесло",
+  "extrastatincTradeExpMul": "На {0}% больше получаемого опыта: Торговля",
+  "extrastatincMycologyExpMul": "На {0}% больше получаемого опыта: Микология",
+
   "extrastatincSmithingExpMul": "Получаемый опыт навыка «Кузнечное дело» увеличен на {0}%",
   "extrastatincCombatExpMul": "Получаемый опыт навыка «Бой» увеличен на {0}%",
   "extrastatincpassiveBlockChance": "Шанс пассивного блока увеличен на {0}%",

@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "サバイバルの獲得経験値が{0}%増加",
+  "extrastatincTimeExpMul": "時間の獲得経験値が{0}%増加",
+  "extrastatincExcavationExpMul": "採掘の獲得経験値が{0}%増加",
+  "extrastatincForestryExpMul": "林業の獲得経験値が{0}%増加",
+  "extrastatincHorticultureExpMul": "園芸の獲得経験値が{0}%増加",
+  "extrastatincHuntingExpMul": "狩猟の獲得経験値が{0}%増加",
+  "extrastatincFormingExpMul": "成形の獲得経験値が{0}%増加",
+  "extrastatincCookingExpMul": "料理の獲得経験値が{0}%増加",
+  "extrastatincCraftingExpMul": "クラフトの獲得経験値が{0}%増加",
+  "extrastatincTradeExpMul": "交易の獲得経験値が{0}%増加",
+  "extrastatincMycologyExpMul": "菌類学の獲得経験値が{0}%増加",
+
   "extrastatincSmithingExpMul": "鍛冶の獲得経験値が{0}%増加",
   "extrastatincCombatExpMul": "戦闘の獲得経験値が{0}%増加",
   "extrastatincpassiveBlockChance": "パッシブブロック確率が{0}%増加",

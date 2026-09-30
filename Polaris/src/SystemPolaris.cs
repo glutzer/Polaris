@@ -493,6 +493,47 @@ public class SystemPolaris : NetworkedGameSystem
             Temporal entities cannot spawn within 8 meters of you
             """).KeystoneStyle().AddLevelRequirement("Time", 8);
 
+        // Append new specializations to preserve existing saved node IDs.
+        PassiveNode.Create("Chronomancer", "chronomancer", time).AddParent("start").WithTag("specialization")
+            .AddRequirement(new SpecializationRequirement()).AddLevelRequirement("Time", 5)
+            .AddAdditiveExtraStat("TimeExpMul", ExpGlobals.SpecializationExperienceBonus).NotableStyle();
+
+        PassiveNode.Create("Miner", "miner", excavation).AddParent("start").WithTag("specialization")
+            .AddRequirement(new SpecializationRequirement()).AddLevelRequirement("Excavation", 5)
+            .AddAdditiveExtraStat("ExcavationExpMul", ExpGlobals.SpecializationExperienceBonus).NotableStyle();
+
+        PassiveNode.Create("Lumberjack", "lumberjack", forestry).AddParent("start").WithTag("specialization")
+            .AddRequirement(new SpecializationRequirement()).AddLevelRequirement("Forestry", 5)
+            .AddAdditiveExtraStat("ForestryExpMul", ExpGlobals.SpecializationExperienceBonus).NotableStyle();
+
+        PassiveNode.Create("Farmer", "farmer", horticulture).AddParent("start").WithTag("specialization")
+            .AddRequirement(new SpecializationRequirement()).AddLevelRequirement("Horticulture", 5)
+            .AddAdditiveExtraStat("HorticultureExpMul", ExpGlobals.SpecializationExperienceBonus).NotableStyle();
+
+        PassiveNode.Create("Huntsman", "huntsman", hunting).AddParent("start").WithTag("specialization")
+            .AddRequirement(new SpecializationRequirement()).AddLevelRequirement("Hunting", 5)
+            .AddAdditiveExtraStat("HuntingExpMul", ExpGlobals.SpecializationExperienceBonus).NotableStyle();
+
+        PassiveNode.Create("Artisan", "artisan", forming).AddParent("start").WithTag("specialization")
+            .AddRequirement(new SpecializationRequirement()).AddLevelRequirement("Forming", 5)
+            .AddAdditiveExtraStat("FormingExpMul", ExpGlobals.SpecializationExperienceBonus).NotableStyle();
+
+        PassiveNode.Create("Chef", "chef", cooking).AddParent("start").WithTag("specialization")
+            .AddRequirement(new SpecializationRequirement()).AddLevelRequirement("Cooking", 5)
+            .AddAdditiveExtraStat("CookingExpMul", ExpGlobals.SpecializationExperienceBonus).NotableStyle();
+
+        PassiveNode.Create("Crafter", "crafter", crafting).AddParent("start").WithTag("specialization")
+            .AddRequirement(new SpecializationRequirement()).AddLevelRequirement("Crafting", 5)
+            .AddAdditiveExtraStat("CraftingExpMul", ExpGlobals.SpecializationExperienceBonus).NotableStyle();
+
+        PassiveNode.Create("Merchant", "merchant", trade).AddParent("start").WithTag("specialization")
+            .AddRequirement(new SpecializationRequirement()).AddLevelRequirement("Trade", 5)
+            .AddAdditiveExtraStat("TradeExpMul", ExpGlobals.SpecializationExperienceBonus).NotableStyle();
+
+        PassiveNode.Create("Mycologist", "mycologist", mycology).AddParent("start").WithTag("specialization")
+            .AddRequirement(new SpecializationRequirement()).AddLevelRequirement("Mycology", 5)
+            .AddAdditiveExtraStat("MycologyExpMul", ExpGlobals.SpecializationExperienceBonus).NotableStyle();
+
         // Register one for each vanilla stat.
         RegisterAggregator(new StatAggregator("healingeffectivness"));
         RegisterAggregator(new StatAggregator("maxhealthExtraPoints"));

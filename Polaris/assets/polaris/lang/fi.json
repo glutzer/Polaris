@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "{0}% enemmän kokemusta: Selviytyminen",
+  "extrastatincTimeExpMul": "{0}% enemmän kokemusta: Aika",
+  "extrastatincExcavationExpMul": "{0}% enemmän kokemusta: Kaivaminen",
+  "extrastatincForestryExpMul": "{0}% enemmän kokemusta: Metsätalous",
+  "extrastatincHorticultureExpMul": "{0}% enemmän kokemusta: Puutarhanhoito",
+  "extrastatincHuntingExpMul": "{0}% enemmän kokemusta: Metsästys",
+  "extrastatincFormingExpMul": "{0}% enemmän kokemusta: Muotoilu",
+  "extrastatincCookingExpMul": "{0}% enemmän kokemusta: Ruoanlaitto",
+  "extrastatincCraftingExpMul": "{0}% enemmän kokemusta: Käsityö",
+  "extrastatincTradeExpMul": "{0}% enemmän kokemusta: Kaupankäynti",
+  "extrastatincMycologyExpMul": "{0}% enemmän kokemusta: Sienitiede",
+
   "extrastatincSmithingExpMul": "Taidosta Taonta saatu kokemus kasvaa {0}%",
   "extrastatincCombatExpMul": "Taidosta Taistelu saatu kokemus kasvaa {0}%",
   "extrastatincpassiveBlockChance": "Passiivisen torjunnan todennäköisyys kasvaa {0}%",

@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "{0}% повече получен опит за Оцеляване",
+  "extrastatincTimeExpMul": "{0}% повече получен опит за Време",
+  "extrastatincExcavationExpMul": "{0}% повече получен опит за Разкопаване",
+  "extrastatincForestryExpMul": "{0}% повече получен опит за Горско стопанство",
+  "extrastatincHorticultureExpMul": "{0}% повече получен опит за Градинарство",
+  "extrastatincHuntingExpMul": "{0}% повече получен опит за Лов",
+  "extrastatincFormingExpMul": "{0}% повече получен опит за Оформяне",
+  "extrastatincCookingExpMul": "{0}% повече получен опит за Готвене",
+  "extrastatincCraftingExpMul": "{0}% повече получен опит за Занаяти",
+  "extrastatincTradeExpMul": "{0}% повече получен опит за Търговия",
+  "extrastatincMycologyExpMul": "{0}% повече получен опит за Микология",
+
   "extrastatincSmithingExpMul": "Получаваният опит в Ковачество е увеличен с {0}%",
   "extrastatincCombatExpMul": "Получаваният опит в Бой е увеличен с {0}%",
   "extrastatincpassiveBlockChance": "Шансът за пасивно блокиране е увеличен с {0}%",

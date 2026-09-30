@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "{0}% meer ervaring opgedaan in Overleven",
+  "extrastatincTimeExpMul": "{0}% meer ervaring opgedaan in Tijd",
+  "extrastatincExcavationExpMul": "{0}% meer ervaring opgedaan in Mijnbouw",
+  "extrastatincForestryExpMul": "{0}% meer ervaring opgedaan in Bosbouw",
+  "extrastatincHorticultureExpMul": "{0}% meer ervaring opgedaan in Tuinbouw",
+  "extrastatincHuntingExpMul": "{0}% meer ervaring opgedaan in Jacht",
+  "extrastatincFormingExpMul": "{0}% meer ervaring opgedaan in Vormgeven",
+  "extrastatincCookingExpMul": "{0}% meer ervaring opgedaan in Koken",
+  "extrastatincCraftingExpMul": "{0}% meer ervaring opgedaan in Ambacht",
+  "extrastatincTradeExpMul": "{0}% meer ervaring opgedaan in Handel",
+  "extrastatincMycologyExpMul": "{0}% meer ervaring opgedaan in Mycologie",
+
   "extrastatincSmithingExpMul": "Verkregen ervaring in Smeden verhoogd met {0}%",
   "extrastatincCombatExpMul": "Verkregen ervaring in Gevecht verhoogd met {0}%",
   "extrastatincpassiveBlockChance": "Passieve blokkans verhoogd met {0}%",

@@ -1,4 +1,16 @@
 {
+  "extrastatincSurvivalExpMul": "Tăng {0}% kinh nghiệm nhận được cho Sinh tồn",
+  "extrastatincTimeExpMul": "Tăng {0}% kinh nghiệm nhận được cho Thời gian",
+  "extrastatincExcavationExpMul": "Tăng {0}% kinh nghiệm nhận được cho Đào bới",
+  "extrastatincForestryExpMul": "Tăng {0}% kinh nghiệm nhận được cho Lâm nghiệp",
+  "extrastatincHorticultureExpMul": "Tăng {0}% kinh nghiệm nhận được cho Làm vườn",
+  "extrastatincHuntingExpMul": "Tăng {0}% kinh nghiệm nhận được cho Săn bắn",
+  "extrastatincFormingExpMul": "Tăng {0}% kinh nghiệm nhận được cho Tạo hình",
+  "extrastatincCookingExpMul": "Tăng {0}% kinh nghiệm nhận được cho Nấu ăn",
+  "extrastatincCraftingExpMul": "Tăng {0}% kinh nghiệm nhận được cho Chế tác",
+  "extrastatincTradeExpMul": "Tăng {0}% kinh nghiệm nhận được cho Buôn bán",
+  "extrastatincMycologyExpMul": "Tăng {0}% kinh nghiệm nhận được cho Nấm học",
+
   "extrastatincSmithingExpMul": "Tăng {0}% kinh nghiệm Rèn nhận được",
   "extrastatincCombatExpMul": "Tăng {0}% kinh nghiệm Chiến đấu nhận được",
   "extrastatincpassiveBlockChance": "Tăng {0}% xác suất đỡ đòn thụ động",
