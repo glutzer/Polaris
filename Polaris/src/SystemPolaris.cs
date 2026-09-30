@@ -226,6 +226,11 @@ public class SystemPolaris : NetworkedGameSystem
         AddConstellation(mycology);
 
         // Survival passives.
+        PassiveNode.Create("Fasting", "fasting", survival).AddParent("start")
+            .AddSkillStat("fasting", 1, "Hunger does not decrease while sitting.")
+            .AddAdditiveExtraStat("healthMultiplier", -0.1f)
+            .AddLevelRequirement("Cooking", 5).AddLevelRequirement("Survival", 5).AddLevelRequirement("Time", 5).NotableStyle();
+
         PassiveNode.Create("Movement Speed", "move1", survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("start").AddLevelRequirement("Survival", 3);
         PassiveNode.Create("Movement Speed", "move2", survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("move1").AddLevelRequirement("Survival", 5);
         PassiveNode.Create("Movement Speed", "move3", survival).AddAdditiveStat("walkspeed", 0.05f).AddParent("move2").AddLevelRequirement("Survival", 7);

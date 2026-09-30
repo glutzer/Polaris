@@ -4,6 +4,10 @@
       0,
       0
     ],
+    "Survival:fasting": [
+      300,
+      -400
+    ],
     "Survival:move1": [
       100,
       100
@@ -66,11 +70,11 @@
     ],
     "Survival:featherfall2": [
       30,
-      230
+      300
     ],
     "Survival:featherfall3": [
       0,
-      300
+      400
     ],
     "Survival:meatShield1": [
       -60,
@@ -89,8 +93,8 @@
       -200
     ],
     "Survival:shroudWalker": [
-      -60,
-      260
+      -100,
+      300
     ],
     "Survival:luminiferous1": [
       -200,
@@ -121,8 +125,8 @@
       -100
     ],
     "Survival:improviser": [
-      100,
-      -100
+      -200,
+      0
     ],
     "Survival:dualSpecialization": [
       200,

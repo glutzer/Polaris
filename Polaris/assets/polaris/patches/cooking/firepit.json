@@ -1,0 +1,10 @@
+[
+  {
+    "file": "game:blocktypes/wood/firepit.json",
+    "op": "add",
+    "path": "/entityBehaviors/-",
+    "value": {
+      "name": "BlockEntityBehaviorClaimable"
+    }
+  }
+]

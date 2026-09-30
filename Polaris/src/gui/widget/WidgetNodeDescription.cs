@@ -77,7 +77,7 @@ public class WidgetNodeDescription : Widget
             int completedGoals = progress.CompletedGoals.Count;
             int totalGoals = achievement.Goals.Length;
 
-            text.AppendLine($"{totalGoals}/{completedGoals}");
+            text.AppendLine($"{completedGoals}/{totalGoals}");
         }
 
         text.AppendLine();
